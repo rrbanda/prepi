@@ -959,7 +959,68 @@ Modern LLM deployment needs both: capable models AND efficient serving.
 
 ---
 
+## Quick Start: Running vLLM Locally
+
+Before diving into enterprise platforms, here's how to run vLLM on your own machine or cloud instance. This is the fastest way to experiment with the concepts you've learned.
+
+### Option 1: Docker (Recommended)
+
+```bash
+# Run vLLM with a model from Hugging Face
+docker run --runtime nvidia --gpus all \
+    -v ~/.cache/huggingface:/root/.cache/huggingface \
+    -p 8000:8000 \
+    --ipc=host \
+    vllm/vllm-openai:latest \
+    --model meta-llama/Llama-2-7b-chat-hf \
+    --max-model-len 4096
+```
+
+### Option 2: Python
+
+```bash
+# Install vLLM
+pip install vllm
+
+# Start the OpenAI-compatible server
+python -m vllm.entrypoints.openai.api_server \
+    --model meta-llama/Llama-2-7b-chat-hf \
+    --port 8000
+```
+
+### Making Requests
+
+Once running, call it like the OpenAI API:
+
+```bash
+curl http://localhost:8000/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "meta-llama/Llama-2-7b-chat-hf",
+    "messages": [{"role": "user", "content": "Hello!"}],
+    "temperature": 0.7
+  }'
+```
+
+### Key Parameters
+
+| Parameter | Purpose | Example |
+|-----------|---------|---------|
+| `--model` | Hugging Face model ID | `meta-llama/Llama-2-7b-chat-hf` |
+| `--max-model-len` | Maximum context length | `4096` |
+| `--gpu-memory-utilization` | Fraction of GPU memory to use | `0.9` |
+| `--tensor-parallel-size` | Split model across N GPUs | `2` |
+| `--quantization` | Use quantized weights | `awq` |
+
+This gives you full access to PagedAttention, continuous batching, and all the optimizations covered in this chapter — on a single GPU or your laptop.
+
+---
+
 ## In Practice: Serving LLMs with OpenShift AI
+
+*This section covers enterprise deployment using Red Hat OpenShift AI. If you're experimenting locally, the Quick Start above is sufficient. If you're deploying for production with requirements like autoscaling, security, and multi-tenancy, read on.*
+
+The serving systems you've learned about — vLLM, TGI, OpenVINO — are all available in **Red Hat OpenShift AI** as managed runtimes. The platform handles the infrastructure complexity so you can focus on deploying models.
 
 The serving systems you've learned about — vLLM, TGI, OpenVINO — are all available in **Red Hat OpenShift AI** as managed runtimes. The platform handles the infrastructure complexity so you can focus on deploying models.
 

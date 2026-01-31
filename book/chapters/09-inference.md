@@ -229,6 +229,53 @@ It depends on your use case. For factual Q&A or code generation: low temperature
 
 ---
 
+## Try It Yourself: Experiment with Sampling
+
+The best way to understand sampling strategies is to see them in action.
+
+### Experiment: Same Prompt, Different Temperatures
+
+Try this prompt with different temperature settings and compare:
+
+**Prompt:** "Write a haiku about programming."
+
+```python
+from openai import OpenAI
+client = OpenAI()
+
+prompt = "Write a haiku about programming."
+
+for temp in [0.0, 0.5, 1.0, 1.5]:
+    print(f"\n--- Temperature: {temp} ---")
+    for i in range(3):  # Generate 3 times to see variation
+        response = client.chat.completions.create(
+            model="gpt-4",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=temp,
+            max_tokens=50
+        )
+        print(f"  {i+1}: {response.choices[0].message.content.strip()}")
+```
+
+### What to Observe
+
+| Temperature | Expected Behavior |
+|-------------|-------------------|
+| **0.0** | Same output every time (deterministic) |
+| **0.5** | Slight variations, coherent |
+| **1.0** | More diverse, still reasonable |
+| **1.5** | Creative but sometimes incoherent |
+
+### Bonus Experiments
+
+1. **Top-p comparison**: Set temperature=1.0, then try top_p=0.1 vs top_p=0.95
+2. **Task dependency**: Compare temperature effects on "What is 2+2?" vs "Write a poem"
+3. **Counting runs**: At temperature=0.7, how many unique outputs in 10 runs?
+
+These experiments build intuition for production settings.
+
+---
+
 ### Sampling and Speculative Decoding
 
 There's an important interaction between sampling strategies and **speculative decoding** — an optimization technique covered in Chapter 12.

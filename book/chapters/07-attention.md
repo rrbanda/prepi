@@ -192,9 +192,72 @@ The matrices W_q, W_k, and W_v are learned during training. They transform embed
 
 ---
 
+## A Worked Example with Numbers
+
+Before diving into the general steps, let's trace through attention with actual numbers. We'll use tiny 4-dimensional vectors to keep the math tractable — real models use 64 or 128 dimensions per head, but the process is identical.
+
+**Setup:** Three tokens: "The", "cat", "sat"
+
+Let's say after the Q, K, V transformations, we have:
+
+```
+Token "The":  Q₁ = [1, 0, 1, 0]    K₁ = [1, 1, 0, 0]    V₁ = [1, 0, 0, 0]
+Token "cat":  Q₂ = [0, 1, 1, 0]    K₂ = [0, 1, 1, 0]    V₂ = [0, 1, 0, 0]
+Token "sat":  Q₃ = [1, 1, 0, 1]    K₃ = [1, 0, 0, 1]    V₃ = [0, 0, 1, 0]
+```
+
+**Goal:** Compute the new representation for "sat" (token 3).
+
+### Step 1: Compute Similarity Scores
+
+We compare Q₃ (what "sat" is looking for) against all Keys using dot products:
+
+```
+Q₃ · K₁ = [1,1,0,1] · [1,1,0,0] = (1×1) + (1×1) + (0×0) + (1×0) = 2
+Q₃ · K₂ = [1,1,0,1] · [0,1,1,0] = (1×0) + (1×1) + (0×1) + (1×0) = 1
+Q₃ · K₃ = [1,1,0,1] · [1,0,0,1] = (1×1) + (1×0) + (0×0) + (1×1) = 2
+
+Raw scores: [2, 1, 2]
+```
+
+"Sat" finds "The" (score=2) and itself (score=2) most relevant, with "cat" (score=1) less so.
+
+### Step 2: Scale and Softmax
+
+We scale by √d (here √4 = 2) to prevent extreme values:
+
+```
+Scaled scores: [2/2, 1/2, 2/2] = [1.0, 0.5, 1.0]
+```
+
+Then apply softmax to convert to probabilities (values that sum to 1):
+
+```
+softmax([1.0, 0.5, 1.0]) ≈ [0.39, 0.22, 0.39]
+```
+
+These are the **attention weights** — how much "sat" should attend to each token.
+
+### Step 3: Weighted Sum of Values
+
+Now we blend the Value vectors using these weights:
+
+```
+Output for "sat" = 0.39 × V₁ + 0.22 × V₂ + 0.39 × V₃
+                 = 0.39 × [1,0,0,0] + 0.22 × [0,1,0,0] + 0.39 × [0,0,1,0]
+                 = [0.39, 0, 0, 0] + [0, 0.22, 0, 0] + [0, 0, 0.39, 0]
+                 = [0.39, 0.22, 0.39, 0]
+```
+
+**The result:** "Sat" now has a new vector that blends information from all three tokens, weighted by relevance. It carries 39% information from "The", 22% from "cat", and 39% from itself.
+
+This is one attention head. In practice, GPT-2 runs 12 of these in parallel (with different learned W_q, W_k, W_v matrices), then concatenates the results.
+
+---
+
 ## The Attention Calculation
 
-Here's what happens:
+Now that you've seen the numbers, here are the general steps:
 
 ### Step 1: Compare Queries to Keys
 

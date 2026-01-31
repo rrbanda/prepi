@@ -271,6 +271,74 @@ You're starting to think like the model.
 
 ---
 
+## Try It Yourself: Explore Embedding Similarity
+
+Embeddings become intuitive once you experiment with them. Here are two ways to explore:
+
+### Option 1: OpenAI Embeddings API
+
+```python
+from openai import OpenAI
+import numpy as np
+
+client = OpenAI()
+
+def get_embedding(text):
+    response = client.embeddings.create(
+        model="text-embedding-3-small",
+        input=text
+    )
+    return np.array(response.data[0].embedding)
+
+def cosine_similarity(a, b):
+    return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
+
+# Compare word pairs
+words = ["dog", "puppy", "cat", "car", "automobile"]
+embeddings = {w: get_embedding(w) for w in words}
+
+print("Similarity scores (1.0 = identical, 0.0 = unrelated):")
+print(f"  dog vs puppy: {cosine_similarity(embeddings['dog'], embeddings['puppy']):.3f}")
+print(f"  dog vs cat:   {cosine_similarity(embeddings['dog'], embeddings['cat']):.3f}")
+print(f"  dog vs car:   {cosine_similarity(embeddings['dog'], embeddings['car']):.3f}")
+print(f"  car vs automobile: {cosine_similarity(embeddings['car'], embeddings['automobile']):.3f}")
+```
+
+### Option 2: Sentence Transformers (Free, Local)
+
+```python
+from sentence_transformers import SentenceTransformer, util
+
+model = SentenceTransformer('all-MiniLM-L6-v2')
+
+sentences = [
+    "The Eiffel Tower is in Paris",
+    "Paris is the capital of France",
+    "I love pizza",
+    "The capital of France is Paris"
+]
+
+embeddings = model.encode(sentences)
+similarities = util.cos_sim(embeddings, embeddings)
+
+print("Similarity matrix:")
+for i, s1 in enumerate(sentences):
+    for j, s2 in enumerate(sentences):
+        if i < j:
+            print(f"  {similarities[i][j]:.3f}: '{s1[:30]}...' vs '{s2[:30]}...'")
+```
+
+### Experiments to Try
+
+1. **Synonyms**: Compare "happy" vs "joyful" vs "sad" — which are closest?
+2. **Analogies**: Embed "king", "queen", "man", "woman" and check if king-man+woman ≈ queen
+3. **Languages**: Does "hola" cluster near "hello"? (Multilingual models can!)
+4. **Sentences**: Are "The dog chased the cat" and "The cat was chased by the dog" similar?
+
+These experiments build intuition for how embeddings capture meaning geometrically.
+
+---
+
 ## In Practice: Embedding Models in OpenShift AI
 
 The embeddings you've learned about aren't just internal to LLMs — you can use dedicated **embedding models** to convert text into vectors for search, retrieval, and RAG applications.

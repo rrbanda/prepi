@@ -110,7 +110,7 @@ Transformer Layer 2: further refined
   ↓
 ...
   ↓
-Transformer Layer 96 (for GPT-4 scale): final representations
+Transformer Layer 96 (GPT-3 175B has 96 layers): final representations
   ↓
 Logits → "Paris" predicted as most likely next word
 ```

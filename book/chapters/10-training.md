@@ -274,6 +274,30 @@ This prevents catastrophic weight updates.
 
 ---
 
+## Self-Supervised Learning: No Labels Required
+
+A remarkable aspect of LLM pretraining is that it requires no human-labeled data. This is called **self-supervised learning**.
+
+Traditional machine learning requires labeled examples:
+- Email → spam/not spam (human-labeled)
+- Image → cat/dog (human-labeled)
+
+LLM pretraining creates its own labels automatically:
+
+```
+Input:  "The Eiffel Tower is located"
+Label:  "in"        ← the actual next word in the text
+
+Input:  "The Eiffel Tower is located in"  
+Label:  "Paris"     ← the actual next word
+```
+
+The training data is just text. The labels (correct next tokens) are extracted by shifting the text by one position. This is why LLMs can train on trillions of tokens — no human needs to label anything.
+
+This approach is called "self-supervised" because the supervision signal (the correct answer) comes from the data itself, not from external labels.
+
+---
+
 ## Perplexity: An Intuitive Metric
 
 Loss is useful but not intuitive. **Perplexity** makes it interpretable:
@@ -289,9 +313,11 @@ Perplexity = exp(loss)
 | 2.0 | 7.4 | Model is ~7-way confused |
 | 1.5 | 4.5 | Model is ~4-way confused |
 
-Think of perplexity as: **"On average, the model is choosing between this many equally likely options."**
+Think of perplexity as: **"The effective vocabulary size the model is uncertain about at each step."**
 
-Lower perplexity = more confident, better predictions. GPT-2 achieved perplexity around 15-20 on common benchmarks.
+For example, an untrained GPT-2 model with a 50,257-token vocabulary might have perplexity around 50,000 — it's essentially guessing randomly among all tokens. After training, perplexity drops to 15-20, meaning the model has narrowed its uncertainty to just 15-20 plausible next tokens on average.
+
+Lower perplexity = more confident, better predictions.
 
 ---
 
@@ -303,7 +329,9 @@ Training frontier models is extraordinarily expensive:
 |-------|------------------------|
 | GPT-3 (175B) | ~$4.6 million |
 | LLaMA 2 (70B) | ~$3 million |
-| GPT-4 | Estimated $50-100+ million |
+| GPT-4 | ~$50-100+ million |
+
+*Note: These are industry estimates based on compute costs and public training details, not official figures from the companies. Actual costs depend on hardware availability, electricity rates, and engineering efficiency.*
 
 For context, training LLaMA 2 7B required **184,320 GPU hours** on A100 GPUs. At cloud prices, even "small" models cost tens of thousands of dollars to train.
 
@@ -317,6 +345,83 @@ Most don't train from scratch. They use pre-trained models (LLaMA, Mistral, Qwen
 
 ---
 
+## Fine-Tuning: Adapting Models Affordably
+
+Since training from scratch is impractical for most organizations, **fine-tuning** is how you adapt a pre-trained model to your specific needs.
+
+### Full Fine-Tuning vs. Parameter-Efficient Methods
+
+| Approach | What Gets Updated | Memory Required | Cost |
+|----------|-------------------|-----------------|------|
+| **Full Fine-Tuning** | All model weights | 2-4× model size | High |
+| **LoRA** | Small adapter matrices (~0.1-1% of params) | ~1× model size | Low |
+| **QLoRA** | LoRA on quantized model | Even less | Very low |
+
+### How LoRA Works
+
+**LoRA (Low-Rank Adaptation)** is the most popular parameter-efficient fine-tuning method. Instead of updating all weights, LoRA adds small trainable matrices to specific layers.
+
+The key insight: During fine-tuning, weight changes tend to be **low-rank** — they can be approximated by multiplying two small matrices.
+
+```
+Original weight: W (4096 × 4096 = 16.7M parameters)
+LoRA adds: A (4096 × 16) and B (16 × 4096) = 131K parameters
+
+Instead of updating W directly:
+  W_new = W + (A × B)
+
+Only A and B are trained — 99% fewer parameters!
+```
+
+### Why LoRA Matters
+
+| Benefit | Explanation |
+|---------|-------------|
+| **Memory efficient** | Only store small adapters, not full model copies |
+| **Fast training** | Fewer gradients to compute |
+| **Composable** | Swap different LoRA adapters for different tasks |
+| **Reversible** | Original model unchanged; adapters can be removed |
+
+### Practical Fine-Tuning with PEFT
+
+```python
+from peft import LoraConfig, get_peft_model
+from transformers import AutoModelForCausalLM
+
+# Load base model
+model = AutoModelForCausalLM.from_pretrained("meta-llama/Llama-2-7b-hf")
+
+# Configure LoRA
+lora_config = LoraConfig(
+    r=16,                    # Rank of adapter matrices
+    lora_alpha=32,           # Scaling factor
+    target_modules=["q_proj", "v_proj"],  # Which layers to adapt
+    lora_dropout=0.05,
+)
+
+# Apply LoRA
+model = get_peft_model(model, lora_config)
+
+# Now train as usual — only LoRA parameters update
+print(f"Trainable parameters: {model.print_trainable_parameters()}")
+# Output: trainable params: 4,194,304 || all params: 6,742,609,920 || trainable%: 0.062
+```
+
+### When to Fine-Tune vs. Prompt
+
+| Situation | Recommendation |
+|-----------|----------------|
+| Need specific output format | Try prompting first |
+| Domain terminology | Fine-tune on domain data |
+| Consistent style/tone | Fine-tune |
+| New knowledge | RAG (retrieval) usually better than fine-tuning |
+| One-off tasks | Prompting |
+| Recurring specialized tasks | Fine-tune |
+
+Fine-tuning changes *how* the model responds. It doesn't reliably add new *facts* — for that, use retrieval (RAG).
+
+---
+
 ## Training vs. Inference Summary
 
 | Aspect | Training | Inference |
@@ -327,6 +432,71 @@ Most don't train from scratch. They use pre-trained models (LLaMA, Mistral, Qwen
 | **Hardware** | Massive GPU clusters | Single GPU or API |
 | **Time** | Weeks to months | Milliseconds to seconds |
 | **Happens** | Once (or fine-tuning) | Every time you use it |
+
+---
+
+## Alignment: Making Models Helpful and Safe
+
+You may have noticed that ChatGPT doesn't just predict likely text — it tries to be helpful, avoids harmful content, and follows instructions. This behavior comes from **alignment training**, which happens after the initial pre-training.
+
+### The Three Stages of Creating a Chat Model
+
+| Stage | Goal | Method |
+|-------|------|--------|
+| **1. Pre-training** | Learn language patterns | Next-token prediction on trillions of tokens |
+| **2. Supervised Fine-Tuning (SFT)** | Learn to follow instructions | Train on human-written (prompt, response) pairs |
+| **3. RLHF/DPO** | Align with human preferences | Learn from human rankings of responses |
+
+### What is RLHF?
+
+**Reinforcement Learning from Human Feedback (RLHF)** teaches the model which responses humans prefer.
+
+The process:
+1. Generate multiple responses to the same prompt
+2. Have humans rank them (Response A > Response B)
+3. Train a **reward model** to predict these rankings
+4. Use reinforcement learning to maximize the reward
+
+```
+Prompt: "Explain quantum computing"
+
+Response A: [Clear, accurate, appropriate length]
+Response B: [Technically correct but condescending]
+Response C: [Short, dismissive]
+
+Human ranking: A > B > C
+Reward model learns: Clarity + helpfulness + respectful tone = high reward
+```
+
+### DPO: A Simpler Alternative
+
+**Direct Preference Optimization (DPO)** achieves similar results without training a separate reward model:
+
+- Directly optimizes the model to prefer winning responses over losing ones
+- Simpler to implement
+- Often comparable results to RLHF
+
+Many newer models (Zephyr, Llama 2 Chat variants) use DPO instead of full RLHF.
+
+### Why Alignment Matters
+
+| Without Alignment | With Alignment |
+|-------------------|----------------|
+| May generate harmful content | Refuses harmful requests |
+| Ignores instructions | Follows instructions |
+| Unpredictable tone | Consistent, helpful style |
+| No safety guardrails | Built-in safety behaviors |
+
+This is why the same base model (e.g., LLaMA 2) behaves very differently in its "base" vs "chat" versions — the chat version has been through SFT and RLHF.
+
+### The Connection to Fine-Tuning
+
+Alignment is a specific *type* of fine-tuning:
+
+- **Domain fine-tuning** (LoRA): Teaches the model *what* to say (domain knowledge, style)
+- **Alignment fine-tuning** (RLHF/DPO): Teaches the model *how* to behave (helpfulness, safety)
+
+Both modify weights. Both require training data. But they optimize for different goals.
 
 ---
 
@@ -359,7 +529,7 @@ Understanding is not required. Prediction is sufficient.
 
 ## Chapter Takeaway
 
-> **Training is prediction + correction, repeated billions of times.** The model predicts the next token, compares to the actual answer, and adjusts weights using AdamW optimizer with learning rate scheduling. Perplexity measures how confused the model is — lower is better. Training GPT-3 cost ~$4.6 million; GPT-4 cost far more. Over massive scale, statistical patterns become encoded in weights. Knowledge emerges from geometry, not explicit storage.
+> **Training is prediction + correction, repeated billions of times.** The model predicts the next token, compares to the actual answer, and adjusts weights using AdamW optimizer with learning rate scheduling. Perplexity measures how confused the model is — lower is better. Training GPT-3 cost ~$4.6 million (estimated); GPT-4 cost far more. **Fine-tuning** adapts pre-trained models affordably — LoRA updates only ~1% of parameters. **Alignment training** (RLHF/DPO) teaches models to be helpful and safe. Over massive scale, statistical patterns become encoded in weights. Knowledge emerges from geometry, not explicit storage.
 
 ---
 
@@ -494,6 +664,9 @@ After Part V, you can confidently explain:
 - Why inference is one-token-at-a-time (autoregressive generation)
 - How training works: forward pass, loss, backpropagation, weight update
 - Why training costs millions of dollars (trillions of examples, billions of weight updates)
+- How LoRA enables affordable fine-tuning by updating only ~1% of parameters
+- Why ChatGPT behaves helpfully: RLHF and alignment training
+- The difference between fine-tuning (what to say) and alignment (how to behave)
 - What the Prologue promised — you can now explain how LLMs work
 
 You're about 75% of the way to understanding how LLMs work. The remaining chapters cover the *engineering* that makes this practical at scale.

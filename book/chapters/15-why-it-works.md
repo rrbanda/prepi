@@ -105,6 +105,46 @@ This is what people mean by "emergence" — capabilities that weren't explicitly
 
 ---
 
+## Emergent Behavior: The Unexpected Capabilities
+
+One of the most surprising discoveries in LLM research is **emergent behavior** — capabilities that appear only at scale and weren't explicitly trained.
+
+Consider: GPT models are trained solely to predict the next word. Yet they can:
+
+- Translate between languages (not a next-word task)
+- Write code in multiple programming languages
+- Perform arithmetic (sometimes)
+- Answer questions about topics never explicitly taught
+- Follow complex multi-step instructions
+
+The original transformer paper was about translation. Yet decoder-only GPT models, trained only on next-word prediction in English-heavy datasets, can translate between languages they weren't specifically trained to translate.
+
+### Why Emergence Happens
+
+The hypothesis: **next-word prediction requires implicit modeling of diverse skills.**
+
+To predict what comes after "Translate 'hello' to French:", the model must have learned:
+- That translation is a task
+- That French is a language
+- That "bonjour" is the French equivalent
+
+These aren't stored as explicit rules. They're patterns learned from predicting billions of tokens that happened to include translations, code, questions, and answers.
+
+### Emergence vs. Scale
+
+Research suggests some capabilities emerge suddenly at certain model sizes:
+
+| Capability | Appears at Scale |
+|------------|------------------|
+| Basic language | Small models |
+| Simple reasoning | ~10B parameters |
+| Multi-step math | ~100B parameters |
+| Complex instruction following | ~50B+ parameters |
+
+This is why "scaling laws" matter — larger models don't just get incrementally better; they can gain qualitatively new capabilities.
+
+---
+
 **You might be wondering:** *"What does 'sort of' mean? Does the model understand or not?"*
 
 The model has *functional* understanding: it captures enough structure to make correct predictions across many contexts. But it's not understanding in the human sense — no conscious awareness, no explicit reasoning, no lived experience. It's "understanding" in that it models patterns well enough to predict successfully. It's not "understanding" in that it lacks sentience, intentionality, or the ability to truly know what it's doing. The philosophical debate continues, but practically: it works, and knowing the mechanism helps you use it appropriately.
@@ -170,6 +210,49 @@ LLMs are incredibly capable at many tasks. But knowing the limits prevents misus
 
 ---
 
+## Extending Capabilities: Chain-of-Thought
+
+Given these limitations, how do LLMs solve complex problems?
+
+One key technique is **Chain-of-Thought (CoT) prompting**: asking the model to "think step by step."
+
+### Why It Works
+
+```
+Without CoT:
+  Q: "What is 17 × 24?"
+  A: "408" (often wrong)
+
+With CoT:
+  Q: "What is 17 × 24? Let's work through it step by step."
+  A: "17 × 24 = 17 × 20 + 17 × 4 = 340 + 68 = 408" (usually correct)
+```
+
+The magic: **each intermediate token becomes context for the next prediction.**
+
+When the model writes "17 × 20 = 340," it can now use "340" when computing the next step. The model essentially uses its own output as working memory.
+
+### The Computation Perspective
+
+LLMs have limited computation per token — each token gets one forward pass. Complex problems require more computation than one pass provides.
+
+Chain-of-thought spreads the computation across multiple tokens:
+
+| Approach | Computation | Accuracy on Complex Problems |
+|----------|-------------|------------------------------|
+| Direct answer | 1 forward pass | Low |
+| Chain-of-thought | N forward passes (N = steps) | Much higher |
+
+### Limitations of CoT
+
+- **Not reliable for very long chains**: Errors accumulate
+- **Doesn't add true reasoning**: Still pattern matching, just extended
+- **Can be manipulated**: Models may confabulate convincing but wrong steps
+
+This is why tools like code execution, calculators, and retrieval systems are often combined with LLMs — they provide capabilities that pattern matching alone cannot.
+
+---
+
 ## The Profound Simplicity
 
 Step back and appreciate what we've learned:
@@ -211,7 +294,7 @@ There's no right answer. But knowing what you're working with helps you use it w
 
 ## Chapter Takeaway
 
-> **LLMs work through statistical pattern matching in high-dimensional space.** There are no explicit facts or rules — just learned weights that produce patterns matching the training data. Knowledge is geometry. Prediction is (functional) understanding. This explains both the remarkable capabilities and the inevitable limitations like hallucinations.
+> **LLMs work through statistical pattern matching in high-dimensional space.** There are no explicit facts or rules — just learned weights that produce patterns matching the training data. Knowledge is geometry. Prediction is (functional) understanding. **Chain-of-Thought prompting** extends capabilities by spreading computation across tokens, but fundamentally, it's still pattern matching. This explains both the remarkable capabilities and the inevitable limitations like hallucinations.
 
 ---
 
@@ -222,7 +305,8 @@ You've reached mastery:
 1. **Hallucinations** happen because pattern matching doesn't include fact-checking
 2. **Knowledge is geometry** — facts are positions and relationships in high-dimensional space
 3. **Prediction is understanding** — functional, not philosophical, but effective
-4. **The limits are real** — novel reasoning, precise math, real-time knowledge
+4. **Chain-of-Thought** extends capabilities by using output tokens as working memory
+5. **The limits are real** — novel reasoning, precise math, real-time knowledge
 
 ---
 
@@ -233,6 +317,7 @@ After Part VII, you can confidently explain:
 - Why hallucinations are inevitable (pattern strength ≠ truth)
 - How "The Eiffel Tower is located in Paris" isn't stored as a fact, but emerges from geometry
 - Why prediction at scale creates the *appearance* of understanding
+- How Chain-of-Thought prompting extends model capabilities by spreading computation
 - The profound simplicity: tokens → embeddings → attention → prediction → repeat
 - Why the same architecture produces gibberish before training and intelligence after
 

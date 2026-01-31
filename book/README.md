@@ -16,10 +16,85 @@ No prior machine learning knowledge required. Just curiosity.
 
 ## Who This Book Is For
 
-- **Engineers** who use LLMs but want to understand them deeply
-- **MLOps practitioners** deploying models to production
-- **Product managers** working with AI teams
-- **Curious minds** who want to know how the magic works
+| Reader | What You'll Get |
+|--------|-----------------|
+| **Software Engineers** | Deep understanding of LLMs to use them more effectively |
+| **MLOps Practitioners** | Production deployment knowledge with vLLM, KServe, OpenShift AI |
+| **Product Managers** | Mental models to evaluate AI capabilities and limitations |
+| **Technical Leaders** | Framework for making informed AI investment decisions |
+| **Curious Minds** | Clear, demystified explanations of how the magic works |
+
+---
+
+## How to Use This Book
+
+### The Best Way: Read Sequentially
+
+This book is designed as a journey. Each chapter builds on the previous ones. Concepts introduced early become building blocks for later explanations. The running example — tracing "The Eiffel Tower is located in" → "Paris" through every step — provides continuity.
+
+**Estimated reading time**: 4-6 hours for the complete book.
+
+### The Fast Path: Skip What You Know
+
+| If You Already Understand... | Start At |
+|------------------------------|----------|
+| What LLMs do (prediction, not retrieval) | Chapter 3: Tokenization |
+| Tokenization and embeddings | Chapter 5: Neural Networks |
+| Neural network basics | Chapter 7: Attention |
+| Transformer architecture | Chapter 9: Inference |
+| LLM fundamentals, want production | Chapter 12: Serving Systems |
+
+### Reference Mode
+
+After reading once, use this book as a reference:
+
+- **Chapter 14 (Vocabulary)** — Quick lookup for any term
+- **Chapter Takeaways** — Boxed summaries at the end of each chapter
+- **"What You Can Now Explain"** — Checkpoints after each Part to verify understanding
+
+### Hands-On Exploration
+
+Several chapters include "Try It Yourself" sections with code you can run:
+
+- **Chapter 3**: Tokenization with `tiktoken` or OpenAI's web tool
+- **Chapter 4**: Embedding similarity with OpenAI API or Sentence Transformers
+- **Chapter 9**: Sampling experiments with temperature settings
+- **Chapter 12**: Running vLLM locally with Docker
+
+These are optional but highly recommended for building intuition.
+
+---
+
+## Conventions Used in This Book
+
+Throughout this book, you'll encounter consistent formatting to help you navigate:
+
+### The Running Example
+
+We trace a single prompt through every concept:
+
+> **"The Eiffel Tower is located in"** → **"Paris"**
+
+By the final chapter, you'll know exactly what happens to these words at every step.
+
+### Special Sections
+
+| Section | Purpose |
+|---------|---------|
+| **"You might be wondering..."** | Anticipates and answers common questions before you have them |
+| **"The Revelation"** | Highlights key insights worth remembering |
+| **"Pause and Reflect"** | Moments to think before continuing |
+| **"Chapter Takeaway"** | The key insight from each chapter, boxed for easy review |
+| **"What You Can Now Explain"** | Checkpoints showing your growing capabilities |
+| **"In Practice with OpenShift AI"** | How concepts apply in production deployments |
+| **"Try It Yourself"** | Hands-on exercises with code |
+
+### Code and Technical Content
+
+- `Inline code` for token IDs, function names, and short snippets
+- Code blocks for longer examples with syntax highlighting
+- YAML examples for Kubernetes/OpenShift deployments
+- ASCII diagrams for visual explanations
 
 ---
 
@@ -76,33 +151,43 @@ No prior machine learning knowledge required. Just curiosity.
 
 ---
 
-## How to Read This Book
+## About the Author
 
-This book is designed to be read sequentially. Each chapter builds on the previous ones. However, if you're already familiar with certain concepts, here's a guide:
+This book was written to bridge the gap between "I use ChatGPT" and "I understand how it works." The author believes that understanding the mechanics behind AI systems — not just using them — is essential for anyone building products, making technical decisions, or simply wanting to be an informed participant in the AI era.
 
-| If you know... | Skip to... |
-|----------------|------------|
-| What LLMs do | Chapter 3 (Tokenization) |
-| Tokenization & embeddings | Chapter 5 (Neural Networks) |
-| Neural network basics | Chapter 7 (Attention) |
-| How transformers work | Chapter 9 (Inference) |
-| LLM fundamentals, want production | Chapter 12 (Serving Systems) |
+The content reflects years of experience in both explaining complex technical concepts and deploying AI systems in production environments.
 
 ---
 
-## Conventions Used
+## Acknowledgments
 
-Throughout this book, you'll see:
+This book builds on the work of countless researchers, engineers, and educators:
 
-- **The Running Example** — We trace a single prompt through every concept: *"The Eiffel Tower is located in"* → *"Paris"*. By the end, you'll understand exactly what happens to these words at every step.
-- **Pause and Reflect** — Moments to think before continuing
-- **Chapter Takeaway** — The key insight from each chapter, boxed for easy review
-- **What You Can Now Explain** — Checkpoints after each Part showing your growing capabilities
-- **In Practice with OpenShift AI** — How concepts apply in production using Red Hat OpenShift AI
-- **Interactive Moments** — Questions to test your understanding
-- Code blocks with concrete examples
-- YAML examples for Kubernetes/OpenShift deployments
-- Analogies to ground abstract concepts
+- The authors of "Attention Is All You Need" (Vaswani et al., 2017) for the transformer architecture
+- OpenAI, Anthropic, Meta, Google, and other organizations advancing LLM research
+- The vLLM team for making high-performance LLM serving accessible
+- The Hugging Face community for democratizing access to models
+- Sebastian Raschka for his excellent "Build a Large Language Model (From Scratch)" book, which inspired several explanations herein
+- The OpenShift AI team for building a production-ready AI platform
+
+---
+
+## Feedback and Contributions
+
+Found an error? Have a suggestion? This book is continuously improved based on reader feedback.
+
+- **Technical corrections**: We strive for 100% accuracy. Please report any inaccuracies.
+- **Clarity improvements**: If something was confusing, others likely feel the same way.
+- **Missing topics**: Suggestions for future editions are welcome.
+
+---
+
+## Version History
+
+| Version | Date | Changes |
+|---------|------|---------|
+| 1.0 | 2024 | Initial release |
+| 1.1 | 2025 | Added hands-on exercises, MoE section, fine-tuning/alignment content, vocabulary expansion |
 
 ---
 

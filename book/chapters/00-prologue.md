@@ -35,3 +35,7 @@ No prior machine learning knowledge required. Just curiosity.
 By the final chapter, you'll understand not just the theory, but how to deploy LLMs in production using platforms like OpenShift AI.
 
 Let's begin.
+
+---
+
+*Next: [Chapter 1: What Just Happened?](01-what-just-happened.md)*

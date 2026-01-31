@@ -258,6 +258,48 @@ If the model could see "Paris" while predicting what comes after "located in," i
 
 ---
 
+## Mixture of Experts: Scaling Without Proportional Cost
+
+There's one more architectural pattern worth knowing: **Mixture of Experts (MoE)**.
+
+In a standard transformer, every token passes through the same FFN (feed-forward network) in each layer. MoE changes this:
+
+```
+Standard FFN:     Token → [Single FFN] → Output
+                  (all parameters used for every token)
+
+MoE:              Token → [Router] → selects 2 of 8 experts
+                          ↓
+                  [Expert 3] + [Expert 7] → Output
+                  (only ~25% of parameters used per token)
+```
+
+### How It Works
+
+1. **Multiple "expert" FFNs**: Instead of one FFN, there are 8, 16, or more
+2. **Router network**: A small network that decides which experts to use
+3. **Sparse activation**: Only 1-2 experts activate per token (the others are skipped)
+
+### Why It Matters
+
+| Aspect | Dense Model | MoE Model |
+|--------|-------------|-----------|
+| **Total parameters** | All active | Only subset active |
+| **Compute per token** | Uses all params | Uses ~12-25% of params |
+| **Scaling** | 10× params = 10× compute | 10× params ≈ 2× compute |
+
+This explains models like **Mixtral 8x7B**: it has 8 expert FFNs of 7B parameters each, but only 2 activate per token. Total parameters: ~47B. Active parameters per token: ~13B.
+
+### Trade-offs
+
+- **Memory**: Still need to store all experts (high VRAM)
+- **Inference**: Can be tricky to batch efficiently
+- **Training**: Requires careful load balancing across experts
+
+MoE models like Mixtral, DeepSeek-MoE, and Grok use this architecture to achieve high quality with lower inference cost per token.
+
+---
+
 ## Pause and Reflect
 
 Think about why attention enables emergence:
@@ -272,7 +314,7 @@ This generality is why we can have one model that writes code, poetry, and expla
 
 ## Chapter Takeaway
 
-> **Transformers process all tokens in parallel**, using self-attention to let tokens directly communicate regardless of distance. Each transformer block combines self-attention (for mixing information between tokens) with a feed-forward network (for processing each token). Layer Normalization and Residual Connections make deep stacking possible. GPT-3 stacks 96 of these blocks with 175 billion parameters.
+> **Transformers process all tokens in parallel**, using self-attention to let tokens directly communicate regardless of distance. Each transformer block combines self-attention (for mixing information between tokens) with a feed-forward network (for processing each token). Layer Normalization and Residual Connections make deep stacking possible. GPT-3 stacks 96 of these blocks with 175 billion parameters. **Mixture of Experts (MoE)** is a scaling variant where only a subset of FFN parameters activate per token, enabling larger models with lower inference cost.
 
 ---
 
@@ -284,6 +326,7 @@ You've learned the machinery of intelligence:
 2. **Layer Normalization**, **GELU**, and **Residual Connections** enable deep stacking
 3. **Transformers** revolutionized this by processing all tokens at once via attention
 4. **Intelligence lives in the weights**, not the architecture
+5. **MoE** scales parameters without proportional compute cost
 
 ---
 
@@ -296,6 +339,7 @@ After Part III, you can confidently explain:
 - Why transformers replaced RNNs (parallel processing, direct long-range connections)
 - How all 7 tokens in "The Eiffel Tower is located in" can "see" each other simultaneously
 - What a transformer block contains (attention + feed-forward network + residuals)
+- How Mixtral 8x7B has 47B parameters but only activates 13B per token (MoE)
 
 You're about 45% of the way to understanding how LLMs work.
 

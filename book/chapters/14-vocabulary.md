@@ -52,6 +52,10 @@ Use this as a quick lookup when reviewing concepts or discussing LLMs with colle
 | **Transformer Block** | One round of attention + FFN with residuals and normalization | Chapter 6 |
 | **Feed-Forward Network (FFN)** | Two-layer MLP in each block (expands 4×, then contracts) | Chapter 6 |
 | **Decoder-only** | Transformer that generates left-to-right | Chapter 6 |
+| **Mixture of Experts (MoE)** | Architecture with multiple FFNs where only some activate per token | Chapter 6 |
+| **Router** | Small network that selects which experts to use in MoE | Chapter 6 |
+| **Expert** | One of several parallel FFN variants in MoE architecture | Chapter 6 |
+| **Sparse Activation** | Only a subset of parameters used per token (MoE) | Chapter 6 |
 
 ---
 
@@ -105,9 +109,11 @@ Use this as a quick lookup when reviewing concepts or discussing LLMs with colle
 | Term | Plain English Definition | Covered In |
 |------|-------------------------|------------|
 | **Training** | The process of learning weights from data | Chapter 10 |
+| **Self-Supervised Learning** | Training where labels come from the data itself (next word = label) | Chapter 10 |
+| **Pretraining** | Initial training on large unlabeled text datasets | Chapter 10 |
 | **Loss** | A number measuring how wrong the prediction was | Chapter 10 |
 | **Cross-Entropy Loss** | Common loss function: -log(probability of correct token) | Chapter 10 |
-| **Perplexity** | exp(loss) — "how many choices the model is confused between" | Chapter 10 |
+| **Perplexity** | exp(loss) — effective vocabulary size the model is uncertain about | Chapter 10 |
 | **Backpropagation** | Computing how each weight affects the loss | Chapter 10 |
 | **Gradient** | Direction to adjust a weight to reduce loss | Chapter 10 |
 | **Gradient Clipping** | Capping gradient magnitude to prevent exploding updates | Chapter 10 |
@@ -115,6 +121,48 @@ Use this as a quick lookup when reviewing concepts or discussing LLMs with colle
 | **AdamW** | Standard optimizer for LLMs (Adam with weight decay) | Chapter 10 |
 | **Learning Rate Schedule** | Warmup then decay of learning rate during training | Chapter 10 |
 | **Training Data** | The text used to train the model | Chapter 10 |
+
+---
+
+## Fine-Tuning and Alignment
+
+| Term | Plain English Definition | Covered In |
+|------|-------------------------|------------|
+| **Fine-Tuning** | Adapting a pre-trained model to a specific task or domain | Chapter 10 |
+| **Full Fine-Tuning** | Updating all model weights during fine-tuning | Chapter 10 |
+| **LoRA** | Low-Rank Adaptation — fine-tuning with small adapter matrices | Chapter 10 |
+| **QLoRA** | LoRA applied to a quantized model for even lower memory | Chapter 10 |
+| **PEFT** | Parameter-Efficient Fine-Tuning — umbrella term for LoRA-like methods | Chapter 10 |
+| **SFT** | Supervised Fine-Tuning — training on (prompt, response) pairs | Chapter 10 |
+| **RLHF** | Reinforcement Learning from Human Feedback — learning from human preferences | Chapter 10 |
+| **DPO** | Direct Preference Optimization — simpler alternative to RLHF | Chapter 10 |
+| **Alignment** | Training models to be helpful, harmless, and honest | Chapter 10 |
+| **Reward Model** | Model trained to predict human preferences (used in RLHF) | Chapter 10 |
+
+---
+
+## Prompting and Reasoning
+
+| Term | Plain English Definition | Covered In |
+|------|-------------------------|------------|
+| **Chain-of-Thought (CoT)** | Prompting the model to show reasoning steps | Chapter 15 |
+| **Few-Shot Prompting** | Including examples in the prompt to guide behavior | Appendix |
+| **Zero-Shot** | Asking the model to perform a task without examples | Appendix |
+| **System Prompt** | Instructions that set the model's behavior/persona | Appendix |
+| **RAG** | Retrieval-Augmented Generation — adding retrieved documents to prompts | Chapter 15 |
+| **Tool Use** | Model generates function calls to external tools | Appendix |
+
+---
+
+## Concepts and Philosophy
+
+| Term | Plain English Definition | Covered In |
+|------|-------------------------|------------|
+| **Emergent Behavior** | Capabilities that appear at scale without explicit training | Chapter 15 |
+| **Scaling Laws** | Relationships between model size, data, compute, and performance | Chapter 15 |
+| **Hallucination** | Model generating plausible but false information | Chapter 15 |
+| **Foundation Model** | A large pretrained model adapted for various downstream tasks | Chapter 10 |
+| **Base Model** | A pretrained model before fine-tuning (same as foundation model) | Chapter 10 |
 
 ---
 

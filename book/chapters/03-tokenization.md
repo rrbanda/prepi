@@ -97,6 +97,8 @@ Tokens: ["The", " Eiff", "el", " Tower", " is", " located", " in"]
 Token IDs: [464, 36751, 417, 8765, 318, 5140, 287]
 ```
 
+*Note: These token IDs are from GPT-2's tokenizer. Different models (GPT-4, LLaMA, Claude) use different vocabularies and will produce different token IDs for the same text. You can explore tokenization interactively using OpenAI's [Tokenizer tool](https://platform.openai.com/tokenizer) or the `tiktoken` Python library.*
+
 Notice what happened:
 
 - "The" is common — stays whole
@@ -263,6 +265,57 @@ Try to tokenize this sentence in your head:
 Would "transformers" be one token or multiple? What about "love"?
 
 For most models: "I" = 1 token, " love" = 1 token, " transformers" = 1 token, "!" = 1 token. Common words stay whole.
+
+---
+
+## Try It Yourself: Explore Tokenization
+
+Here are three ways to experiment with tokenization right now:
+
+### Option 1: OpenAI's Web Tool (No Code)
+
+Visit [platform.openai.com/tokenizer](https://platform.openai.com/tokenizer) and type:
+- Your name — does it split into pieces?
+- "ChatGPT" — how many tokens?
+- A sentence in another language — more or fewer tokens than English?
+
+### Option 2: Python with tiktoken
+
+```python
+import tiktoken
+
+# Load GPT-4's tokenizer
+enc = tiktoken.encoding_for_model("gpt-4")
+
+# Tokenize and see the pieces
+text = "The Eiffel Tower is located in"
+tokens = enc.encode(text)
+print(f"Token IDs: {tokens}")
+print(f"Token count: {len(tokens)}")
+
+# See what each token looks like
+for token_id in tokens:
+    print(f"  {token_id} → '{enc.decode([token_id])}'")
+```
+
+### Option 3: Hugging Face Transformers
+
+```python
+from transformers import AutoTokenizer
+
+tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-2-7b-hf")
+tokens = tokenizer.encode("The Eiffel Tower is located in")
+print(tokenizer.convert_ids_to_tokens(tokens))
+```
+
+### Experiments to Try
+
+1. **Your name**: How many tokens is your full name? Uncommon names split more.
+2. **Code vs prose**: Compare `print("hello")` vs "print the word hello" — which uses more tokens?
+3. **Languages**: Try the same sentence in English, Spanish, and Chinese. Which uses the fewest tokens?
+4. **Numbers**: How does "1000000" tokenize vs "one million"?
+
+These experiments build intuition for why token count affects both cost (APIs charge per token) and context limits.
 
 ---
 
