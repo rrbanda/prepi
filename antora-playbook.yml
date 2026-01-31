@@ -11,12 +11,19 @@ content:
 
 ui:
   bundle:
-    # Couchbase Docs UI - beautiful, modern theme with tabs, version switcher, search
-    # Preview: https://cb-docs-ui.netlify.app
-    url: https://github.com/couchbase/docs-ui/releases/latest/download/ui-bundle.zip
-    # Alternative: Antora Default UI
-    # url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/HEAD/raw/build/ui-bundle.zip?job=bundle-stable
+    # Antora Default UI - clean, professional, no branding
+    url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/HEAD/raw/build/ui-bundle.zip?job=bundle-stable
     snapshot: true
+  supplemental_files:
+    - path: ui.yml
+      contents: |
+        static_files:
+        - .nojekyll
+    - path: partials/footer-content.hbs
+      contents: |
+        <footer class="footer">
+          <p>© 2025 The LLM Handbook. Built with <a href="https://antora.org">Antora</a>.</p>
+        </footer>
 
 output:
   dir: ./build/site
