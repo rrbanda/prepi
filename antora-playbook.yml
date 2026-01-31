@@ -11,7 +11,11 @@ content:
 
 ui:
   bundle:
-    url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/HEAD/raw/build/ui-bundle.zip?job=bundle-stable
+    # Couchbase Docs UI - beautiful, modern theme with tabs, version switcher, search
+    # Preview: https://cb-docs-ui.netlify.app
+    url: https://github.com/couchbase/docs-ui/releases/latest/download/ui-bundle.zip
+    # Alternative: Antora Default UI
+    # url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/HEAD/raw/build/ui-bundle.zip?job=bundle-stable
     snapshot: true
 
 output:
