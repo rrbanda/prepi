@@ -1,4 +1,4 @@
-= Chapter 13: The Complete Vocabulary
+= Chapter 14: The Complete Vocabulary
 :description: A comprehensive reference of all LLM terms and concepts covered in this book
 
 _Part VII: Mastery_
@@ -509,6 +509,58 @@ Use this as a quick lookup when reviewing concepts or discussing LLMs with colle
 |Distributed inference system for high-throughput LLM serving
 |===
 
+== OpenShift AI Platform
+
+[cols="1,2", options="header"]
+|===
+|Term |What It Is
+
+|*OpenShift AI Operator*
+|Meta-operator that deploys and manages all OpenShift AI components
+
+|*Model Catalog*
+|Curated library of GenAI models from Red Hat, IBM, Meta, NVIDIA
+
+|*Workbench*
+|Isolated development environment (Jupyter, code-server, RStudio)
+
+|*AI Pipelines*
+|ML workflow automation based on Kubeflow Pipelines 2.0
+
+|*Kueue*
+|Kubernetes-native job queuing and quota management
+
+|*Ray/KubeRay*
+|Distributed compute orchestration for training
+
+|*Training Hub*
+|Framework for fine-tuning foundation models
+
+|*Docling*
+|Python library for converting unstructured documents to structured formats
+
+|*Model Registry*
+|Central repository for versioning and tracking model lifecycle
+
+|*TrustyAI*
+|Responsible AI toolkit for bias detection and drift monitoring
+
+|*Feature Store*
+|Centralized storage for ML features (based on Feast)
+
+|*Serverless Mode*
+|KServe deployment with scale-to-zero via Knative
+
+|*RawDeployment Mode*
+|KServe deployment using standard Kubernetes resources
+
+|*Llama Stack*
+|Unified AI runtime for GenAI workloads (RAG, agents)
+
+|*Ragas*
+|Evaluation framework for RAG pipelines
+|===
+
 == Quick Reference Card
 
 Memorize these key relationships:
@@ -543,4 +595,4 @@ Full Response
 This vocabulary reference covers all major terms from the book. Use it for quick lookups during review. Understanding the relationships between terms is as important as knowing definitions.
 ====
 
-xref:14-why-it-works.adoc[Next: The Deep Insight — Why It Works →]
+xref:15-why-it-works.adoc[Next: The Deep Insight — Why It Works →]

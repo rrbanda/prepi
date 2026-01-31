@@ -1,4 +1,4 @@
-# Chapter 13: The Complete Vocabulary
+# Chapter 14: The Complete Vocabulary
 
 *Part VII: Mastery*
 
@@ -195,6 +195,28 @@ Use this as a quick lookup when reviewing concepts or discussing LLMs with colle
 
 ---
 
+## OpenShift AI Platform
+
+| Term | What It Is |
+|------|------------|
+| **OpenShift AI Operator** | Meta-operator that deploys and manages all OpenShift AI components |
+| **Model Catalog** | Curated library of GenAI models from Red Hat, IBM, Meta, NVIDIA |
+| **Workbench** | Isolated development environment (Jupyter, code-server, RStudio) |
+| **AI Pipelines** | ML workflow automation based on Kubeflow Pipelines 2.0 |
+| **Kueue** | Kubernetes-native job queuing and quota management |
+| **Ray/KubeRay** | Distributed compute orchestration for training |
+| **Training Hub** | Framework for fine-tuning foundation models |
+| **Docling** | Python library for converting unstructured documents to structured formats |
+| **Model Registry** | Central repository for versioning and tracking model lifecycle |
+| **TrustyAI** | Responsible AI toolkit for bias detection and drift monitoring |
+| **Feature Store** | Centralized storage for ML features (based on Feast) |
+| **Serverless Mode** | KServe deployment with scale-to-zero via Knative |
+| **RawDeployment Mode** | KServe deployment using standard Kubernetes resources |
+| **Llama Stack** | Unified AI runtime for GenAI workloads (RAG, agents) |
+| **Ragas** | Evaluation framework for RAG pipelines |
+
+---
+
 ## Quick Reference Card
 
 Memorize these key relationships:
@@ -229,4 +251,4 @@ Full Response
 
 ---
 
-*Next: [Chapter 14: The Deep Insight — Why It Works](14-why-it-works.md)*
+*Next: [Chapter 15: The Deep Insight — Why It Works](15-why-it-works.md)*

@@ -1444,4 +1444,4 @@ These are systems concerns, separate from the ML itself. But essential for real-
 
 Now we bring it all together.
 
-xref:13-vocabulary.adoc[Next: The Complete Vocabulary →]
+xref:13-openshift-ai-platform.adoc[Next: The OpenShift AI Platform →]

@@ -63,15 +63,16 @@ No prior machine learning knowledge required. Just curiosity.
 
 - [Chapter 11: The KV Cache — Why Inference Doesn't Crawl](chapters/11-kv-cache.md)
 - [Chapter 12: Serving Systems — vLLM and Friends](chapters/12-serving-systems.md)
+- [Chapter 13: The OpenShift AI Platform](chapters/13-openshift-ai-platform.md)
 
 ### Part VII: Mastery
 *Synthesis and deep insights*
 
-- [Chapter 13: The Complete Vocabulary](chapters/13-vocabulary.md)
-- [Chapter 14: The Deep Insight — Why It Works](chapters/14-why-it-works.md)
+- [Chapter 14: The Complete Vocabulary](chapters/14-vocabulary.md)
+- [Chapter 15: The Deep Insight — Why It Works](chapters/15-why-it-works.md)
 
 ### Appendix
-- [Appendix: Where to Go Next](chapters/15-appendix.md)
+- [Appendix: Where to Go Next](chapters/16-appendix.md)
 
 ---
 

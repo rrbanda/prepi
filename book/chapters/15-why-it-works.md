@@ -1,4 +1,4 @@
-# Chapter 14: The Deep Insight — Why It Works
+# Chapter 15: The Deep Insight — Why It Works
 
 *Part VII: Mastery*
 
@@ -252,4 +252,4 @@ The magic is demystified. The machine is understood.
 
 ---
 
-*Next: [Appendix: Where to Go Next](15-appendix.md)*
+*Next: [Appendix: Where to Go Next](16-appendix.md)*

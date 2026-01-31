@@ -1381,4 +1381,4 @@ You're about 90% of the way to understanding how LLMs work. What remains is synt
 
 Now we bring it all together.
 
-*Next: [Chapter 13: The Complete Vocabulary](13-vocabulary.md)*
+*Next: [Chapter 13: The OpenShift AI Platform](13-openshift-ai-platform.md)*

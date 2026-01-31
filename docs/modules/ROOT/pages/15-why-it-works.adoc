@@ -1,4 +1,4 @@
-= Chapter 14: The Deep Insight — Why It Works
+= Chapter 15: The Deep Insight — Why It Works
 :description: Understanding why LLMs work - the philosophy behind statistical pattern matching at scale
 
 _Part VII: Mastery_
@@ -216,4 +216,4 @@ There's no right answer. But knowing what you're working with helps you use it w
 *LLMs work through statistical pattern matching in high-dimensional space.* There are no explicit facts or rules — just learned weights that produce patterns matching the training data. Knowledge is geometry. Prediction is (functional) understanding. This explains both the remarkable capabilities and the inevitable limitations like hallucinations.
 ====
 
-xref:15-appendix.adoc[Next: Appendix — Where to Go Next →]
+xref:16-appendix.adoc[Next: Appendix — Where to Go Next →]

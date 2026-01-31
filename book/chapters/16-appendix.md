@@ -2,7 +2,25 @@
 
 ---
 
-You've mastered LLM fundamentals. Here's what to explore next, depending on your goals.
+You've mastered LLM fundamentals. You traced "The Eiffel Tower is located in" through every step. Here's what to explore next, depending on your goals.
+
+---
+
+## Exercise: Trace Your Own Prompt
+
+Now that you understand the complete flow, try tracing your own prompt. Pick a sentence and work through:
+
+1. **Tokenization**: How would it split? Use OpenAI's tokenizer tool or `tiktoken` library to see exact tokens.
+2. **Embeddings**: Which tokens would be similar in embedding space?
+3. **Attention**: Which tokens need to attend to which others to predict the next word?
+4. **Output**: What word do you expect the model to predict?
+
+Try prompts like:
+- "The capital of Japan is" → ?
+- "To be or not to" → ?
+- "import pandas as" → ?
+
+For each, ask: *What patterns in training data would lead to this prediction?*
 
 ---
 
@@ -58,6 +76,14 @@ When to adapt the model:
 | **Fine-tuning** | Domain-specific, consistent style | Medium |
 | **RLHF** | Alignment, preference learning | High |
 
+---
+
+**You might be wondering:** *"When should I use fine-tuning vs. RLHF? What's the difference in outcomes?"*
+
+Fine-tuning adapts the model to a domain or task — teaching it to write like your documentation, understand your codebase, or generate specific formats. RLHF (Reinforcement Learning from Human Feedback) aligns the model with human preferences — making it more helpful, less harmful, following a particular tone. Use fine-tuning for "what to say" (content, domain, style). Use RLHF for "how to behave" (helpfulness, safety, persona). They can be combined: fine-tune first for domain, then apply RLHF for alignment.
+
+---
+
 ### Prompt Engineering
 
 Getting better outputs through better inputs:
@@ -70,34 +96,108 @@ Getting better outputs through better inputs:
 
 ## Systems Deep Dive
 
-### vLLM vs. TensorRT-LLM vs. TGI
+### vLLM vs. TensorRT-LLM vs. SGLang
 
 Choosing a serving system:
 
 | System | Strengths | Best For |
 |--------|-----------|----------|
-| **vLLM** | PagedAttention, easy setup | General use, open models |
-| **TensorRT-LLM** | Maximum NVIDIA performance | Production at scale |
-| **TGI** | HuggingFace integration | Quick deployment |
-| **Triton** | Enterprise features | Production with NVIDIA GPUs |
+| **vLLM** | PagedAttention, OpenAI-compatible API, wide model support, hardware flexibility | General use, recommended for OpenShift AI |
+| **TensorRT-LLM** | Maximum NVIDIA performance, custom kernels, graph optimization | Production at scale, NVIDIA-only environments |
+| **NIM** | Pre-packaged containers, simple deployment, uses TRT-LLM or vLLM | Fast path to production on NVIDIA |
+| **SGLang** | RadixAttention, programming interface, structured outputs | Agentic applications, complex pipelines |
+| **Triton** | Enterprise features, multi-framework | Complex pipelines with NVIDIA GPUs |
+
+Note: OpenShift AI 3.x uses vLLM (v0.11.x) as the primary LLM serving runtime, supporting NVIDIA, AMD, and Intel Gaudi accelerators.
+
+### Scheduler and Batching
+
+Understanding continuous batching internals:
+
+- **Scheduler**: Central coordinator managing waiting, running, and swapped request queues
+- **Continuous batching**: Dynamic addition/removal of requests mid-inference
+- **Preemption**: Swapping or recomputing KV cache when memory fills
+- **Resources**: vLLM scheduler source code, GuideLLM for measuring batching efficiency
+
+### Speculative Decoding
+
+Accelerating generation with draft models:
+
+- **Concept**: Use small model to predict tokens, large model to verify in parallel
+- **Benefits**: Reduced latency without accuracy loss
+- **Trade-offs**: Extra memory for draft model, complexity
+- **When to use**: Long generations, low-temperature sampling, code generation
+- **vLLM flags**: `--speculative-model`, `--num-speculative-tokens`
+- **Read**: "Speculative Decoding with Big Little Decoder" (Kim et al., 2023)
 
 ### Quantization
 
-Making models smaller:
+Making models smaller and faster:
 
 - **What it is**: Reducing precision of weights (32-bit → 8-bit or 4-bit)
-- **Trade-offs**: Smaller model, faster inference, some quality loss
-- **Techniques**: GPTQ, AWQ, bitsandbytes
-- **When to use**: Limited GPU memory, edge deployment
+- **Trade-offs**: Smaller model, faster inference, slight quality loss (usually <1%)
+- **Formats**: W4A16 (memory-focused), W8A8-INT8 (balanced), W8A8-FP8 (H100 optimized)
+- **Tools**:
+  - **llm-compressor**: Red Hat/Neural Magic tool for vLLM-compatible quantization
+  - **AutoAWQ**: Activation-aware weight quantization
+  - **GPTQ**: Post-training quantization algorithm
+  - **bitsandbytes**: 4/8-bit for training and inference
+- **When to use**: Limited GPU memory, edge deployment, cost reduction
+- **Resources**: llm-compressor GitHub, Neural Magic documentation
 
 ### Distributed Inference
 
 Serving models larger than one GPU:
 
-- **Tensor parallelism**: Split layers across GPUs
+- **Tensor parallelism**: Split layers across GPUs (vLLM: `--tensor-parallel-size`)
 - **Pipeline parallelism**: Different layers on different GPUs
-- **Expert parallelism**: For mixture-of-experts models
+- **Expert parallelism**: For mixture-of-experts models (Mixtral, etc.)
+- **llm-d**: OpenShift AI's distributed inference with intelligent routing
 - **Tools**: DeepSpeed, Megatron-LM, FairScale
+
+---
+
+## Evaluation and Benchmarking
+
+### Performance Benchmarking
+
+Measuring inference speed and capacity:
+
+- **GuideLLM**: OpenAI-compatible server benchmarking
+  - Measures TTFT, TPOT, throughput, concurrency
+  - Runs load sweeps to find optimal operating points
+  - Calculates goodput against SLO constraints
+  - **Install**: `pip install guidellm`
+  - **Docs**: [GuideLLM Documentation](https://github.com/neuralmagic/guidellm)
+
+### Accuracy Evaluation
+
+Measuring model quality:
+
+- **lm-eval-harness**: Standard framework for LLM benchmarks
+  - Supports MMLU, HellaSwag, TruthfulQA, GSM8K, HumanEval
+  - Works with vLLM backend
+  - **Install**: `pip install lm-eval`
+  - **Docs**: [lm-eval-harness GitHub](https://github.com/EleutherAI/lm-evaluation-harness)
+
+### RAG Evaluation
+
+Measuring retrieval-augmented generation quality:
+
+- **Ragas**: Evaluation framework for RAG
+  - Measures faithfulness, relevancy, context precision/recall
+  - Helps tune retrieval and generation together
+  - **Docs**: [Ragas Documentation](https://docs.ragas.io)
+
+### Key Metrics Reference
+
+| Metric | Definition | Good Target |
+|--------|------------|-------------|
+| **TTFT** | Time to first token | <500ms for interactive |
+| **TPOT** | Time per output token | <50ms for streaming |
+| **P99 Latency** | 99th percentile response time | Define per use case |
+| **Goodput** | Requests/sec meeting SLOs | Maximize |
+| **Acceptance Rate** | Speculative decoding efficiency | >60% worthwhile |
 
 ---
 
@@ -129,15 +229,17 @@ Serving models larger than one GPU:
 
 ## OpenShift AI Resources
 
-If you want to deploy and serve LLMs in production, **Red Hat OpenShift AI** provides an enterprise platform. Here are resources to go deeper:
+If you want to deploy and serve LLMs in production, **Red Hat OpenShift AI** provides an enterprise platform. Here are resources to go deeper.
+
+> **Note**: OpenShift AI 3.x requires OpenShift Container Platform 4.19 or later. There is no upgrade path from RHOAI 2.x to 3.0 — it's a fresh installation. If migrating from 2.x, you must migrate workloads from Serverless to RawDeployment mode before upgrading.
 
 ### Official Documentation
 
 | Resource | Description |
 |----------|-------------|
 | [OpenShift AI Self-Managed Docs](https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/) | Complete platform documentation |
-| [Serving Models Guide](https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/2.16/html/serving_models/) | Model serving with KServe and vLLM |
-| [Working with Distributed Workloads](https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/2.16/html/working_with_distributed_workloads/) | Multi-node training with CodeFlare |
+| [Serving Models Guide](https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/3/html/serving_models/) | Model serving with KServe and vLLM |
+| [Working with Distributed Workloads](https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/3/html/working_with_distributed_workloads/) | Multi-node training with KubeRay and Kueue |
 
 ### Training Courses
 
@@ -145,15 +247,29 @@ If you want to deploy and serve LLMs in production, **Red Hat OpenShift AI** pro
 |--------|-------|
 | **AI262** — Introduction to Red Hat OpenShift AI | Platform fundamentals, workbenches, data connections |
 | **AI264** — Creating Machine Learning Models | Model training with RHOAI |
-| **AI265** — Deploying Machine Learning Models | Model serving and KServe |
+| **AI265** — Deploying Machine Learning Models | Model serving with KServe and vLLM |
 | **AI267** — Developing and Deploying AI/ML Applications | Complete MLOps workflow |
+
+### OpenShift AI 3.x Key Features
+
+| Feature | Description |
+|---------|-------------|
+| **Model Catalog** | Curated library of Red Hat-provided models (Llama, Granite, etc.) |
+| **Model Registry** | Version control for trained models with metadata and lineage tracking |
+| **Gen AI Studio** | Playground for testing LLMs with Llama Stack backend |
+| **llm-d** | Distributed inference for high-throughput LLM serving |
+| **MaaS** | Models as a Service with centralized token management |
+| **Hardware Profiles** | Unified GPU/CPU resource configurations (replaced Accelerator Profiles) |
+| **Feature Store** | Feast-based feature management with RBAC |
+| **LM Eval** | Model evaluation and benchmarking |
 
 ### Related Projects
 
 - **KServe** — [kserve.github.io](https://kserve.github.io) — Model serving on Kubernetes
-- **vLLM** — [docs.vllm.ai](https://docs.vllm.ai) — High-throughput LLM serving
+- **vLLM** — [docs.vllm.ai](https://docs.vllm.ai) — High-throughput LLM serving (v0.11.x in RHOAI 3.x)
 - **Open Data Hub** — [opendatahub.io](https://opendatahub.io) — Open-source upstream for OpenShift AI
 - **GitOps Catalog** — Red Hat Community of Practice patterns for GitOps
+- **Llama Stack** — Agentic AI applications with OpenShift AI (Technology Preview in 3.x)
 
 ### GitOps for AI Infrastructure
 
@@ -164,7 +280,7 @@ For enterprise-scale deployments, GitOps provides declarative infrastructure man
 | **Models as Code** | InferenceService definitions in Git repositories |
 | **Environment Promotion** | Same config flows from dev → staging → prod |
 | **GPU Autoscaling Policies** | Declarative cluster autoscaler configurations |
-| **Accelerator Profiles** | Version-controlled GPU configurations (T4, A10G, L40s, H100) |
+| **Hardware Profiles** | Version-controlled GPU configurations (T4, A10G, L40s, H100, MI300X) |
 | **Custom Workbenches** | Pre-configured Jupyter environments as container images |
 
 A typical GitOps-managed AI platform structure:
@@ -188,13 +304,15 @@ This approach enables **Models as a Service (MaaS)** — serving dozens of model
 
 ### Key Concepts Mapping
 
-| This Book | OpenShift AI Component |
+| This Book | OpenShift AI 3.x Component |
 |-----------|------------------------|
-| Training (Ch. 10) | Workbenches with GPU support |
-| KV Cache (Ch. 11) | vLLM's PagedAttention |
-| Serving Systems (Ch. 12) | KServe + ServingRuntimes + GitOps |
-| Inference (Ch. 9) | InferenceService endpoints |
-| Production at Scale | GitOps-managed Models as a Service |
+| Training (Ch. 10) | Workbenches with GPU support, Kubeflow Trainer v2 |
+| KV Cache (Ch. 11) | vLLM's PagedAttention (v0.11.x) |
+| Serving Systems (Ch. 12) | KServe + vLLM ServingRuntime + llm-d |
+| Inference (Ch. 9) | InferenceService / LLMInferenceService endpoints |
+| Production at Scale | Model Catalog, Model Registry, MaaS, GitOps |
+| Resource Management | Hardware Profiles, Kueue for workload scheduling |
+| Agentic AI | Llama Stack, Gen AI Studio Playground |
 
 ---
 
@@ -218,7 +336,7 @@ This knowledge won't become outdated. Architectures may change, but the core con
 
 Use this understanding to:
 - Build better products with LLMs
-- Ask smarter questions in interviews
+- Deploy models to production with confidence
 - Evaluate claims about AI capabilities
 - Contribute to the field
 
