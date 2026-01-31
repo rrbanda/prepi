@@ -24,10 +24,10 @@ So we face a fundamental challenge:
 
 ## The Translation Pipeline
 
-The answer is a multi-step translation process. Here's the preview:
+The answer is a multi-step translation process. Here's the preview — and we'll trace our running example through every step:
 
 ```
-Your Text
+"The Eiffel Tower is located in"
     ↓
 Break into pieces (tokens)
     ↓
@@ -39,7 +39,7 @@ Do math (transformer layers)
     ↓
 Score possible next words
     ↓
-Pick one
+Pick one → "Paris"
     ↓
 Response Text
 ```
@@ -100,8 +100,21 @@ You've learned the two foundational truths:
 
 2. **Computers only do math.** Language must be converted into numbers before any processing can happen.
 
-Now we dive into the details: How exactly do we turn words into numbers?
+---
+
+## What You Can Now Explain
+
+After Part I, you can confidently explain:
+
+- Why LLMs are prediction machines, not knowledge databases
+- Why "The Eiffel Tower is located in" → "Paris" isn't retrieval — it's prediction
+- Why computers can't understand words directly
+- Why language must become numbers before any processing can happen
+
+You're about 15% of the way to understanding how LLMs work.
 
 ---
+
+Now we dive into the details: How exactly do we turn "The Eiffel Tower is located in" into numbers?
 
 *Next: [Chapter 3: Breaking Language into Pieces](03-tokenization.md)*

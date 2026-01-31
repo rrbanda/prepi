@@ -87,7 +87,24 @@ Instead of carving each toy from scratch (whole words), you build everything fro
 
 ## Watching Tokenization Happen
 
-Let's see it in action. Here's how GPT might tokenize a sentence:
+Let's see it in action with our running example:
+
+```
+Input: "The Eiffel Tower is located in"
+
+Tokens: ["The", " Eiff", "el", " Tower", " is", " located", " in"]
+
+Token IDs: [464, 36751, 417, 8765, 318, 5140, 287]
+```
+
+Notice what happened:
+
+- "The" is common — stays whole
+- "Eiffel" splits into "Eiff" + "el" — it's a proper noun, less common
+- "Tower", "is", "located", "in" — all common enough to be single tokens
+- Spaces are attached to the following word (" Eiff", " Tower")
+
+Here's another example:
 
 ```
 Input: "ChatGPT is amazing!"
@@ -97,11 +114,7 @@ Tokens: ["Chat", "G", "PT", " is", " amazing", "!"]
 Token IDs: [16047, 38, 2898, 318, 4998, 0]
 ```
 
-Notice:
-
-- "ChatGPT" splits into three pieces (it's a newer word)
-- "is" includes the preceding space (" is")
-- Common patterns get their own tokens
+"ChatGPT" splits into three pieces because it's a newer word that wasn't common when the vocabulary was built.
 
 Each token then gets an **ID** — just an integer that identifies it.
 
@@ -157,6 +170,14 @@ Step 4:   ["lower"]                 (merged "lowe" + "r")
 The key insight: **merges are determined by frequency in the training corpus**. Common words like "the" become single tokens early. Rare words like "cryptocurrency" stay as multiple pieces because their subparts weren't merged.
 
 This is why BPE handles unknown words gracefully — any word can be built from the character-level tokens that always exist in the vocabulary.
+
+---
+
+**The Revelation:**
+
+> Any word — even one never seen before — can be built from pieces.
+
+This is profound. The tokenizer will never fail. "Cryptocurrency," "ChatGPT," a typo like "teh," a name like "Nguyen" — everything breaks down into known pieces. The model can process *any* text, in *any* language, including text that didn't exist when it was trained.
 
 ---
 
@@ -290,6 +311,12 @@ This directly relates to Chapter 3's concepts — the model can process up to 20
 ## Chapter Takeaway
 
 > **Tokenization breaks text into learnable pieces** — not too big, not too small. Each piece gets a Token ID, which is just an arbitrary integer label. GPT-2's vocabulary contains exactly 50,257 tokens, including special markers like `<|endoftext|>` for document boundaries. The tokenizer and vocabulary are fixed before training and never change. Token IDs have no meaning on their own — they're just addresses. **In OpenShift AI, chat templates control how conversations are tokenized for each model.**
+
+---
+
+We've turned "The Eiffel Tower is located in" into `[464, 36751, 417, 8765, 318, 5140, 287]`. But these are just arbitrary labels — coat check numbers. How do they become *meaning*?
+
+That's where embeddings come in.
 
 ---
 

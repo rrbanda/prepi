@@ -4,7 +4,9 @@
 
 ---
 
-We've turned text into token IDs. But we said token IDs are meaningless. So how does the model understand anything?
+We've turned "The Eiffel Tower is located in" into token IDs: `[464, 36751, 417, 8765, 318, 5140, 287]`. But we said token IDs are meaningless — just arbitrary labels.
+
+So how does the model understand anything?
 
 This is where the magic really begins.
 
@@ -88,6 +90,27 @@ embedding = embedding_matrix[token_id]
 
 This embedding is the meaning of that token — represented as coordinates in high-dimensional space.
 
+### Our Running Example
+
+Let's trace what happens to "The Eiffel Tower is located in":
+
+```
+Token IDs: [464, 36751, 417, 8765, 318, 5140, 287]
+
+Embedding lookup:
+  464   ("The")     → [0.12, -0.34, 0.56, 0.23, ...]  (768 numbers)
+  36751 (" Eiff")   → [-0.08, 0.91, -0.12, 0.45, ...]
+  417   ("el")      → [0.33, -0.17, 0.29, -0.88, ...]
+  8765  (" Tower")  → [0.67, 0.23, -0.45, 0.12, ...]
+  318   (" is")     → [-0.22, 0.18, 0.89, -0.34, ...]
+  5140  (" located")→ [0.45, -0.67, 0.11, 0.78, ...]
+  287   (" in")     → [0.19, 0.42, -0.33, 0.56, ...]
+
+Result: Matrix of 7 tokens × 768 dimensions
+```
+
+Now we have 7 vectors — 7 points in 768-dimensional space — ready for the transformer to process.
+
 ---
 
 ## Why Similar Concepts End Up Nearby
@@ -139,6 +162,14 @@ This isn't programmed. It emerges from the geometry of learned embeddings.
 ```
 
 The embedding space has learned abstract directions for concepts like "gender" and "royalty" — without ever being told these concepts exist.
+
+---
+
+**The Revelation:**
+
+> Meaning IS position in space. Similar words literally sit closer together.
+
+This is the moment language becomes math. "Paris" and "France" aren't just related conceptually — they're *geometrically* close. "Eiffel" and "Tower" cluster near landmarks. The entire richness of human language is encoded as distances and directions in this high-dimensional space.
 
 ---
 
@@ -300,10 +331,34 @@ You've learned how language becomes numbers:
 1. **Tokenization** breaks text into pieces and assigns arbitrary integer IDs.
 2. **Embeddings** convert those IDs into meaningful vectors — points in a high-dimensional space where similar concepts are nearby.
 
+Our running example has transformed:
+
+```
+"The Eiffel Tower is located in"
+        ↓ Tokenization
+[464, 36751, 417, 8765, 318, 5140, 287]
+        ↓ Embedding lookup
+7 vectors × 768 dimensions (each vector captures meaning)
+```
+
 Now the model has something it can actually compute with: vectors of numbers that represent meaning.
 
-But how does it process those vectors? What happens inside the transformer? That's next.
+---
+
+## What You Can Now Explain
+
+After Part II, you can confidently explain:
+
+- How any text becomes token IDs (and why subwords, not words)
+- Why "Eiffel" splits into "Eiff" + "el" while "Tower" stays whole
+- What embeddings are and why similar words cluster in space
+- Why "king - man + woman ≈ queen" works — it's geometry, not magic
+- The difference between token IDs (arbitrary labels) and embeddings (meaningful vectors)
+
+You're about 30% of the way to understanding how LLMs work.
 
 ---
+
+But how does the model process these vectors? What transforms a collection of word meanings into an understanding of the sentence? That's where neural networks come in.
 
 *Next: [Chapter 5: How Machines Learn Anything](05-neural-networks.md)*

@@ -4,9 +4,9 @@
 
 ---
 
-We've converted text into meaningful vectors. Now what?
+We've converted "The Eiffel Tower is located in" into 7 embedding vectors — 7 points in 768-dimensional space. Now what?
 
-Those vectors need to be *processed* — transformed, analyzed, and eventually turned into a prediction. This is where neural networks come in.
+Those vectors need to be *processed* — transformed, analyzed, and eventually turned into a prediction of the next word. This is where neural networks come in.
 
 Don't worry if you've never studied neural networks. We're starting from scratch.
 
@@ -93,21 +93,23 @@ Output
 
 Each layer takes the previous layer's output as its input. The data "flows forward" through the network.
 
-For an LLM:
+For our running example:
 
 ```
-Token Embeddings
+"The Eiffel Tower is located in" (7 embedding vectors)
   ↓
-Transformer Layer 1
+Transformer Layer 1: vectors refined
   ↓
-Transformer Layer 2
+Transformer Layer 2: further refined
   ↓
 ...
   ↓
-Transformer Layer 96  (for GPT-4 scale)
+Transformer Layer 96 (for GPT-4 scale): final representations
   ↓
-Logits (predictions)
+Logits → "Paris" predicted as most likely next word
 ```
+
+Each layer transforms the vectors, making them richer with context and meaning.
 
 ---
 
@@ -189,6 +191,16 @@ After training:
 - Model outputs coherent text ✓
 
 The architecture is like a blank brain. The weights are the knowledge, skills, and patterns it has learned.
+
+---
+
+**The Revelation:**
+
+> Intelligence is in the weights, not the architecture.
+
+You can download the GPT-2 architecture right now — it's open source. But without trained weights, it outputs random garbage. The architecture is just a container. The weights are everything.
+
+This is why companies guard their weights carefully, and why model weights are often proprietary even when architectures are public.
 
 ---
 
@@ -309,5 +321,7 @@ If you copied the architecture but trained with random weights on a small datase
 > **Neural networks transform data through layers.** Each layer applies a learned transformation controlled by weights. Three techniques make deep networks trainable: **Layer Normalization** keeps values in reasonable ranges, **GELU activation** provides smooth non-linearity, and **Residual Connections** let gradients flow through shortcuts. The architecture defines the structure; the weights define the behavior. Before training, models know nothing. After training, intelligence emerges from the patterns encoded in the weights.
 
 ---
+
+We have the machinery of neural networks — layers that transform data. But what makes transformers *special*? Before 2017, language models struggled with long text. Transformers changed everything.
 
 *Next: [Chapter 6: The Transformer Revolution](06-transformers.md)*

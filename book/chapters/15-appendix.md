@@ -2,7 +2,25 @@
 
 ---
 
-You've mastered LLM fundamentals. Here's what to explore next, depending on your goals.
+You've mastered LLM fundamentals. You traced "The Eiffel Tower is located in" through every step. Here's what to explore next, depending on your goals.
+
+---
+
+## Exercise: Trace Your Own Prompt
+
+Now that you understand the complete flow, try tracing your own prompt. Pick a sentence and work through:
+
+1. **Tokenization**: How would it split? Use OpenAI's tokenizer tool or `tiktoken` library to see exact tokens.
+2. **Embeddings**: Which tokens would be similar in embedding space?
+3. **Attention**: Which tokens need to attend to which others to predict the next word?
+4. **Output**: What word do you expect the model to predict?
+
+Try prompts like:
+- "The capital of Japan is" → ?
+- "To be or not to" → ?
+- "import pandas as" → ?
+
+For each, ask: *What patterns in training data would lead to this prediction?*
 
 ---
 

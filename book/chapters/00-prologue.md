@@ -6,6 +6,20 @@ You've used ChatGPT. You've seen it write poetry, debug code, and explain quantu
 
 This handbook answers that question. Not with hand-waving or jargon, but with genuine understanding. By the end, you'll be able to explain — clearly, confidently, and correctly — how a large language model transforms your words into its response.
 
+---
+
+## Our Running Example
+
+Throughout this book, we'll trace a single prompt through the entire system:
+
+> **"The Eiffel Tower is located in"**
+
+By the final chapter, you'll know exactly what happens to these six words — how they become numbers, how those numbers interact, and how "Paris" emerges as the response. Every concept we cover will touch this example.
+
+Think of it as a thread running through the entire book. When you finish, you'll be able to trace any prompt through the same journey.
+
+---
+
 We'll start with the magic trick: what appears to happen when you talk to an AI. Then we'll peel back the curtain, layer by layer, until you understand every step of the journey from your prompt to its response.
 
 Along the way, you'll learn:

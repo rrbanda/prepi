@@ -85,6 +85,14 @@ The context window just determines how much history can be included.
 
 ---
 
+**The Revelation:**
+
+> Nothing is remembered. Everything is re-read, every time.
+
+When you ask a follow-up question, the model doesn't "recall" your previous question. It re-reads the entire conversation — including your previous question — as if for the first time. Each response is computed from scratch. There is no persistent memory between calls.
+
+---
+
 ## Context Is Computed, Not Stored
 
 Let's be precise:
@@ -223,8 +231,22 @@ You've mastered the secret sauce:
 3. **Multi-head attention** provides multiple perspectives
 4. **Position encodings** add sequence information
 
-Now let's see the full flow: how a prompt becomes a response.
+---
+
+## What You Can Now Explain
+
+After Part IV, you can confidently explain:
+
+- How attention works: Query, Key, Value, and weighted blending
+- Why "in" in our running example focuses on "Tower" and "Eiffel" to predict "Paris"
+- Why the same word becomes different vectors in different contexts
+- The difference between "context window" (input limit) and "contextual representation" (computed meaning)
+- Why models don't "remember" conversations — they re-read everything each time
+
+You're about 60% of the way to understanding how LLMs work.
 
 ---
+
+Now let's see the full flow: how "The Eiffel Tower is located in" becomes "Paris" — step by step.
 
 *Next: [Chapter 9: Inference — A Token's Journey](09-inference.md)*

@@ -1344,8 +1344,23 @@ You've seen the engineering that makes LLMs practical:
 
 These are systems concerns, separate from the ML itself. But essential for real-world use.
 
-Now we bring it all together.
+---
+
+## What You Can Now Explain
+
+After Part VI, you can confidently explain:
+
+- Why inference doesn't crawl: the KV cache stores computed K/V vectors
+- How PagedAttention eliminates memory fragmentation
+- What continuous batching is and why it maximizes GPU utilization
+- How speculative decoding can speed up generation
+- Key metrics: TTFT, TPOT, throughput, P99 latency
+- How to deploy models in OpenShift AI with vLLM
+
+You're about 90% of the way to understanding how LLMs work. What remains is synthesis — seeing the complete picture.
 
 ---
+
+Now we bring it all together.
 
 *Next: [Chapter 13: The Complete Vocabulary](13-vocabulary.md)*

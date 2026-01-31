@@ -263,43 +263,75 @@ This is why it's called **scaled dot-product attention**.
 
 ## A Concrete Example
 
-Let's trace through: **"The bank by the river"**
+Let's trace through our running example: **"The Eiffel Tower is located in"**
 
-When processing "bank":
+When processing "in" (the final token that will predict "Paris"):
 
 1. **Generate Q, K, V** for each token:
    ```
-   "The"   → Q₁, K₁, V₁
-   "bank"  → Q₂, K₂, V₂
-   "by"    → Q₃, K₃, V₃
-   "the"   → Q₄, K₄, V₄
-   "river" → Q₅, K₅, V₅
+   "The"      → Q₁, K₁, V₁
+   " Eiff"    → Q₂, K₂, V₂
+   "el"       → Q₃, K₃, V₃
+   " Tower"   → Q₄, K₄, V₄
+   " is"      → Q₅, K₅, V₅
+   " located" → Q₆, K₆, V₆
+   " in"      → Q₇, K₇, V₇
    ```
 
-2. **Query from "bank"** compares to all Keys:
+2. **Query from "in"** compares to all Keys:
    ```
-   Q₂ vs K₁ ("The")   → low score
-   Q₂ vs K₂ ("bank")  → medium score (self)
-   Q₂ vs K₃ ("by")    → low score
-   Q₂ vs K₄ ("the")   → low score
-   Q₂ vs K₅ ("river") → HIGH score ← relevant context!
+   Q₇ vs K₁ ("The")      → low score
+   Q₇ vs K₂ (" Eiff")    → HIGH score ← what landmark?
+   Q₇ vs K₃ ("el")       → medium score
+   Q₇ vs K₄ (" Tower")   → HIGH score ← what's being located?
+   Q₇ vs K₅ (" is")      → low score
+   Q₇ vs K₆ (" located") → medium score
+   Q₇ vs K₇ (" in")      → medium score (self)
    ```
 
 3. **Softmax** the scores:
    ```
-   Attention weights: [0.05, 0.15, 0.05, 0.05, 0.70]
+   Attention weights: [0.03, 0.28, 0.08, 0.35, 0.04, 0.12, 0.10]
    ```
 
 4. **Blend the Values**:
    ```
-   New "bank" = 0.05×V₁ + 0.15×V₂ + 0.05×V₃ + 0.05×V₄ + 0.70×V₅
+   New "in" = 0.03×V₁ + 0.28×V₂ + 0.08×V₃ + 0.35×V₄ + 0.04×V₅ + 0.12×V₆ + 0.10×V₇
    ```
 
-The output for "bank" now carries significant information from "river."
+The output for "in" now carries significant information from "Tower" (35%) and "Eiff" (28%). This contextual vector knows that we're asking *where the Eiffel Tower is located* — which is exactly what's needed to predict "Paris."
+
+**The attention mechanism has extracted the relevant context for prediction.**
+
+---
+
+## Another Example: Disambiguation
+
+Let's also look at: **"The bank by the river"**
+
+When processing "bank":
+
+```
+Q₂ ("bank") vs K₅ ("river") → HIGH score ← relevant context!
+```
+
+Attention weights: `[0.05, 0.15, 0.05, 0.05, 0.70]`
+
+The output for "bank" carries 70% information from "river."
 
 If the sentence were "The bank holds money," "bank" would attend strongly to "money" instead, producing a completely different contextual vector.
 
 **Same word, same starting embedding, different context, different output.**
+
+---
+
+---
+
+**The Revelation:**
+
+> The same word becomes different vectors depending on context.
+
+"In" starts as the same embedding every time. But after attention, it becomes a different vector for "located in Paris" vs. "interested in cooking" vs. "in the morning." The contextual representation captures not just *what* the word is, but *what role it plays here*.
 
 ---
 

@@ -40,41 +40,42 @@ The difference is what happens after.
 
 ## The Training Example
 
-Consider this training text:
+Consider our running example as training text:
 
 ```
-"The capital of France is Paris"
+"The Eiffel Tower is located in Paris"
 ```
 
 We create training examples by sliding a window:
 
 | Input | Target |
 |-------|--------|
-| "The" | "capital" |
-| "The capital" | "of" |
-| "The capital of" | "France" |
-| "The capital of France" | "is" |
-| "The capital of France is" | "Paris" |
+| "The" | "Eiffel" |
+| "The Eiffel" | "Tower" |
+| "The Eiffel Tower" | "is" |
+| "The Eiffel Tower is" | "located" |
+| "The Eiffel Tower is located" | "in" |
+| "The Eiffel Tower is located in" | "Paris" |
 
-For each input, the model must predict the target.
+For each input, the model must predict the target. This is how the model learned that "Paris" follows our prompt.
 
 ---
 
 ## Step-by-Step Training
 
-Let's trace through one example:
+Let's trace through our running example:
 
-**Input**: "The capital of France is"  
+**Input**: "The Eiffel Tower is located in"  
 **Target**: "Paris"
 
 ### Step 1: Forward Pass
 
 ```
-Input: "The capital of France is"
+Input: "The Eiffel Tower is located in"
     ↓
-Tokenize: [464, 3139, 286, 4881, 318]
+Tokenize: [464, 36751, 417, 8765, 318, 5140, 287]
     ↓
-Embed: 5 vectors
+Embed: 7 vectors
     ↓
 Transformer layers: contextual vectors
     ↓
@@ -174,7 +175,13 @@ Training is like learning to throw darts:
 
 After enough practice, you hit the bullseye reliably.
 
-The model doesn't "know" French geography. It has adjusted billions of weights so that when the input pattern looks like [capital, France, is], the output pattern activates "Paris" strongly.
+---
+
+**The Revelation:**
+
+> Billions of tiny corrections. That's all learning is.
+
+The model doesn't "know" that the Eiffel Tower is in Paris. It has adjusted billions of weights — each nudged by a tiny amount, millions of times — so that when the input pattern looks like "Eiffel Tower is located in," the output pattern activates "Paris" strongly. Knowledge is the accumulated result of countless small corrections.
 
 ---
 
@@ -462,8 +469,23 @@ You've seen the complete lifecycle:
 
 The model doesn't understand. It predicts. But it predicts so well that it appears to understand.
 
-Now let's look under the hood at optimizations that make this practical.
+---
+
+## What You Can Now Explain
+
+After Part V, you can confidently explain:
+
+- The complete journey of "The Eiffel Tower is located in" → "Paris"
+- Every step: tokenization, embedding, transformer layers, output projection, softmax, sampling
+- Why inference is one-token-at-a-time (autoregressive generation)
+- How training works: forward pass, loss, backpropagation, weight update
+- Why training costs millions of dollars (trillions of examples, billions of weight updates)
+- What the Prologue promised — you can now explain how LLMs work
+
+You're about 75% of the way to understanding how LLMs work. The remaining chapters cover the *engineering* that makes this practical at scale.
 
 ---
+
+Now let's look under the hood at optimizations that make inference fast enough to be useful.
 
 *Next: [Chapter 11: The KV Cache — Why Inference Doesn't Crawl](11-kv-cache.md)*

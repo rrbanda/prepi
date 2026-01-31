@@ -87,6 +87,19 @@ The   cat   sat   on   the   mat   was   happy
 
 This is the key innovation: **Direct connections between any pair of tokens, regardless of distance.**
 
+For our running example "The Eiffel Tower is located in":
+
+```
+The   Eiff   el   Tower   is   located   in
+ |      |     |     |      |      |       |
+ +------|-----|-----|------|------|-------+
+        |     |     |      |      |        
+        ←←←←← ATTENTION CONNECTIONS →→→→→→
+
+"in" can directly attend to "Tower" and "Eiffel" — 
+knowing what's being located helps predict "Paris"
+```
+
 ---
 
 ## The Reading Analogy
@@ -111,6 +124,14 @@ The implications are profound:
 4. **Flexibility**: The same architecture works for text, images, audio, and more
 
 This is why essentially all modern LLMs — GPT-4, Claude, LLaMA, Gemini — use transformer architectures.
+
+---
+
+**The Revelation:**
+
+> Any token can talk to any other — instantly, regardless of distance.
+
+In our running example, "in" doesn't have to wait for information about "Eiffel" to trickle through 5 intermediate steps. It looks directly at "Eiffel," "Tower," and every other token simultaneously. This is what unlocked long-context understanding.
 
 ---
 
@@ -250,8 +271,22 @@ You've learned the machinery of intelligence:
 3. **Transformers** revolutionized this by processing all tokens at once via attention
 4. **Intelligence lives in the weights**, not the architecture
 
-Now we dive into the heart of the transformer: attention itself.
+---
+
+## What You Can Now Explain
+
+After Part III, you can confidently explain:
+
+- What neural network "layers" and "weights" actually are
+- Why intelligence is in the weights, not the architecture
+- Why transformers replaced RNNs (parallel processing, direct long-range connections)
+- How all 7 tokens in "The Eiffel Tower is located in" can "see" each other simultaneously
+- What a transformer block contains (attention + feed-forward network + residuals)
+
+You're about 45% of the way to understanding how LLMs work.
 
 ---
+
+Now we dive into the heart of the transformer: *how* does attention actually work? How does "in" know to focus on "Tower" and "Eiffel" rather than "is" and "located"?
 
 *Next: [Chapter 7: Attention — The Core Mechanism](07-attention.md)*

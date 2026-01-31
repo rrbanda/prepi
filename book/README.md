@@ -93,8 +93,10 @@ This book is designed to be read sequentially. Each chapter builds on the previo
 
 Throughout this book, you'll see:
 
+- **The Running Example** — We trace a single prompt through every concept: *"The Eiffel Tower is located in"* → *"Paris"*. By the end, you'll understand exactly what happens to these words at every step.
 - **Pause and Reflect** — Moments to think before continuing
 - **Chapter Takeaway** — The key insight from each chapter, boxed for easy review
+- **What You Can Now Explain** — Checkpoints after each Part showing your growing capabilities
 - **In Practice with OpenShift AI** — How concepts apply in production using Red Hat OpenShift AI
 - **Interactive Moments** — Questions to test your understanding
 - Code blocks with concrete examples

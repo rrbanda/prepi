@@ -6,6 +6,8 @@
 
 Here's a puzzle.
 
+In Chapter 9, we watched "The Eiffel Tower is located in" generate "Paris." But that was just one token. What happens when the model generates a longer response?
+
 When generating a response, the model processes tokens one at a time. For each new token, it seems like we need to run attention over the **entire sequence** — everything so far.
 
 For a 1000-token conversation, generating the 1001st token requires attention over all 1000 previous tokens. The 1002nd token requires attention over 1001 tokens. And so on.
@@ -57,6 +59,16 @@ V = Embedding × W_v
 The embedding is fixed. The weights are fixed. So K and V are fixed.
 
 Only the **Query (Q)** for the new token matters for the new computation.
+
+---
+
+---
+
+**The Revelation:**
+
+> We never recompute what we've already computed. That's why it's fast.
+
+Once we've computed K and V for "Eiffel" and "Tower," those vectors are cached. When generating subsequent tokens, we just *look them up* instead of recalculating. This simple insight turns an impossibly slow process into something practical.
 
 ---
 

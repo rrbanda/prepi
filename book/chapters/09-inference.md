@@ -4,17 +4,19 @@
 
 ---
 
-Let's follow a prompt from the moment you hit Enter to the moment you see a response.
+Remember the promise from the Prologue?
 
-Every step, explained. No mysteries.
+> "By the end, you'll be able to explain — clearly, confidently, and correctly — how a large language model transforms your words into its response."
+
+This is that chapter. You're about to watch it happen, step by step.
 
 ---
 
 ## The Setup
 
-You type:
+You type our running example:
 
-> "The Eiffel Tower is in"
+> "The Eiffel Tower is located in"
 
 And you wait for the model to complete it.
 
@@ -24,20 +26,21 @@ What happens inside the machine?
 
 ## Step 1: Tokenization
 
-First, your text is broken into tokens.
+First, your text is broken into tokens — exactly as we learned in Chapter 3.
 
 ```
-Input text: "The Eiffel Tower is in"
+Input text: "The Eiffel Tower is located in"
 
 Tokenization:
-  "The"    → Token ID 464
-  " Eiff"  → Token ID 36751
-  "el"     → Token ID 417
-  " Tower" → Token ID 8765
-  " is"    → Token ID 318
-  " in"    → Token ID 287
+  "The"      → Token ID 464
+  " Eiff"    → Token ID 36751
+  "el"       → Token ID 417
+  " Tower"   → Token ID 8765
+  " is"      → Token ID 318
+  " located" → Token ID 5140
+  " in"      → Token ID 287
 
-Result: [464, 36751, 417, 8765, 318, 287]
+Result: [464, 36751, 417, 8765, 318, 5140, 287]
 ```
 
 This happens on the CPU. The tokenizer is deterministic — same input always gives same output.
@@ -46,17 +49,18 @@ This happens on the CPU. The tokenizer is deterministic — same input always gi
 
 ## Step 2: Embedding Lookup
 
-Each token ID is converted to a vector by looking it up in the embedding matrix.
+Each token ID is converted to a vector by looking it up in the embedding matrix — exactly as we learned in Chapter 4.
 
 ```
-Token ID 464   → [0.12, -0.34, 0.56, 0.23, ...]  (768+ dimensions)
-Token ID 36751 → [-0.08, 0.91, -0.12, 0.45, ...]
-Token ID 417   → [0.33, -0.17, 0.29, -0.88, ...]
-Token ID 8765  → [0.67, 0.23, -0.45, 0.12, ...]
-Token ID 318   → [-0.22, 0.18, 0.89, -0.34, ...]
-Token ID 287   → [0.45, -0.67, 0.11, 0.78, ...]
+Token ID 464   ("The")     → [0.12, -0.34, 0.56, 0.23, ...]  (768 dimensions)
+Token ID 36751 (" Eiff")   → [-0.08, 0.91, -0.12, 0.45, ...]
+Token ID 417   ("el")      → [0.33, -0.17, 0.29, -0.88, ...]
+Token ID 8765  (" Tower")  → [0.67, 0.23, -0.45, 0.12, ...]
+Token ID 318   (" is")     → [-0.22, 0.18, 0.89, -0.34, ...]
+Token ID 5140  (" located")→ [0.45, -0.67, 0.11, 0.78, ...]
+Token ID 287   (" in")     → [0.19, 0.42, -0.33, 0.56, ...]
 
-Result: Matrix of 6 tokens × 768 dimensions
+Result: Matrix of 7 tokens × 768 dimensions
 ```
 
 Now we have meaningful vectors, not just labels.
@@ -67,7 +71,7 @@ Positional encodings are also added here, so the model knows token order.
 
 ## Step 3: Transformer Layers
 
-The embeddings pass through the transformer layers. Each layer:
+The embeddings pass through the transformer layers — exactly as we learned in Chapters 5-7. Each layer:
 
 1. **Self-Attention**: Tokens gather information from relevant other tokens
 2. **Feed-Forward Network**: Each token is processed independently
@@ -76,20 +80,20 @@ The embeddings pass through the transformer layers. Each layer:
 This repeats for every layer (e.g., 96 times for GPT-4 scale).
 
 ```
-Embeddings (6 tokens × 768 dims)
+Embeddings (7 tokens × 768 dims)
       ↓
-  Layer 1 → Refined representations
+  Layer 1 → "in" starts gathering context from "Tower", "Eiffel"
       ↓
-  Layer 2 → More refined
+  Layer 2 → Context deepens
       ↓
     ...
       ↓
   Layer 96 → Final contextual vectors
       ↓
-Output (6 tokens × 768 dims)
+Output (7 tokens × 768 dims)
 ```
 
-After all layers, each token's vector encodes its meaning, position, and relationship to all other tokens.
+After all layers, each token's vector encodes its meaning, position, and relationship to all other tokens. The vector for "in" now carries rich information about *what* is being located *where*.
 
 ---
 
@@ -236,13 +240,13 @@ We've generated one token: "Paris".
 Now we append it to the input and repeat:
 
 ```
-Original: [464, 36751, 417, 8765, 318, 287]
-                                         ↓ new token
-Updated:  [464, 36751, 417, 8765, 318, 287, 6342]
+Original: [464, 36751, 417, 8765, 318, 5140, 287]
+                                              ↓ new token
+Updated:  [464, 36751, 417, 8765, 318, 5140, 287, 6342]
 ```
 
 The entire process runs again:
-- Embeddings for all 7 tokens
+- Embeddings for all 8 tokens
 - Transformer layers
 - Output projection (now from the "Paris" position)
 - Sampling → next token (maybe "," or ".")
@@ -259,44 +263,44 @@ Until:
 ## The Full Flow Diagram
 
 ```
-┌─────────────────────────────────────────┐
-│ "The Eiffel Tower is in"                │
-└───────────────┬─────────────────────────┘
+┌───────────────────────────────────────────────┐
+│ "The Eiffel Tower is located in"              │
+└───────────────┬───────────────────────────────┘
                 ↓
-┌─────────────────────────────────────────┐
-│ TOKENIZER (CPU)                         │
-│ → [464, 36751, 417, 8765, 318, 287]     │
-└───────────────┬─────────────────────────┘
+┌───────────────────────────────────────────────┐
+│ TOKENIZER (CPU)                               │
+│ → [464, 36751, 417, 8765, 318, 5140, 287]     │
+└───────────────┬───────────────────────────────┘
                 ↓
-┌─────────────────────────────────────────┐
-│ EMBEDDING LOOKUP (GPU)                  │
-│ → 6 vectors of 768 dimensions           │
-│ + positional encodings                  │
-└───────────────┬─────────────────────────┘
+┌───────────────────────────────────────────────┐
+│ EMBEDDING LOOKUP (GPU)                        │
+│ → 7 vectors of 768 dimensions                 │
+│ + positional encodings                        │
+└───────────────┬───────────────────────────────┘
                 ↓
-┌─────────────────────────────────────────┐
-│ TRANSFORMER LAYERS (GPU)                │
-│ Layer 1: Attention + FFN                │
-│ Layer 2: Attention + FFN                │
-│ ...                                     │
-│ Layer 96: Attention + FFN               │
-└───────────────┬─────────────────────────┘
+┌───────────────────────────────────────────────┐
+│ TRANSFORMER LAYERS (GPU)                      │
+│ Layer 1: Attention + FFN                      │
+│ Layer 2: Attention + FFN                      │
+│ ...                                           │
+│ Layer 96: Attention + FFN                     │
+└───────────────┬───────────────────────────────┘
                 ↓
-┌─────────────────────────────────────────┐
-│ OUTPUT PROJECTION (GPU)                 │
-│ Final token's vector → vocabulary scores│
-└───────────────┬─────────────────────────┘
+┌───────────────────────────────────────────────┐
+│ OUTPUT PROJECTION (GPU)                       │
+│ Final token's vector → vocabulary scores      │
+└───────────────┬───────────────────────────────┘
                 ↓
-┌─────────────────────────────────────────┐
-│ SOFTMAX + SAMPLING                      │
-│ → "Paris" (Token ID 6342)               │
-└───────────────┬─────────────────────────┘
+┌───────────────────────────────────────────────┐
+│ SOFTMAX + SAMPLING                            │
+│ → "Paris" (Token ID 6342)                     │
+└───────────────┬───────────────────────────────┘
                 ↓
-┌─────────────────────────────────────────┐
-│ APPEND + REPEAT                         │
-│ → [464, 36751, 417, 8765, 318, 287,     │
-│    6342, ...]                           │
-└─────────────────────────────────────────┘
+┌───────────────────────────────────────────────┐
+│ APPEND + REPEAT                               │
+│ → [464, 36751, 417, 8765, 318, 5140, 287,     │
+│    6342, ...]                                 │
+└───────────────────────────────────────────────┘
 ```
 
 ---
