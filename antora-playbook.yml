@@ -1,0 +1,25 @@
+site:
+  title: The LLM Handbook
+  url: https://raghurambanda.github.io/prepi
+  start_page: llm-handbook::index.adoc
+
+content:
+  sources:
+    - url: .
+      start_path: docs
+      branches: HEAD
+
+ui:
+  bundle:
+    url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/HEAD/raw/build/ui-bundle.zip?job=bundle-stable
+    snapshot: true
+
+output:
+  dir: ./build/site
+
+# Optional: Add diagram extensions later
+# asciidoc:
+#   extensions:
+#     - asciidoctor-kroki
+#   attributes:
+#     kroki-fetch-diagram: true

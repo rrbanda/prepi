@@ -1,0 +1,31 @@
+* xref:index.adoc[Introduction]
+* xref:00-prologue.adoc[Prologue: The Promise]
+
+.Part I: The Magic Trick
+* xref:01-what-just-happened.adoc[Chapter 1: What Just Happened?]
+* xref:02-the-language-barrier.adoc[Chapter 2: The Language Barrier]
+
+.Part II: The Translation Problem
+* xref:03-tokenization.adoc[Chapter 3: Breaking Language into Pieces]
+* xref:04-embeddings.adoc[Chapter 4: Giving Numbers Meaning]
+
+.Part III: The Brain's Blueprint
+* xref:05-neural-networks.adoc[Chapter 5: How Machines Learn Anything]
+* xref:06-transformers.adoc[Chapter 6: The Transformer Revolution]
+
+.Part IV: The Secret Sauce
+* xref:07-attention.adoc[Chapter 7: Attention — The Core Mechanism]
+* xref:08-context.adoc[Chapter 8: Context — The Most Misunderstood Word]
+
+.Part V: Watching It Think
+* xref:09-inference.adoc[Chapter 9: Inference — A Token's Journey]
+* xref:10-training.adoc[Chapter 10: Training — How Intelligence Emerges]
+
+.Part VI: Under the Hood
+* xref:11-kv-cache.adoc[Chapter 11: The KV Cache]
+* xref:12-serving-systems.adoc[Chapter 12: Serving Systems — vLLM and Friends]
+
+.Part VII: Mastery
+* xref:13-vocabulary.adoc[Chapter 13: The Complete Vocabulary]
+* xref:14-why-it-works.adoc[Chapter 14: The Deep Insight — Why It Works]
+* xref:15-appendix.adoc[Appendix: Where to Go Next]
