@@ -37,6 +37,104 @@ Attention lets each token **selectively gather information** from the tokens tha
 
 ---
 
+## Why the Model Must Decide (First Principles)
+
+This is a fundamental question — why does the model need to decide which previous tokens matter?
+
+The answer from first principles:
+
+**Because the meaning of the current token depends on which parts of the prior context are relevant, and that relevance changes dynamically.**
+
+If the model treated all previous tokens equally, it would fail at language.
+
+### Language Is Contextual and Non-Local
+
+Human language has properties that demand selective attention:
+
+- Words refer to things far away in the sentence
+- Meanings shift based on earlier clauses
+- Pronouns depend on earlier nouns
+- Negation flips meaning
+- Numbers and units must align
+
+Example:
+
+> "The server failed because it ran out of memory."
+
+To understand "it", the model must:
+
+- Ignore irrelevant words ("because")
+- Focus on "server"
+- Not confuse it with "memory"
+
+So the model must **selectively focus**.
+
+### What Happens Without This Decision-Making
+
+Imagine a model that treats all previous tokens equally — just averages everything.
+
+Then:
+
+- Long sentences become noise
+- Important words get diluted
+- Meaning collapses as context grows
+
+This is exactly why older RNN-based models struggled with long context.
+
+### Why the Decision Must Be Dynamic
+
+Relevance changes token by token.
+
+Example:
+
+> "I put the glass on the table because it was unstable."
+
+Now "it" refers to **table**, not **glass**.
+
+The model cannot use a fixed rule like "pronouns always look at the last noun." It must compute relevance **dynamically** based on meaning.
+
+That's what self-attention does.
+
+### The Capability Self-Attention Provides
+
+Self-attention allows the model to:
+
+- **Select** which prior tokens matter
+- **Weight** them differently
+- **Ignore** irrelevant context
+- **Combine** relevant information into a new representation
+
+This happens numerically, not symbolically.
+
+### Connection to the Forward Pass
+
+During the forward pass on the GPU:
+
+1. Current token creates a **Query**
+2. Past tokens provide **Keys**
+3. Similarity scores determine relevance
+4. Values from relevant tokens are combined
+
+The model literally computes: **"Who should I listen to right now?"**
+
+### Why This Beats Older Approaches
+
+Before transformers:
+
+- RNNs / LSTMs processed tokens sequentially
+- Information had to be carried forward step by step
+- Long-range dependencies faded (vanishing gradients)
+
+With self-attention:
+
+- Any token can directly attend to any other token
+- Long-range dependencies are easy
+- Parallelizable on GPUs
+
+That's why transformers won.
+
+---
+
 ## The Library Analogy
 
 Let's build intuition with a powerful analogy.
