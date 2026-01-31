@@ -88,6 +88,14 @@ The   cat   sat   on   the   mat   was   happy
 
 This is the key innovation: *Direct connections between any pair of tokens, regardless of distance.*
 
+'''
+
+*You might be wondering:* "_If tokens are processed simultaneously, how can one token 'look at' another? Doesn't parallel processing mean they're independent?_"
+
+They are processed in parallel, but attention computes relationships between all tokens in one pass. Each token generates Query, Key, and Value vectors (more on this in Chapter 7). The attention mechanism compares all Query-Key pairs simultaneously via matrix multiplication, producing attention weights that blend all Value vectors. The parallel computation doesn't mean independence — it means the connections are computed all at once, not one by one.
+
+'''
+
 == The Reading Analogy
 
 *RNN approach*: Reading with a single finger on the page. You can only see one word at a time. You must remember what came before.
@@ -249,6 +257,14 @@ In decoder-only transformers:
 
 * Each token can only attend to tokens before it (causal masking)
 * This prevents the model from "cheating" by looking at future tokens
+
+'''
+
+*You might be wondering:* "_Why can't decoder models see future tokens? What would go wrong?_"
+
+If the model could see "Paris" while predicting what comes after "located in," it would just copy the answer instead of learning to predict. During training, this would make the model useless — it learns nothing if it can cheat. Causal masking forces the model to actually learn patterns. Think of it like taking a test: if you can see the answer key, you'll ace the test but learn nothing.
+
+'''
 
 == Pause and Reflect
 

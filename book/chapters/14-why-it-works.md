@@ -66,6 +66,12 @@ The model finds structure in this space that we cannot visualize. Concepts like 
 
 ---
 
+**You might be wondering:** *"Why do high dimensions make patterns separable? The 2D→3D example is intuitive, but why does adding thousands of dimensions help?"*
+
+In high dimensions, you have more degrees of freedom to separate patterns. Think of each dimension as a new axis along which points can differ. With enough dimensions, even complex, non-linear patterns become linearly separable — you can draw a hyperplane (high-dimensional flat surface) between any two clusters. This is why embeddings work: concepts that seem hopelessly intertwined in 2D or 3D can be cleanly separated in 768D or 4096D space. The model learns which dimensions capture which distinctions.
+
+---
+
 ## The Geometry of Knowledge
 
 Knowledge in an LLM is **geometric relationships** between vectors.
@@ -96,6 +102,12 @@ To predict that "Paris" follows "capital of France," the model implicitly repres
 It doesn't "understand" these in the human sense. But it has captured enough structure to make correct predictions.
 
 This is what people mean by "emergence" — capabilities that weren't explicitly programmed but arose from scale and training.
+
+---
+
+**You might be wondering:** *"What does 'sort of' mean? Does the model understand or not?"*
+
+The model has *functional* understanding: it captures enough structure to make correct predictions across many contexts. But it's not understanding in the human sense — no conscious awareness, no explicit reasoning, no lived experience. It's "understanding" in that it models patterns well enough to predict successfully. It's not "understanding" in that it lacks sentience, intentionality, or the ability to truly know what it's doing. The philosophical debate continues, but practically: it works, and knowing the mechanism helps you use it appropriately.
 
 ---
 
@@ -133,6 +145,12 @@ Ask about a less common structure, and the pattern applies even if incorrect. Th
 **Confidence comes from pattern strength, not from truth.**
 
 A question that matches common patterns produces confident answers. A rare or novel question produces uncertain or wrong answers.
+
+---
+
+**You might be wondering:** *"If hallucinations come from pattern matching, why can't we add fact-checking to prevent them?"*
+
+You can — and people do, through techniques like RAG (Retrieval-Augmented Generation), which retrieves relevant documents and adds them to the prompt. But hallucinations are inherent to the core mechanism: the model predicts based on pattern strength, not truth. Even with fact-checking, the model may still generate plausible but incorrect patterns that slip through. The fundamental issue is that "common pattern" ≠ "true fact." External verification helps, but doesn't eliminate the problem entirely.
 
 ---
 

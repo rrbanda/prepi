@@ -64,6 +64,12 @@ Each token gets its own vector of that size.
 
 ---
 
+**You might be wondering:** *"What does it mean to have 768 dimensions? Is each dimension like a feature or property of the word?"*
+
+Each dimension is just one number in the vector — one axis in the space. No single dimension maps to a human concept like "gender" or "animal." Meaning is distributed across all dimensions simultaneously. The model learns which combinations of these numbers represent concepts. Think of it like GPS coordinates: no single coordinate defines a location, but together they specify a unique point in space.
+
+---
+
 ## The Embedding Matrix
 
 Here's how it works in practice.
@@ -165,6 +171,12 @@ The embedding space has learned abstract directions for concepts like "gender" a
 
 ---
 
+**You might be wondering:** *"Can I do math with any embeddings? Like 'doctor - man + woman'?"*
+
+In principle, yes. But results vary. The King-Queen example works because gender and royalty have clear, consistent patterns in training data. More complex analogies may not work as cleanly — or at all. The embedding space encodes what the training data captured — no more, no less. Some relationships are well-represented; others are noisy or missing entirely.
+
+---
+
 **The Revelation:**
 
 > Meaning IS position in space. Similar words literally sit closer together.
@@ -196,6 +208,12 @@ There's a subtle but important distinction:
 The embedding matrix provides the starting point. The transformer layers create context-aware representations.
 
 We'll see how in Part IV.
+
+---
+
+**You might be wondering:** *"If embeddings are learned during training, why are they called 'static'? And what's the difference between the embedding matrix and what comes out of transformer layers?"*
+
+"Static" means each token ID maps to one fixed embedding vector, regardless of context. The embedding matrix is the initial lookup — "bank" always retrieves the same starting vector. After passing through transformer layers, each token's representation becomes context-dependent: "bank" in "river bank" ends up with a different vector than "bank" in "bank account." The embedding matrix provides the starting point; transformers add context-awareness.
 
 ---
 

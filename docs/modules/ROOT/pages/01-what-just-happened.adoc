@@ -66,6 +66,20 @@ To predict that "Paris" comes after "The capital of France is," the model must h
 
 The model doesn't store these as explicit facts. Instead, they're encoded implicitly in the patterns it learned. Predict well enough, and understanding emerges.
 
+'''
+
+*You might be wondering:* "_If the model only predicts the next word, how does it 'understand'? Isn't it just pattern matching?_"
+
+Understanding here means the model captures relationships between concepts through patterns. It doesn't store explicit facts, but the patterns encode these relationships implicitly. When prediction is accurate across many contexts, it reflects an implicit model of how concepts relate — not sentience, but functional understanding.
+
+'''
+
+*You might be wondering:* "_But pattern matching sounds simple. How does that produce essays and code?_"
+
+The key is scale. A billion parameters trained on trillions of tokens can capture incredibly complex patterns — not just word pairs, but sentence structure, logical flow, coding conventions, and domain knowledge. Simple mechanism, profound result. The complexity is in what the patterns encode, not in the mechanism itself.
+
+'''
+
 == Pause and Reflect
 
 Before continuing, try this thought experiment:

@@ -168,6 +168,14 @@ The key insight: *merges are determined by frequency in the training corpus*. Co
 
 This is why BPE handles unknown words gracefully — any word can be built from the character-level tokens that always exist in the vocabulary.
 
+'''
+
+*You might be wondering:* "_How does merging frequent pairs create meaningful tokens? Why would 'lo' + 'w' → 'low' be meaningful rather than arbitrary?_"
+
+BPE doesn't create meaning directly — it creates a vocabulary that balances coverage and efficiency. Frequent pairs are merged because they appear together often in training data, not because they're semantically meaningful. The model learns meaning later through embeddings. BPE just builds reusable pieces; meaning comes from how those pieces are used in context during training.
+
+'''
+
 == The Critical Distinction (Remember This)
 
 *Token IDs are just labels. They have no meaning.*
@@ -180,6 +188,14 @@ You can't compare token IDs:
 * Is token 318 bigger than token 100? Meaningless question.
 
 Token IDs are addresses, not meanings. The meaning comes next.
+
+'''
+
+*You might be wondering:* "_If token IDs are meaningless, why do we use them at all? Why not go straight to embeddings?_"
+
+Token IDs are necessary as addresses — they tell the model which row of the embedding matrix to look up. You need some way to index into the matrix, and integers are the simplest index. Think of them as keys in a dictionary: the key "16047" isn't meaningful, but it points to a value (the embedding) that is. The ID is the lookup key; the embedding is the actual meaning.
+
+'''
 
 == What "Encoding" Really Means
 
@@ -283,6 +299,14 @@ Incorrect tokenization causes subtle failures:
 * Missing special tokens → model doesn't know when to stop
 
 When using the Model Catalog in OpenShift AI, these configurations are pre-set correctly for each model. But if you're deploying custom models, understanding tokenization helps you debug issues.
+
+'''
+
+*You might be wondering:* "_What happens if I use the wrong tokenizer for a model?_"
+
+Disaster. Each model has its own vocabulary and tokenizer. Using a different tokenizer means token IDs map to wrong embeddings — "cat" might become the embedding for random garbage. The model produces incoherent output, hallucinates, or crashes. Always use the tokenizer that came with the model. This is why model downloads include both the weights and the tokenizer files.
+
+'''
 
 === Token Limits and Context
 

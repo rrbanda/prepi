@@ -71,6 +71,14 @@ When to adapt the model:
 |High
 |===
 
+'''
+
+*You might be wondering:* "_When should I use fine-tuning vs. RLHF? What's the difference in outcomes?_"
+
+Fine-tuning adapts the model to a domain or task — teaching it to write like your documentation, understand your codebase, or generate specific formats. RLHF (Reinforcement Learning from Human Feedback) aligns the model with human preferences — making it more helpful, less harmful, following a particular tone. Use fine-tuning for "what to say" (content, domain, style). Use RLHF for "how to behave" (helpfulness, safety, persona). They can be combined: fine-tune first for domain, then apply RLHF for alignment.
+
+'''
+
 === Prompt Engineering
 
 Getting better outputs through better inputs:

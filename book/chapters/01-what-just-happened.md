@@ -71,11 +71,23 @@ The model doesn't store these as explicit facts. Instead, they're encoded implic
 
 ---
 
+**You might be wondering:** *"If the model only predicts the next word, how does it 'understand'? Isn't it just pattern matching?"*
+
+Understanding here means the model captures relationships between concepts through patterns. It doesn't store explicit facts like "Eiffel Tower → Paris," but the patterns encode these relationships implicitly. When prediction is accurate across many contexts, it reflects an implicit model of how concepts relate — not sentience, but functional understanding.
+
+---
+
 **The Revelation:**
 
 > It doesn't *know*. It *predicts*. And that's more profound, not less.
 
 Let this sink in. The model has no database of facts, no explicit rules about landmarks or cities. Yet from pure prediction — billions of times over — something that *looks* like knowledge emerges.
+
+---
+
+**You might be wondering:** *"But pattern matching sounds simple. How does that produce essays and code?"*
+
+The key is scale. A billion parameters trained on trillions of tokens can capture incredibly complex patterns — not just word pairs, but sentence structure, logical flow, coding conventions, and domain knowledge. Simple mechanism, profound result. The complexity is in what the patterns encode, not in the mechanism itself.
 
 ---
 

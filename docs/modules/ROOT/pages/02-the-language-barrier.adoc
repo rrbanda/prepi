@@ -64,6 +64,14 @@ This is roughly what an LLM does with language:
 
 The next few chapters explore each step.
 
+'''
+
+*You might be wondering:* "_How does turning a book into music relate to tokenization and embeddings? This seems abstract._"
+
+The analogy maps concrete steps: syllables → tokens, notes → token IDs, melodies → embeddings, symphony → transformer processing. It's a structural parallel showing how we break language into pieces, assign identifiers, create meaningful representations, and then process them. The point isn't that LLMs are literally like music — it's that both involve transforming one representation into another while preserving something essential.
+
+'''
+
 == Pause and Reflect
 
 Before reading on, make a guess:

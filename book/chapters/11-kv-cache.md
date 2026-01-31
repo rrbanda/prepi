@@ -62,6 +62,10 @@ Only the **Query (Q)** for the new token matters for the new computation.
 
 ---
 
+**You might be wondering:** *"Why does the Query (Q) change for each new token, but K and V don't? Aren't they all computed the same way?"*
+
+K and V for existing tokens are computed from fixed embeddings using fixed weights, so they're constant once computed. The Query for the new token is computed from the *new* token's embedding, which is different at each generation step. Q represents "what the new token is looking for," while K/V represent "what previous tokens can provide." The new token's K and V are also computed and cached for future steps — so they're "new" when generated, then "old" (and cached) for all subsequent tokens.
+
 ---
 
 **The Revelation:**
@@ -246,6 +250,12 @@ Size = 2 × num_layers × embedding_dim × 2 bytes
 GPT-3's 100k context would require nearly **half a terabyte** just for the KV cache — not counting the model weights!
 
 This is why context length is limited — the KV cache eats GPU memory, and it scales linearly with sequence length and model depth.
+
+---
+
+**You might be wondering:** *"Why does GPT-3 need 4.7 MB per token while GPT-2 Small needs only 37 KB?"*
+
+It's proportional to model size. GPT-3 has 96 layers with 12,288-dimensional embeddings; GPT-2 Small has 12 layers with 768 dimensions. The formula is: `2 × layers × embedding_dim × 2 bytes`. More layers and larger dimensions mean more K and V values to store per token. GPT-3 is 8× deeper and 16× wider than GPT-2 Small, so its per-token KV cache is ~128× larger.
 
 ---
 

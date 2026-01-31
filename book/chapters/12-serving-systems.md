@@ -88,6 +88,14 @@ Let's trace through exactly what happens at each decoding step:
 
 Key insight: **Every request is treated independently, even in the same batch.** Requests can have different prompt sizes and generate different numbers of tokens. The system handles this naturally.
 
+---
+
+**You might be wondering:** *"How can requests with different prompt lengths and generation positions be processed together in the same batch? Doesn't batching require identical shapes?"*
+
+The system uses padding and attention masking. Shorter sequences are padded to match the longest in the batch, and attention masks ensure each request only attends to its own valid tokens (ignoring padding). Each request also tracks its own position and generation state independently. The GPU processes the padded batch in parallel, but the masking makes each request's computation independent. This is why variable-length batching works without corrupting outputs.
+
+---
+
 #### Why Continuous Batching Matters
 
 | Metric | Static Batching | Continuous Batching |
@@ -222,6 +230,10 @@ Pages can be anywhere in memory. A request's pages don't need to be contiguous.
 This simple insight dramatically increases how many concurrent requests can run.
 
 ---
+
+**You might be wondering:** *"What's the difference between PagedAttention and BlockSpaceManager? Are they the same thing?"*
+
+PagedAttention is the algorithm/concept: the idea of dividing KV cache memory into pages (like OS virtual memory) to avoid fragmentation. BlockSpaceManager is the implementation: the actual code component that manages page allocation, logical-to-physical mapping, eviction, and reuse. Think of PagedAttention as the design pattern and BlockSpaceManager as the engine that implements it. When you read about "PagedAttention" in research papers, it refers to the technique; in vLLM's codebase, BlockSpaceManager is the component you'd examine.
 
 ---
 
@@ -360,6 +372,12 @@ If acceptance rate is low, check:
 1. Is sampling too random? Lower temperature.
 2. Is draft model too different from target? Try a better-matched draft.
 3. Is the task unpredictable? Some content is inherently hard to speculate.
+
+---
+
+**You might be wondering:** *"When should I NOT use speculative decoding?"*
+
+Avoid speculative decoding when: (1) output is very short (<20 tokens) — the overhead of running two models exceeds any speedup; (2) sampling is highly random (high temperature) — low acceptance rate means wasted computation on rejected speculation; (3) you're using beam search — incompatible decoding approach; or (4) you can't fit both models in GPU memory — no room for a draft model. It works best for long, predictable outputs like code generation, documentation, or structured data extraction.
 
 ---
 

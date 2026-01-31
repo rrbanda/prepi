@@ -71,6 +71,12 @@ Key insight:
 
 ---
 
+**You might be wondering:** *"How can billions of weights be learned automatically? What does 'learned, not programmed' mean in practice?"*
+
+During training, the model uses backpropagation: it makes a prediction, compares it to the correct answer, computes gradients (how much each weight contributed to the error), and adjusts weights to reduce that error. This happens across millions of examples. The weights start random and converge to useful values through repeated small updates. The architecture defines the structure; training finds the values.
+
+---
+
 ## The Forward Pass
 
 When data flows through a neural network, it's called a **forward pass**.
@@ -303,6 +309,12 @@ In GPT, every transformer block has two residual connections:
 - After feed-forward: `x = x + ffn(x)`
 
 Without residual connections, training a 96-layer GPT-3 would be essentially impossible.
+
+---
+
+**You might be wondering:** *"Why doesn't adding the input back (x + layer(x)) mess up what the layer learned?"*
+
+It actually helps, not hurts. The layer only needs to learn the *difference* — what to add or remove from the input. If the layer's contribution should be zero for some inputs, it can learn to output zeros, and the original input passes through unchanged. This makes learning easier: instead of learning the entire transformation from scratch, the layer learns incremental modifications. It's like giving an artist a sketch to refine rather than a blank canvas.
 
 ---
 

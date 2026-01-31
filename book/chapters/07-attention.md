@@ -261,6 +261,12 @@ This is why it's called **scaled dot-product attention**.
 
 ---
 
+**You might be wondering:** *"Why divide by √d specifically? Why not just divide by d, or use a different scaling factor?"*
+
+The √d scaling comes from the variance of dot products. When Q and K have dimension d and their components are roughly independent with variance 1, the dot product has variance d (each of the d multiplications contributes variance 1, and they sum). Dividing by √d normalizes the variance to 1, keeping softmax inputs in a reasonable range. Dividing by d would over-scale and make attention weights too uniform. The square root is the mathematical result of variance normalization.
+
+---
+
 ## A Concrete Example
 
 Let's trace through our running example: **"The Eiffel Tower is located in"**
@@ -364,6 +370,14 @@ Different heads learn to focus on different things:
 
 It's like having multiple pairs of eyes reading the text, each watching for different patterns. The final output combines all perspectives.
 
+---
+
+**You might be wondering:** *"How do different heads 'learn' to focus on different patterns? Is this programmed, or does it emerge naturally?"*
+
+This emerges during training — it's not programmed. Each head has its own W_q, W_k, W_v weight matrices, so they can learn different attention patterns independently. The model discovers that specialization helps overall prediction accuracy. There's no explicit instruction saying "head 3 should focus on syntax"; the loss function rewards patterns that improve predictions, and specialization is one way to achieve that. Researchers have found heads that specialize in syntax, semantics, coreference, and more — but these emerge, they're not designed.
+
+---
+
 ### Dropout in Attention
 
 During training, models apply **dropout** to attention weights — randomly zeroing out some weights and scaling up the rest. This prevents the model from relying too heavily on specific attention patterns and improves generalization. Typical dropout rates are 10-20%.
@@ -387,6 +401,12 @@ Token 4 can see: [1, 2, 3, 4]
 ```
 
 Future tokens are masked out (their attention weights become zero).
+
+---
+
+**You might be wondering:** *"Can encoder models see future tokens? Is that why BERT is different from GPT?"*
+
+Yes, exactly. Encoder models like BERT use bidirectional attention — every token can attend to every other token, including "future" ones (to the right). This is powerful for understanding tasks like classification or fill-in-the-blank. But it prevents autoregressive generation because you can't generate left-to-right if each position needs to see what comes after it. GPT-style decoder models use causal masking specifically because they generate text left-to-right, one token at a time.
 
 ---
 

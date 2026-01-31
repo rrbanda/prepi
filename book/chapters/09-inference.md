@@ -121,6 +121,14 @@ Token 50255 ("[END]"): -2.8
 
 These scores are called **logits**. They're not probabilities yet — just raw scores.
 
+---
+
+**You might be wondering:** *"Why use only the final token's vector to predict the next token? Why not use all tokens or an average?"*
+
+The final token's vector already includes context from all prior tokens via attention. Through the many transformer layers, information from "Eiffel," "Tower," and "located" has been gathered into the final position. Using it alone is sufficient and efficient. Averaging all tokens would add complexity without benefit, since attention already aggregated the needed information into that last position.
+
+---
+
 ### Weight Tying (Efficiency Trick)
 
 Interestingly, the original GPT-2 **shares weights** between the embedding matrix and the output projection matrix. They're the same matrix used in different directions:
@@ -131,6 +139,12 @@ Interestingly, the original GPT-2 **shares weights** between the embedding matri
 This saves memory — that's 50,257 × 768 = 38.6 million parameters that don't need to be stored twice.
 
 Newer, larger models often don't tie weights, since the added capacity can help. But weight tying is worth understanding as it demonstrates the elegance of the architecture.
+
+---
+
+**You might be wondering:** *"How can the same matrix work in both directions (lookup vs matrix multiply)?"*
+
+The embedding matrix is transposed for the output projection. Row lookup (token ID → embedding) uses the matrix as-is: given row index 318, retrieve the 768-dim vector at that row. Column projection (hidden state → vocabulary scores) uses the transpose: multiply a 768-dim hidden state by the 768×50257 transposed matrix to get 50257 scores. This works because the vocabulary size matches one dimension and embedding size matches the other. It's elegant parameter-sharing that reduces memory without changing expressiveness.
 
 ---
 
@@ -206,6 +220,14 @@ Beam 3: "France" (5%)
 Each beam is extended with its most likely next tokens, then the top beams are kept. This finds globally better sequences but is more expensive. It's often used for translation rather than open-ended generation.
 
 Most production systems combine **temperature + top-p** (or top-k) for a balance of creativity and coherence.
+
+---
+
+**You might be wondering:** *"Which sampling strategy should I use in production?"*
+
+It depends on your use case. For factual Q&A or code generation: low temperature (0.1-0.3) or greedy to maximize accuracy. For creative writing: higher temperature (0.7-1.0) with top-p (0.9) to allow diversity. For chat applications: moderate temperature (0.5-0.7) with top-p (0.9) balances coherence with variety. Start conservative and adjust based on output quality. There's no universal answer — experimentation is key.
+
+---
 
 ### Sampling and Speculative Decoding
 

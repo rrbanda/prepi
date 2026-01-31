@@ -88,6 +88,14 @@ Nothing is "remembered." The conversation history is re-read every single time.
 
 The context window just determines how much history can be included.
 
+'''
+
+*You might be wondering:* "_If the model re-reads everything each time, why does it seem to 'remember' earlier parts of the conversation? Why doesn't it contradict itself?_"
+
+The model appears to remember because the full conversation history is included in the input each time. When you ask a follow-up, the model sees both your original question and the follow-up together, so it can respond consistently. It's not memory — it's re-reading. If you were to remove earlier messages from the input, the model wouldn't reference them because it literally can't see them. The apparent consistency comes from seeing the full history, not from any persistent internal state.
+
+'''
+
 == Context Is Computed, Not Stored
 
 Let's be precise:
@@ -182,6 +190,14 @@ Instead of adding position information to the embedding, RoPE encodes *relative*
 The advantage: RoPE captures *relative distances* ("how far apart are these tokens?") rather than *absolute positions* ("is this token 5th or 500th?"). This generalizes better to longer sequences than the model was trained on.
 
 Key distinction: GPT-2 uses learned absolute positions, while newer models often use RoPE for better length generalization.
+
+'''
+
+*You might be wondering:* "_What does 'rotates the vectors based on position' actually mean? How is rotation different from addition?_"
+
+RoPE applies a rotation matrix to Q and K vectors based on their positions. Mathematically, rotation preserves vector magnitude (length) while changing direction. Instead of adding a position vector (which shifts the point in space), rotation changes the angle of the vector. The key insight: when you compute Q × K for attention, the dot product of two rotated vectors depends on their *relative* rotation — which encodes relative distance. This means "token A is 5 positions before token B" is captured, regardless of absolute positions. That's why RoPE generalizes better to sequences longer than training.
+
+'''
 
 == Pause and Reflect
 

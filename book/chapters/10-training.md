@@ -141,6 +141,14 @@ For each weight, we compute: "If I nudge this weight up/down, does the loss go u
 
 This produces a **gradient** for each weight — a direction to move.
 
+---
+
+**You might be wondering:** *"How does backpropagation compute gradients? What does 'working backward' mean?"*
+
+Backpropagation uses the chain rule of calculus. Starting from the loss, it computes how each weight affects the loss by propagating gradients backward through layers. For each layer, it multiplies gradients from later layers by local derivatives (how that layer's output changes with its weights). This yields a gradient per weight indicating which direction to adjust it to reduce loss. The "backward" flow mirrors the forward pass: if data flowed A → B → C → Loss, gradients flow Loss → C → B → A.
+
+---
+
 ### Step 5: Update the Weights
 
 Using the gradients, we adjust every weight:
@@ -300,6 +308,12 @@ Training frontier models is extraordinarily expensive:
 For context, training LLaMA 2 7B required **184,320 GPU hours** on A100 GPUs. At cloud prices, even "small" models cost tens of thousands of dollars to train.
 
 This is why companies don't retrain from scratch — they fine-tune existing models or use techniques like LoRA that update only a small subset of weights.
+
+---
+
+**You might be wondering:** *"If training costs millions, how do smaller companies afford to use LLMs?"*
+
+Most don't train from scratch. They use pre-trained models (LLaMA, Mistral, Qwen, etc.) and either: (1) use them as-is for general tasks, (2) fine-tune on domain-specific data (much cheaper — thousands, not millions), or (3) use API services from providers who absorb training costs. Training a frontier model requires massive resources; using or adapting one doesn't. Fine-tuning with LoRA can cost under $100 for small models on cloud GPUs.
 
 ---
 
