@@ -74,6 +74,193 @@ B completes: [D, E, F]  ← F joins
 
 No waiting. Maximum GPU utilization.
 
+==== Continuous Batching Step-by-Step
+
+Let's trace through exactly what happens at each decoding step:
+
+[cols="1,2,1", options="header"]
+|===
+|Decoding Step
+|What Happens
+|Active Requests
+
+|Step 1
+|Generate token 1 for requests A, B, C
+|A, B, C
+
+|Step 2
+|Request D arrives → added to batch
+|A, B, C, D
+
+|Step 3
+|Generate: token 2 for A,B,C + token 1 for D
+|A, B, C, D
+
+|Step 4
+|A completes (hit stop token) → removed
+|B, C, D
+
+|Step 5
+|Request E arrives → added
+|B, C, D, E
+
+|Step 6
+|Generate: token 3 for B,C + token 2 for D + token 1 for E
+|B, C, D, E
+|===
+
+Key insight: *Every request is treated independently, even in the same batch.* Requests can have different prompt sizes and generate different numbers of tokens. The system handles this naturally.
+
+==== Why Continuous Batching Matters
+
+[cols="1,1", options="header"]
+|===
+|Metric
+|Static vs Continuous
+
+|GPU utilization
+|Low (waiting) vs High (always processing)
+
+|Latency
+|High (blocked) vs Low (immediate)
+
+|Throughput
+|Limited vs Maximized
+
+|Memory efficiency
+|Poor vs Optimized
+|===
+
+This is the default behavior in vLLM — you get it automatically.
+
+== The Scheduler: Heart of the Serving System
+
+The *scheduler* is the central coordinator that makes continuous batching work. It's the brain of the inference engine.
+
+=== What the Scheduler Does
+
+[source]
+----
+┌─────────────────────────────────────────────────────────┐
+│                      SCHEDULER                          │
+│                                                         │
+│   ┌───────────┐    ┌───────────┐    ┌───────────┐      │
+│   │  WAITING  │───▶│  RUNNING  │───▶│ COMPLETED │      │
+│   │   Queue   │    │   Queue   │    │           │      │
+│   └───────────┘    └─────┬─────┘    └───────────┘      │
+│         ▲                │                              │
+│         │                ▼                              │
+│         │          ┌───────────┐                        │
+│         └──────────│  SWAPPED  │                        │
+│                    │   Queue   │                        │
+│                    └───────────┘                        │
+└─────────────────────────────────────────────────────────┘
+----
+
+=== Request Lifecycle States
+
+[cols="1,2,1", options="header"]
+|===
+|State
+|Description
+|When It Happens
+
+|*Waiting*
+|Request received, not yet processing
+|New requests enter here
+
+|*Running*
+|Actively generating tokens
+|Scheduler picked this request
+
+|*Swapped*
+|Paused, KV cache moved to CPU
+|Memory pressure, preemption
+
+|*Completed*
+|Finished generating
+|Hit stop token or max length
+|===
+
+=== Core Scheduler Responsibilities
+
+[cols="1,2", options="header"]
+|===
+|Component
+|Description
+
+|`schedule()`
+|Entry point — decides what requests run next
+
+|Queue management
+|Tracks waiting, running, and swapped requests
+
+|Token allocation
+|Determines how many tokens each request gets per step
+
+|Block management
+|Coordinates with BlockSpaceManager for KV cache
+
+|Preemption logic
+|Decides when to pause requests to free memory
+
+|Speculative coordination
+|Manages multi-step decoding when enabled
+|===
+
+=== Preemption: Handling Memory Pressure
+
+When GPU memory fills up, the scheduler must make hard choices:
+
+[source]
+----
+Scenario: GPU memory at 95% capacity
+          New high-priority request arrives
+          
+Options:
+1. SWAP: Move a running request's KV cache to CPU RAM
+         - Slower but preserves progress
+         - Request can resume later
+         
+2. RECOMPUTE: Evict KV cache entirely
+              - Request restarts from prompt
+              - Wastes prior computation
+              - Frees more memory
+----
+
+The scheduler uses policies to decide:
+
+* *FIFO*: First-in-first-out eviction
+* *Priority-based*: Low-priority requests evicted first
+* *Size-based*: Large KV caches evicted first
+
+=== Why Understanding the Scheduler Matters
+
+When debugging production issues:
+
+[cols="1,1,1", options="header"]
+|===
+|Symptom
+|Likely Cause
+|Scheduler-Related Fix
+
+|High latency spikes
+|Queue buildup
+|Increase `max_num_seqs`
+
+|OOM errors
+|Too many running requests
+|Reduce `max_num_batched_tokens`
+
+|Inconsistent latency
+|Preemption happening
+|Increase GPU memory or reduce concurrency
+
+|Low throughput
+|Conservative scheduling
+|Tune `gpu-memory-utilization` higher
+|===
+
 == vLLM: PagedAttention
 
 *vLLM* is a popular open-source serving system. Its key innovation is *PagedAttention*.
@@ -116,6 +303,119 @@ Pages can be anywhere in memory. A request's pages don't need to be contiguous.
 
 This simple insight dramatically increases how many concurrent requests can run.
 
+== Speculative Decoding: Thinking Ahead
+
+*Speculative decoding* is a powerful optimization technique that can dramatically reduce inference latency without changing the model's outputs.
+
+=== The Core Idea
+
+Instead of generating one token at a time with your large model:
+
+. Use a *small, fast "draft" model* to predict several tokens ahead
+. Have the *large "target" model* verify those predictions in parallel
+. Accept correct predictions, reject wrong ones
+. Net result: fewer expensive forward passes through the large model
+
+[source]
+----
+Traditional Decoding:
+Token 1 → [Large Model] → Token 2 → [Large Model] → Token 3 → ...
+          (slow)                    (slow)
+
+Speculative Decoding:
+[Draft Model] → Speculate: Token 2, 3, 4, 5
+(fast)                    ↓
+[Target Model] → Verify all 4 in ONE forward pass
+(expensive but done once)
+                          ↓
+Accept: 2, 3, 4 ✓  Reject: 5 ✗
+→ Generated 3 tokens with 1 expensive pass!
+----
+
+=== Benefits
+
+[cols="1,2", options="header"]
+|===
+|Benefit
+|Explanation
+
+|*Lower latency*
+|Fewer expensive forward passes through large model
+
+|*Same output quality*
+|Target model still makes final decisions
+
+|*No retraining needed*
+|Drop-in optimization
+
+|*Model-agnostic*
+|Works with any transformer decoder
+|===
+
+=== Trade-offs
+
+[cols="1,2", options="header"]
+|===
+|Challenge
+|Details
+
+|*Extra GPU memory*
+|Both draft and target model must be loaded
+
+|*Acceptance rate varies*
+|Depends on draft model quality and sampling strategy
+
+|*Implementation complexity*
+|Two models must coordinate
+
+|*Not always faster*
+|Short sequences or high randomness may not benefit
+|===
+
+=== When Speculative Decoding Helps
+
+[cols="1,1", options="header"]
+|===
+|Scenario
+|Benefit Level
+
+|Long generations (100+ tokens)
+|*High* — amortizes setup cost
+
+|Greedy/low-temperature sampling
+|*High* — predictable, high acceptance
+
+|Code generation
+|*High* — structured, predictable patterns
+
+|Short responses (<20 tokens)
+|*Low* — overhead exceeds benefit
+
+|High temperature/creative writing
+|*Low* — randomness kills acceptance rate
+
+|Beam search
+|*Not compatible*
+|===
+
+=== vLLM Speculative Decoding
+
+vLLM supports speculative decoding out of the box:
+
+[source,bash]
+----
+# Enable speculative decoding with a draft model
+python -m vllm.entrypoints.openai.api_server \
+    --model meta-llama/Llama-3.2-70B \
+    --speculative-model meta-llama/Llama-3.2-7B \
+    --num-speculative-tokens 4
+----
+
+Key parameters:
+
+* `--speculative-model`: Path to the draft model
+* `--num-speculative-tokens`: How many tokens to speculate (typically 3-5)
+
 == Other Serving Systems
 
 vLLM isn't the only option:
@@ -142,6 +442,194 @@ vLLM isn't the only option:
 |===
 
 Different trade-offs: ease of use vs. raw performance, open-source vs. vendor-supported.
+
+=== Competitive Landscape: Understanding the Alternatives
+
+==== NVIDIA TensorRT-LLM (TRT-LLM)
+
+TensorRT-LLM is NVIDIA's optimized inference engine for LLMs.
+
+[cols="1,2", options="header"]
+|===
+|Aspect
+|Details
+
+|*Hardware*
+|NVIDIA GPUs only — no AMD, Intel, or CPU fallback
+
+|*Optimization approach*
+|Low-level graph optimizations, kernel fusion, quantization
+
+|*Strengths*
+|Maximum performance on NVIDIA hardware
+
+|*Weaknesses*
+|Vendor lock-in, less flexible, steeper learning curve
+|===
+
+==== NVIDIA NIM
+
+NIM (NVIDIA Inference Microservices) is NVIDIA's containerized model-serving solution.
+
+[cols="1,2", options="header"]
+|===
+|Aspect
+|Details
+
+|*What it is*
+|Pre-packaged containers for specific models (LLaMA, Mistral, etc.)
+
+|*Backend*
+|Uses TRT-LLM or vLLM depending on model and hardware
+
+|*Strengths*
+|Simple to deploy, OpenAI-compatible API
+
+|*Weaknesses*
+|NVIDIA-only, less customization, closed source
+|===
+
+==== SGLang
+
+SGLang is a fast, open-source serving framework with a programming focus.
+
+[cols="1,2", options="header"]
+|===
+|Aspect
+|Details
+
+|*Focus*
+|Developer-friendly programming interface for LLM workflows
+
+|*Key innovation*
+|RadixAttention for prefix caching, structured output support
+
+|*Strengths*
+|Excellent for agents, function-calling, complex pipelines
+
+|*Weaknesses*
+|Smaller community than vLLM
+|===
+
+== Quantization: Making Models Smaller
+
+*Quantization* reduces the precision of model weights, trading some accuracy for dramatic improvements in memory usage and inference speed.
+
+=== Why Quantization Matters
+
+A typical LLM weight is stored in FP16 (16-bit floating point). Quantization converts these to lower precision:
+
+[cols="1,1,1,1", options="header"]
+|===
+|Precision
+|Bits per Weight
+|Memory Reduction
+|Speed Impact
+
+|FP32
+|32 bits
+|Baseline
+|Slow
+
+|FP16/BF16
+|16 bits
+|2× smaller
+|Standard
+
+|INT8
+|8 bits
+|4× smaller
+|Faster
+
+|INT4
+|4 bits
+|8× smaller
+|Much faster
+|===
+
+=== Quantization Formats for vLLM
+
+[cols="1,2,2", options="header"]
+|===
+|Format
+|Description
+|Best Use Case
+
+|*W4A16*
+|4-bit weights, FP16 activations
+|Memory-constrained, edge, containerized apps
+
+|*W8A8-INT8*
+|8-bit weights, INT8 activations
+|High-throughput, general purpose, any GPU
+
+|*W8A8-FP8*
+|8-bit weights, FP8 activations
+|Accuracy-sensitive + memory constraints, H100 GPUs
+
+|*2:4 Sparsity + FP8*
+|Structured sparsity with FP8
+|Maximum speed on H100/Blackwell
+|===
+
+=== Quantization Tools
+
+==== llm-compressor (Red Hat/Neural Magic)
+
+The recommended tool for quantizing models for vLLM deployment:
+
+[source,python]
+----
+from llmcompressor import compress
+from llmcompressor.modifiers import SmoothQuantModifier, GPTQModifier
+
+# Quantize a model to W4A16
+recipe = [
+    SmoothQuantModifier(smoothing_strength=0.5),
+    GPTQModifier(scheme="W4A16", ignore=["lm_head"]),
+]
+
+compressed_model = compress(
+    model="meta-llama/Llama-3.2-7B",
+    recipe=recipe,
+    calibration_data="calibration_dataset"
+)
+----
+
+==== Other Tools
+
+* *AutoAWQ*: Activation-aware Weight Quantization
+* *bitsandbytes*: 8-bit and 4-bit quantization
+* *GGUF*: Single-file quantized format (vLLM supports single-file only)
+
+=== Accuracy Impact
+
+Well-quantized models typically recover *99%+ of baseline accuracy*:
+
+[cols="1,1,1,1", options="header"]
+|===
+|Model
+|Baseline (FP16)
+|W8A8-INT8
+|W4A16
+
+|LLaMA 7B
+|100%
+|99.5%
+|98.8%
+
+|Mistral 7B
+|100%
+|99.6%
+|99.1%
+
+|LLaMA 70B
+|100%
+|99.7%
+|99.3%
+|===
+
+_Accuracy measured on standard benchmarks (MMLU, HellaSwag, etc.)_
 
 == What They DON'T Change
 
@@ -188,29 +676,231 @@ Think of serving systems as *traffic management for GPUs*. They don't make the c
 
 If you're just using LLMs through APIs, you can treat this as a black box. If you're deploying or optimizing, this is essential.
 
-== Key Metrics
+== Production Metrics Deep Dive
 
-Production deployments care about:
+Understanding metrics is essential for operating LLMs in production. Different use cases prioritize different metrics.
+
+=== Latency Metrics
+
+==== Time to First Token (TTFT)
+
+*Definition*: Time from request arrival to first token returned.
+
+*Why it matters*:
+
+* Most user-visible latency metric
+* Critical for chatbots, copilots, interactive tools
+* High TTFT makes applications feel sluggish
+
+*What affects TTFT*:
+
+* Prompt length (longer prompts = higher TTFT)
+* Queue depth (more waiting requests = higher TTFT)
+* Model size
+* Prefix caching (can reduce TTFT significantly)
+
+==== Time Per Output Token (TPOT)
+
+*Definition*: Average time between consecutive generated tokens.
+
+*Why it matters*:
+
+* Determines streaming "smoothness"
+* Critical for code assistants, real-time summarization
+* Users perceive smooth streaming as faster
+
+==== Inter-Token Latency (ITL)
+
+*Definition*: Time between each subsequent token during streaming.
+
+High ITL variance causes "stuttering" in streamed responses.
+
+==== End-to-End Request Latency
+
+*Definition*: Total time from request to complete response.
+
+This includes queue waiting, prompt processing, and all token generation.
+
+=== Throughput Metrics
+
+==== Tokens Per Second (TPS)
+
+*Definition*: Total output tokens generated per second across all requests.
+
+*Why it matters*:
+
+* Raw capacity of the system
+* Higher TPS = more users served
+* Lower infrastructure cost per token
+
+==== Goodput
+
+*Definition*: Requests per second that meet Service Level Objectives (SLOs).
+
+Example SLOs:
+
+* TTFT < 500ms at P90
+* TPOT < 50ms at P90
+* End-to-end < 10s at P99
+
+*Why it matters*:
+
+* Aligns infrastructure performance with user-facing requirements
+* Throughput alone doesn't guarantee good user experience
+
+==== P95/P99 Latency
+
+*Definition*: Latency at the 95th/99th percentile.
+
+*Why it matters*:
+
+* Enterprise SLAs often defined at P95/P99
+* Mean latency hides outliers
+* Users remember the worst experiences
+
+=== Metric Optimization by Use Case
+
+[cols="1,2,2", options="header"]
+|===
+|Use Case
+|Primary Metrics
+|Secondary Metrics
+
+|*Chatbots*
+|TTFT, ITL
+|End-to-end latency
+
+|*Code assistants*
+|TTFT, TPOT
+|Accuracy
+
+|*Document processing*
+|Throughput (TPS)
+|Cost per token
+
+|*RAG applications*
+|TTFT, concurrency
+|Memory utilization
+
+|*LLM-as-a-Service*
+|P95 latency, throughput
+|Cost, availability
+|===
+
+== Evaluation and Benchmarking Tools
+
+Measuring LLM performance requires specialized tools.
+
+=== GuideLLM
+
+*GuideLLM* is a benchmarking framework designed for evaluating LLM inference performance.
+
+==== What It Measures
+
+* TTFT (mean, median, P99)
+* TPOT, ITL, request latency
+* Requests/second, tokens/second
+* Concurrency
+
+==== Running a Benchmark
+
+[source,bash]
+----
+# Install
+pip install guidellm
+
+# Run benchmark
+guidellm \
+    --target "http://localhost:8000/v1" \
+    --model "meta-llama/Llama-3.2-8B" \
+    --data-type emulated \
+    --data "prompt_tokens=512,generated_tokens=128"
+----
+
+GuideLLM runs a *sweep* across multiple load levels, helping you find the optimal operating point for your system.
+
+=== lm-eval-harness
+
+*lm-eval-harness* is the standard framework for evaluating model accuracy on benchmarks.
+
+==== What It Measures
+
+* General knowledge: MMLU, HellaSwag, ARC, TruthfulQA
+* Reasoning: GSM8K, MATH, BIG-Bench
+* Code: HumanEval, MBPP
+
+==== Running Evaluations
+
+[source,bash]
+----
+# Install
+pip install lm-eval
+
+# Evaluate a model on MMLU
+lm_eval --model vllm \
+    --model_args pretrained=meta-llama/Llama-3.2-8B \
+    --tasks mmlu \
+    --batch_size auto
+----
+
+=== Ragas
+
+*Ragas* (Retrieval Augmented Generation Assessment) evaluates RAG pipeline quality.
+
+==== What It Measures
+
+* *Faithfulness*: Is the answer grounded in retrieved context?
+* *Answer relevancy*: Does the answer address the question?
+* *Context precision*: Are retrieved documents relevant?
+* *Context recall*: Did retrieval find all relevant information?
+
+=== Choosing the Right Tool
 
 [cols="1,1", options="header"]
+|===
+|Goal
+|Tool
+
+|Benchmark inference speed
+|GuideLLM
+
+|Measure model accuracy
+|lm-eval-harness
+
+|Evaluate RAG quality
+|Ragas
+
+|Production monitoring
+|Prometheus + Grafana with vLLM metrics
+|===
+
+== Key Metrics Summary
+
+[cols="1,2", options="header"]
 |===
 |Metric
 |Definition
 
-|*Throughput*
-|Tokens generated per second (across all requests)
-
-|*Latency (TTFT)*
+|*TTFT*
 |Time To First Token — how fast the response starts
 
-|*Latency (TPS)*
-|Tokens Per Second per request — how fast it streams
+|*TPOT*
+|Time Per Output Token — streaming speed
+
+|*TPS*
+|Tokens Per Second — system throughput
+
+|*Goodput*
+|Requests/sec meeting SLOs
+
+|*P95/P99*
+|Tail latency for SLA compliance
 
 |*Memory utilization*
 |How efficiently GPU memory is used
 
 |*Cost per token*
-|How much each generated token costs
+|Infrastructure cost per generated token
 |===
 
 Serving systems optimize these metrics simultaneously.

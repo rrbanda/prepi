@@ -359,6 +359,92 @@ Token 4 can see: [1, 2, 3, 4]
 
 Future tokens are masked out (their attention weights become zero).
 
+== Why Architecture Matters for Attention
+
+Not all transformer architectures use attention the same way. Understanding these differences explains why optimizations like PagedAttention are designed specifically for decoder-only models.
+
+=== Decoder-Only Models (GPT, LLaMA, Claude)
+
+Decoder-only models generate tokens *one at a time, autoregressively*. Each new token needs access to the full context history — every previous token's Keys and Values.
+
+[source]
+----
+Token 1: Generate → store K₁, V₁
+Token 2: Attend to [K₁] → generate → store K₂, V₂  
+Token 3: Attend to [K₁, K₂] → generate → store K₃, V₃
+...
+Token 1000: Attend to [K₁...K₉₉₉] → generate → store K₁₀₀₀, V₁₀₀₀
+----
+
+This creates:
+
+* A *large and growing memory footprint* per request
+* *Linear KV cache growth* with each new token
+* *Variable-length sequences* across concurrent requests
+
+This is exactly why PagedAttention (covered in Chapter 12) was designed — it handles the dynamic, growing KV cache efficiently through non-contiguous memory allocation.
+
+=== Encoder-Only Models (BERT)
+
+Encoder models process the *entire input sequence in one forward pass*. There's no autoregressive generation — no token-by-token output.
+
+[source]
+----
+Input: "The cat sat on the mat"
+       ↓
+All tokens processed simultaneously
+       ↓
+Output: Contextual embeddings for each token
+----
+
+Key characteristics:
+
+* *No KV cache needed* — no incremental generation
+* *Bidirectional attention* — each token sees all other tokens
+* Memory use is *batch-wide and fixed*, not incremental
+
+Since there's no growing KV cache to manage, PagedAttention provides no benefit for encoder-only models.
+
+=== Encoder-Decoder Models (T5, BART)
+
+These models have two parts:
+
+. *Encoder*: Processes the input (like encoder-only)
+. *Decoder*: Generates output autoregressively (like decoder-only)
+
+The decoder portion does require a KV cache, so PagedAttention can help. However, these architectures are less common for the use cases vLLM is optimized for — long chat-style inferencing and high-concurrency generation.
+
+=== Why This Matters for Production
+
+[cols="1,1,1,1", options="header"]
+|===
+|Architecture
+|KV Cache?
+|PagedAttention Benefit
+|Common Use
+
+|*Decoder-only*
+|Yes, grows linearly
+|*Maximum benefit*
+|Chat, generation, code
+
+|*Encoder-only*
+|No
+|None
+|Classification, embeddings
+
+|*Encoder-decoder*
+|Decoder only
+|Partial benefit
+|Translation, summarization
+|===
+
+When you're deploying LLMs in production (Chapter 12), understanding this helps you:
+
+* Choose the right serving optimizations
+* Predict memory requirements
+* Understand why certain models scale differently
+
 == Pause and Reflect
 
 Try this exercise:

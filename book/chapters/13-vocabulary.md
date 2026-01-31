@@ -124,12 +124,56 @@ Use this as a quick lookup when reviewing concepts or discussing LLMs with colle
 |------|-------------------------|------------|
 | **KV Cache** | Stored Key/Value vectors to avoid recomputation | Chapter 11 |
 | **Attention State** | Synonym for KV cache — emphasizes it's the state needed for attention | Chapter 11 |
+| **BlockSpaceManager** | vLLM's memory manager that implements PagedAttention | Chapter 11 |
 | **Batching** | Processing multiple requests together | Chapter 12 |
 | **Continuous Batching** | Dynamically adding/removing requests from batch | Chapter 12 |
 | **PagedAttention** | vLLM's method for non-contiguous KV cache storage | Chapter 12 |
+| **Scheduler** | Central coordinator managing request queues and batch execution | Chapter 12 |
+| **Preemption** | Pausing or evicting requests to free memory | Chapter 12 |
 | **Throughput** | Tokens generated per second (system-wide) | Chapter 12 |
 | **Latency** | Time to generate response | Chapter 12 |
-| **TTFT** | Time To First Token | Chapter 12 |
+| **TTFT** | Time To First Token — latency until first output token | Chapter 12 |
+| **TPOT** | Time Per Output Token — average time between tokens | Chapter 12 |
+| **ITL** | Inter-Token Latency — time between consecutive tokens | Chapter 12 |
+| **Goodput** | Requests/second meeting SLO constraints | Chapter 12 |
+| **P95/P99** | 95th/99th percentile latency | Chapter 12 |
+
+---
+
+## Speculative Decoding
+
+| Term | Plain English Definition | Covered In |
+|------|-------------------------|------------|
+| **Speculative Decoding** | Optimization using a draft model to predict ahead | Chapter 12 |
+| **Draft Model** | Small, fast model that generates speculative tokens | Chapter 12 |
+| **Target Model** | Large, accurate model that verifies speculative tokens | Chapter 12 |
+| **Acceptance Rate** | Percentage of speculated tokens accepted by target | Chapter 12 |
+
+---
+
+## Quantization
+
+| Term | Plain English Definition | Covered In |
+|------|-------------------------|------------|
+| **Quantization** | Reducing weight precision to save memory and speed | Chapter 12 |
+| **W4A16** | 4-bit weights, 16-bit activations | Chapter 12 |
+| **W8A8-INT8** | 8-bit weights and activations (integer) | Chapter 12 |
+| **W8A8-FP8** | 8-bit weights and activations (floating point) | Chapter 12 |
+| **llm-compressor** | Tool for quantizing models for vLLM | Chapter 12 |
+| **GPTQ** | Post-training quantization algorithm | Chapter 12 |
+| **AWQ** | Activation-aware Weight Quantization | Chapter 12 |
+
+---
+
+## Evaluation
+
+| Term | Plain English Definition | Covered In |
+|------|-------------------------|------------|
+| **GuideLLM** | Benchmarking tool for LLM inference performance | Chapter 12 |
+| **lm-eval-harness** | Framework for evaluating model accuracy on benchmarks | Chapter 12 |
+| **Ragas** | Evaluation framework for RAG applications | Chapter 12 |
+| **MMLU** | Multi-task benchmark for language understanding | Chapter 12 |
+| **Benchmark Sweep** | Testing across multiple load levels | Chapter 12 |
 
 ---
 
@@ -138,13 +182,16 @@ Use this as a quick lookup when reviewing concepts or discussing LLMs with colle
 | Term | What It Is |
 |------|------------|
 | **vLLM** | Open-source serving system with PagedAttention |
-| **TensorRT-LLM** | NVIDIA's optimized serving library |
+| **TensorRT-LLM** | NVIDIA's optimized serving library (NVIDIA-only) |
+| **NIM** | NVIDIA Inference Microservices — containerized model serving |
+| **SGLang** | Fast serving framework with RadixAttention, agentic focus |
 | **TGI** | HuggingFace's Text Generation Inference |
 | **Triton** | NVIDIA's inference server |
 | **KServe** | Control plane for model serving — orchestrates lifecycle, scaling, routing |
 | **InferenceService** | Kubernetes resource that defines a deployed model |
 | **ServingRuntime** | Template defining how to run a model server (container, config) |
 | **Model Server** | The execution engine (vLLM, Triton) that runs inference on GPU |
+| **llm-d** | Distributed inference system for high-throughput LLM serving |
 
 ---
 

@@ -203,6 +203,30 @@ Each beam is extended with its most likely next tokens, then the top beams are k
 
 Most production systems combine **temperature + top-p** (or top-k) for a balance of creativity and coherence.
 
+### Sampling and Speculative Decoding
+
+There's an important interaction between sampling strategies and **speculative decoding** — an optimization technique covered in Chapter 12.
+
+Speculative decoding uses a small, fast "draft" model to predict several tokens ahead, then a larger model verifies or corrects those predictions. This speeds up generation significantly.
+
+However, **sampling strategy affects speculative decoding effectiveness**:
+
+| Sampling Strategy | Speculative Decoding Compatibility |
+|-------------------|-----------------------------------|
+| **Greedy (temperature=0)** | Excellent — highly predictable, high acceptance rate |
+| **Low temperature (0.1-0.5)** | Good — draft model predictions are often accepted |
+| **High temperature (>1.0)** | Poor — randomness leads to low acceptance rate, wasted computation |
+| **Beam search** | Incompatible — fundamentally different decoding approach |
+
+The key insight: **Speculative decoding relies on predictability**. If the target model's sampling is highly random, the draft model's guesses are often rejected, negating the speed benefit.
+
+In production systems like vLLM:
+- Requests with different sampling strategies may need separate batching
+- Mixing speculative decoding with high-temperature requests adds scheduling complexity
+- Teams must choose consistent sampling parameters for optimal throughput
+
+This is why understanding sampling isn't just about output quality — it affects infrastructure efficiency too.
+
 ---
 
 ## Step 7: Repeat (Autoregressive Generation)

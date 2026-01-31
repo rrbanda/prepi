@@ -81,7 +81,7 @@ Getting better outputs through better inputs:
 
 == Systems Deep Dive
 
-=== vLLM vs. TensorRT-LLM
+=== vLLM vs. TensorRT-LLM vs. SGLang
 
 Choosing a serving system:
 
@@ -92,12 +92,20 @@ Choosing a serving system:
 |Best For
 
 |*vLLM*
-|PagedAttention, OpenAI-compatible API, wide model support
+|PagedAttention, OpenAI-compatible API, wide model support, hardware flexibility
 |General use, recommended for OpenShift AI
 
 |*TensorRT-LLM*
-|Maximum NVIDIA performance, custom kernels
-|Production at scale with NVIDIA GPUs
+|Maximum NVIDIA performance, custom kernels, graph optimization
+|Production at scale, NVIDIA-only environments
+
+|*NIM*
+|Pre-packaged containers, simple deployment, uses TRT-LLM or vLLM
+|Fast path to production on NVIDIA
+
+|*SGLang*
+|RadixAttention, programming interface, structured outputs
+|Agentic applications, complex pipelines
 
 |*Triton*
 |Enterprise features, multi-framework
@@ -106,23 +114,111 @@ Choosing a serving system:
 
 Note: OpenShift AI 3.x uses vLLM (v0.11.x) as the primary LLM serving runtime, supporting NVIDIA, AMD, and Intel Gaudi accelerators.
 
+=== Scheduler and Batching
+
+Understanding continuous batching internals:
+
+* *Scheduler*: Central coordinator managing waiting, running, and swapped request queues
+* *Continuous batching*: Dynamic addition/removal of requests mid-inference
+* *Preemption*: Swapping or recomputing KV cache when memory fills
+* *Resources*: vLLM scheduler source code, GuideLLM for measuring batching efficiency
+
+=== Speculative Decoding
+
+Accelerating generation with draft models:
+
+* *Concept*: Use small model to predict tokens, large model to verify in parallel
+* *Benefits*: Reduced latency without accuracy loss
+* *Trade-offs*: Extra memory for draft model, complexity
+* *When to use*: Long generations, low-temperature sampling, code generation
+* *vLLM flags*: `--speculative-model`, `--num-speculative-tokens`
+* *Read*: "Speculative Decoding with Big Little Decoder" (Kim et al., 2023)
+
 === Quantization
 
-Making models smaller:
+Making models smaller and faster:
 
 * *What it is*: Reducing precision of weights (32-bit → 8-bit or 4-bit)
-* *Trade-offs*: Smaller model, faster inference, some quality loss
-* *Techniques*: GPTQ, AWQ, bitsandbytes
-* *When to use*: Limited GPU memory, edge deployment
+* *Trade-offs*: Smaller model, faster inference, slight quality loss (usually <1%)
+* *Formats*: W4A16 (memory-focused), W8A8-INT8 (balanced), W8A8-FP8 (H100 optimized)
+* *Tools*:
+** *llm-compressor*: Red Hat/Neural Magic tool for vLLM-compatible quantization
+** *AutoAWQ*: Activation-aware weight quantization
+** *GPTQ*: Post-training quantization algorithm
+** *bitsandbytes*: 4/8-bit for training and inference
+* *When to use*: Limited GPU memory, edge deployment, cost reduction
+* *Resources*: llm-compressor GitHub, Neural Magic documentation
 
 === Distributed Inference
 
 Serving models larger than one GPU:
 
-* *Tensor parallelism*: Split layers across GPUs
+* *Tensor parallelism*: Split layers across GPUs (vLLM: `--tensor-parallel-size`)
 * *Pipeline parallelism*: Different layers on different GPUs
-* *Expert parallelism*: For mixture-of-experts models
+* *Expert parallelism*: For mixture-of-experts models (Mixtral, etc.)
+* *llm-d*: OpenShift AI's distributed inference with intelligent routing
 * *Tools*: DeepSpeed, Megatron-LM, FairScale
+
+== Evaluation and Benchmarking
+
+=== Performance Benchmarking
+
+Measuring inference speed and capacity:
+
+* *GuideLLM*: OpenAI-compatible server benchmarking
+** Measures TTFT, TPOT, throughput, concurrency
+** Runs load sweeps to find optimal operating points
+** Calculates goodput against SLO constraints
+** *Install*: `pip install guidellm`
+** *Docs*: https://github.com/neuralmagic/guidellm[GuideLLM Documentation]
+
+=== Accuracy Evaluation
+
+Measuring model quality:
+
+* *lm-eval-harness*: Standard framework for LLM benchmarks
+** Supports MMLU, HellaSwag, TruthfulQA, GSM8K, HumanEval
+** Works with vLLM backend
+** *Install*: `pip install lm-eval`
+** *Docs*: https://github.com/EleutherAI/lm-evaluation-harness[lm-eval-harness GitHub]
+
+=== RAG Evaluation
+
+Measuring retrieval-augmented generation quality:
+
+* *Ragas*: Evaluation framework for RAG
+** Measures faithfulness, relevancy, context precision/recall
+** Helps tune retrieval and generation together
+** *Docs*: https://docs.ragas.io[Ragas Documentation]
+
+=== Key Metrics Reference
+
+[cols="1,2,1", options="header"]
+|===
+|Metric
+|Definition
+|Good Target
+
+|*TTFT*
+|Time to first token
+|<500ms for interactive
+
+|*TPOT*
+|Time per output token
+|<50ms for streaming
+
+|*P99 Latency*
+|99th percentile response time
+|Define per use case
+
+|*Goodput*
+|Requests/sec meeting SLOs
+|Maximize
+
+|*Acceptance Rate*
+|Speculative decoding efficiency
+|>60% worthwhile
+|===
 
 == Recommended Reading
 
