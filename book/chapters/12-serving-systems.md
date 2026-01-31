@@ -219,6 +219,86 @@ The serving stack has three layers:
 | **InferenceService** | Deploys a specific model using a runtime |
 | **KServe** | Orchestrates lifecycle, routing, and scaling |
 
+### Understanding the Three Layers
+
+These three components solve different problems and operate at different levels. Understanding their boundaries prevents confusion.
+
+#### KServe: The Control Plane
+
+KServe is the orchestration layer. Think of it as the manager that ensures models are running, healthy, and accessible.
+
+**What KServe owns:**
+- Deploying model server pods
+- Autoscaling (adding/removing replicas)
+- Health checks and restarts
+- Traffic routing between versions
+- Exposing external endpoints
+
+**What KServe does NOT do:**
+- Load model weights
+- Run GPU computations
+- Manage the KV cache
+- Generate tokens
+- Touch the inference math
+
+KServe manages model servers the way Kubernetes manages pods. It doesn't replace the model server — it operates it.
+
+#### Model Server: The Execution Engine
+
+The model server (vLLM, Triton, TGI) is where inference actually happens. This is the component that uses your GPU.
+
+**What the model server owns:**
+- Loading model weights into GPU memory
+- Running the tokenizer
+- Executing transformer forward passes
+- Managing the KV cache
+- Applying PagedAttention optimizations
+- Generating tokens one by one
+
+**The key insight:** When you deploy a model through KServe, KServe launches a model server pod. The model server does all the work described in Chapters 9-11. KServe just makes sure that pod is running and accessible.
+
+#### InferenceService: The Abstraction
+
+An InferenceService is the Kubernetes resource that ties everything together. It specifies:
+- Which model to serve
+- Which runtime to use (vLLM, OpenVINO, etc.)
+- Resource requirements (GPUs, memory)
+- Scaling parameters
+
+When you create an InferenceService, KServe reads it and creates the necessary pods, services, and routes.
+
+### InferenceService vs OpenShift Route
+
+A common point of confusion: how is an InferenceService different from an OpenShift Route?
+
+| Aspect | OpenShift Route | InferenceService |
+|--------|-----------------|------------------|
+| **Layer** | Networking | Application/ML serving |
+| **Purpose** | Expose HTTP(S) traffic | Serve models with lifecycle management |
+| **ML awareness** | None | Full (knows about models, runtimes, GPUs) |
+| **Autoscaling** | No | Yes |
+| **GPU awareness** | No | Yes |
+| **Health checks** | Basic HTTP | Model-specific readiness |
+
+An InferenceService *uses* Routes (indirectly) to expose its endpoint. But they solve different problems:
+- A Route is networking plumbing — it moves HTTP traffic.
+- An InferenceService defines and operates the inference workload that traffic reaches.
+
+You could deploy a model using just a Route and a plain Deployment, but you'd lose autoscaling, model lifecycle management, and the serving abstractions that make production deployment practical.
+
+### Where Service Mesh Fits
+
+If you're using Istio or another service mesh, you might wonder: does the mesh replace KServe?
+
+No — they complement each other.
+
+| Technology | Layer | Provides |
+|------------|-------|----------|
+| **Istio/Envoy** | Network/service mesh | mTLS, authentication, traffic policies, observability |
+| **KServe** | Model serving control plane | Model lifecycle, inference abstraction, ML-aware scaling |
+
+Istio can sit in front of KServe, providing security and observability at the network layer. KServe handles the model-serving concerns that a generic service mesh doesn't understand.
+
 ### vLLM in OpenShift AI
 
 Remember PagedAttention from earlier? It's available via the **vLLM ServingRuntime for KServe**:

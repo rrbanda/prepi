@@ -123,6 +123,7 @@ Use this as a quick lookup when reviewing concepts or discussing LLMs with colle
 | Term | Plain English Definition | Covered In |
 |------|-------------------------|------------|
 | **KV Cache** | Stored Key/Value vectors to avoid recomputation | Chapter 11 |
+| **Attention State** | Synonym for KV cache — emphasizes it's the state needed for attention | Chapter 11 |
 | **Batching** | Processing multiple requests together | Chapter 12 |
 | **Continuous Batching** | Dynamically adding/removing requests from batch | Chapter 12 |
 | **PagedAttention** | vLLM's method for non-contiguous KV cache storage | Chapter 12 |
@@ -140,6 +141,10 @@ Use this as a quick lookup when reviewing concepts or discussing LLMs with colle
 | **TensorRT-LLM** | NVIDIA's optimized serving library |
 | **TGI** | HuggingFace's Text Generation Inference |
 | **Triton** | NVIDIA's inference server |
+| **KServe** | Control plane for model serving — orchestrates lifecycle, scaling, routing |
+| **InferenceService** | Kubernetes resource that defines a deployed model |
+| **ServingRuntime** | Template defining how to run a model server (container, config) |
+| **Model Server** | The execution engine (vLLM, Triton) that runs inference on GPU |
 
 ---
 

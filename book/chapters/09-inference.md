@@ -292,6 +292,31 @@ The model can't learn from your prompts during inference. That would require tra
 
 ---
 
+## CPU vs GPU: Who Does What
+
+The inference pipeline spans two processors with distinct responsibilities:
+
+| Step | Runs On | Why |
+|------|---------|-----|
+| Tokenization | CPU | String processing and dictionary lookup |
+| Embedding lookup | GPU | Accessing model weights in GPU memory |
+| Transformer layers | GPU | Massive matrix multiplications |
+| Output projection | GPU | Matrix multiplication to produce logits |
+| Sampling | CPU (often) | Probability calculations and random selection |
+| Detokenization | CPU | Token IDs back to text |
+
+The model server orchestrates this entire flow. When you call an inference endpoint:
+
+1. The **CPU** receives your text and runs the tokenizer
+2. Token IDs are copied to **GPU** memory
+3. The **GPU** runs the transformer forward pass (the expensive part)
+4. Results come back to the **CPU** for sampling and text conversion
+5. The **CPU** returns the response
+
+This is why both CPU and GPU specifications matter for model serving, though GPU is typically the bottleneck for LLMs.
+
+---
+
 ## Pause and Reflect
 
 Notice: The model generated "Paris" not because it knows geography as facts, but because:

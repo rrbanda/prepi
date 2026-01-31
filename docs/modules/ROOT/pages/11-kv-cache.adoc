@@ -236,6 +236,21 @@ Common misconceptions:
 
 The KV cache is an *optimization*, not a feature. It makes fast generation possible but doesn't add capabilities.
 
+=== Also Called "Attention State"
+
+You may encounter the term *attention state* used interchangeably with KV cache. They refer to the same thing: the stored Key and Value vectors for processed tokens.
+
+The name "attention state" emphasizes that this data represents the accumulated state needed for attention computation. The name "KV cache" emphasizes that it's cached (stored for reuse) Key and Value vectors.
+
+=== The Relationship to Context
+
+This distinction is important:
+
+* *KV cache* stores the K/V vectors that _enable_ efficient context computation
+* *Context* (contextual representation) is the _result_ of computing attention over those K/V vectors
+
+The KV cache is not context itself — it's the ingredients. Context is the dish you cook from those ingredients. Every time a new token is generated, the model uses the cached K/V vectors to compute a new contextual representation for that token.
+
 == The Collaborative Story Analogy
 
 Imagine you're writing a story collaboratively:

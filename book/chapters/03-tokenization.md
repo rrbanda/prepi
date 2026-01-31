@@ -175,6 +175,52 @@ Token IDs are addresses, not meanings. The meaning comes next.
 
 ---
 
+## What "Encoding" Really Means
+
+You'll often hear tokenization described as "encoding" text. This terminology can be confusing, so let's be precise:
+
+**Encoding means:** mapping text to pre-existing token IDs using the tokenizer's rules.
+
+**Encoding does NOT mean:**
+- Creating new token IDs
+- Modifying the vocabulary
+- Any kind of learning or intelligence
+
+The tokenizer performs a deterministic lookup. Given the same text, it always produces the same token IDs. The vocabulary and rules are fixed before training and never change.
+
+### What Happens When a Word Isn't in the Vocabulary?
+
+The tokenizer never fails. If a whole word doesn't exist as a token, the tokenizer splits it into smaller pieces that do exist:
+
+```
+"cryptocurrency"
+→ ["crypt", "oc", "urrency"]  (example split)
+→ [token IDs exist for each piece]
+```
+
+It keeps splitting until every piece matches something in the vocabulary. Worst case, it falls back to individual characters or byte-level tokens.
+
+This is why:
+- LLMs can handle any text, including typos, new words, and multiple languages
+- Rare or complex words cost more tokens (affecting cost and context usage)
+- The model never encounters an "unknown word" error
+
+### Where Tokenization Runs
+
+Tokenization happens on the **CPU**, not the GPU.
+
+```
+CPU: Text → Tokenizer → Token IDs
+         ↓
+GPU: Token IDs → Embedding lookup → Model computation
+```
+
+The tokenizer is string processing and dictionary lookup — operations CPUs handle efficiently. The GPU takes over once we have token IDs and need to do the heavy matrix math of the transformer.
+
+In practice, the **model server** (like vLLM) handles this automatically. It runs the tokenizer, sends token IDs to the GPU, and converts output token IDs back to text.
+
+---
+
 ## Pause and Reflect
 
 Try to tokenize this sentence in your head:

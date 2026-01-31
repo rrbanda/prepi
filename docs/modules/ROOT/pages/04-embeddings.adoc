@@ -189,6 +189,55 @@ We'll see how in Part IV.
 
 Token ID 318 is just an address. The embedding at row 318 is the content — the actual representation of what " is" means to this model.
 
+=== The Full Hierarchy: Token ID → Embedding → Vector → Tensor
+
+These terms often cause confusion because they're related but distinct. Here's how they connect:
+
+[cols="1,1,1", options="header"]
+|===
+|Term
+|What It Is
+|Role in the Pipeline
+
+|*Token ID*
+|Single integer
+|Index for lookup — has no meaning on its own
+
+|*Embedding*
+|A specific type of vector
+|Looked up using token ID — represents token meaning
+
+|*Vector*
+|Ordered list of numbers
+|Mathematical object that embeddings and hidden states are
+
+|*Tensor*
+|Multi-dimensional array
+|Container that holds vectors, matrices, and higher-dimensional data
+|===
+
+The key relationships:
+
+* *Embeddings are vectors.* Every embedding is a vector — a list of numbers representing meaning.
+* *Vectors are 1D tensors.* In deep learning frameworks, a vector is just a tensor with one dimension.
+* *Tensors contain vectors.* The embedding matrix is a 2D tensor where each row is a vector (embedding).
+
+When you see code or documentation referring to "tensors," it usually means the multi-dimensional arrays that contain model weights — including the embedding vectors.
+
+=== What Is a Dimension?
+
+A dimension is simply one number in a vector — one axis in the space.
+
+If a vector has 768 numbers, we say it has 768 dimensions. Each dimension captures some aspect of meaning, though no single dimension corresponds to a human-interpretable concept like "gender" or "size." Meaning is distributed across all dimensions.
+
+Different models use different embedding dimensions:
+
+* *768 dimensions*: GPT-2 Small, BERT-base
+* *4,096 dimensions*: LLaMA-7B
+* *12,288 dimensions*: GPT-3 (175B)
+
+More dimensions generally mean more capacity to represent nuanced meaning — but also more memory and computation.
+
 == Pause and Reflect
 
 If "Paris" and "France" have similar embeddings (they appear in similar contexts), where do you think "Berlin" ends up?
