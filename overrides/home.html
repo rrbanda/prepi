@@ -5,270 +5,637 @@
 {% block tabs %}
 
 <style>
+/* ===== CSS Reset & Variables ===== */
+:root {
+  --hero-gradient: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4c1d95 100%);
+  --accent-gradient: linear-gradient(135deg, #818cf8, #a78bfa);
+  --card-bg: rgba(255, 255, 255, 0.03);
+  --card-border: rgba(255, 255, 255, 0.08);
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-muted: rgba(255, 255, 255, 0.5);
+}
+
+[data-md-color-scheme="default"] {
+  --section-bg: #f8fafc;
+  --card-bg-light: #ffffff;
+  --card-border-light: #e2e8f0;
+  --text-dark: #1e293b;
+  --text-dark-secondary: #475569;
+}
+
+[data-md-color-scheme="slate"] {
+  --section-bg: #0f172a;
+  --card-bg-light: #1e293b;
+  --card-border-light: #334155;
+  --text-dark: #f1f5f9;
+  --text-dark-secondary: #cbd5e1;
+}
+
 /* ===== Header Bar ===== */
-.tx-header {
-  background: linear-gradient(135deg, #4f46e5, #7c3aed);
-  padding: 0.5rem 1rem;
+.llm-header {
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(12px);
+  padding: 1rem 2rem;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.llm-header__brand {
+  display: flex;
+  align-items: center;
   gap: 0.75rem;
-}
-
-[data-md-color-scheme="slate"] .tx-header {
-  background: linear-gradient(135deg, #312e81, #4c1d95);
-}
-
-.tx-header__search input {
-  padding: 0.4rem 0.8rem;
-  border: 1px solid rgba(255,255,255,0.3);
-  border-radius: 16px;
-  background: rgba(255,255,255,0.15);
   color: white;
-  font-size: 0.8rem;
-  width: 180px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.1rem;
 }
 
-.tx-header__search input::placeholder { color: rgba(255,255,255,0.7); }
+.llm-header__brand svg {
+  width: 28px;
+  height: 28px;
+  fill: #818cf8;
+}
 
-.tx-header__toggle {
-  background: rgba(255,255,255,0.15);
-  border: 1px solid rgba(255,255,255,0.3);
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
+.llm-header__nav {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.llm-header__link {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.llm-header__link:hover {
+  color: #818cf8;
+}
+
+.llm-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.llm-header__search {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  color: white;
+  font-size: 0.85rem;
+  width: 200px;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.llm-header__search::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.llm-header__search:focus {
+  border-color: #818cf8;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.llm-header__icon-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  width: 38px;
+  height: 38px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   color: white;
-  font-size: 0.9rem;
+  transition: all 0.2s;
 }
 
-.tx-header__github { color: white; opacity: 0.9; }
-.tx-header__github:hover { opacity: 1; }
-
-/* ===== COMPACT Hero ===== */
-.tx-container {
-  background: linear-gradient(135deg, #4f46e5, #7c3aed);
-  padding: 1rem 1rem 1.25rem;
+.llm-header__icon-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #818cf8;
 }
 
-[data-md-color-scheme="slate"] .tx-container {
-  background: linear-gradient(135deg, #312e81, #4c1d95);
+/* ===== Hero Section ===== */
+.llm-hero {
+  background: var(--hero-gradient);
+  padding: 6rem 2rem 8rem;
+  position: relative;
+  overflow: hidden;
 }
 
-.tx-hero {
+.llm-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.5;
+}
+
+.llm-hero__container {
   max-width: 1200px;
   margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.llm-hero__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 100px;
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+}
+
+.llm-hero__badge-dot {
+  width: 8px;
+  height: 8px;
+  background: #22c55e;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.llm-hero__title {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.1;
+  margin: 0 0 1.5rem;
+  letter-spacing: -0.03em;
+}
+
+.llm-hero__title span {
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.llm-hero__subtitle {
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  color: var(--text-secondary);
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0 0 2.5rem;
+}
+
+.llm-hero__cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 4rem;
+}
+
+.llm-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: none;
+}
+
+.llm-btn--primary {
+  background: white;
+  color: #1e1b4b;
+}
+
+.llm-btn--primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.llm-btn--secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.llm-btn--secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Token Demo */
+.llm-hero__demo {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 2rem;
+  max-width: 700px;
+}
+
+.llm-demo__label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+.llm-demo__flow {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 1.5rem;
-  color: white;
   flex-wrap: wrap;
 }
 
-.tx-hero h1 {
-  font-size: 1.8rem;
-  font-weight: 800;
-  margin: 0;
-  line-height: 1.1;
+.llm-demo__input {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  padding: 1rem 1.5rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.1rem;
+  color: var(--text-secondary);
 }
 
-.tx-hero__tagline {
+.llm-demo__arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  color: #818cf8;
+}
+
+.llm-demo__arrow svg {
+  width: 32px;
+  height: 32px;
+}
+
+.llm-demo__arrow span {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+}
+
+.llm-demo__output {
+  background: linear-gradient(135deg, #818cf8, #a78bfa);
+  border-radius: 10px;
+  padding: 1rem 1.5rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: white;
+  box-shadow: 0 10px 30px rgba(129, 140, 248, 0.3);
+}
+
+/* ===== Features Section ===== */
+.llm-features {
+  background: var(--section-bg);
+  padding: 6rem 2rem;
+}
+
+.llm-features__container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.llm-section__header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.llm-section__title {
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 0 0 1rem;
+  letter-spacing: -0.02em;
+}
+
+.llm-section__subtitle {
+  font-size: 1.1rem;
+  color: var(--text-dark-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.llm-features__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.llm-feature-card {
+  background: var(--card-bg-light);
+  border: 1px solid var(--card-border-light);
+  border-radius: 16px;
+  padding: 2rem;
+  transition: all 0.3s ease;
+}
+
+.llm-feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border-color: #818cf8;
+}
+
+.llm-feature-card__icon {
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, #818cf8, #a78bfa);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.llm-feature-card__title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 0 0 0.75rem;
+}
+
+.llm-feature-card__description {
   font-size: 0.95rem;
-  opacity: 0.9;
-  margin: 0.25rem 0 0;
+  color: var(--text-dark-secondary);
+  line-height: 1.7;
+  margin: 0;
 }
 
-.tx-hero__description {
-  font-size: 0.85rem;
-  opacity: 0.8;
-  margin: 0.25rem 0 0.75rem;
+/* ===== Journey Section ===== */
+.llm-journey {
+  background: var(--hero-gradient);
+  padding: 6rem 2rem;
+  position: relative;
 }
 
-.tx-hero .md-button {
-  padding: 0.4rem 0.8rem;
-  font-size: 0.8rem;
-  border-radius: 5px;
-  margin-right: 0.4rem;
+.llm-journey__container {
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.tx-hero .md-button--primary {
-  background: white;
-  color: #4f46e5;
-  border: none;
-}
-
-.tx-hero .md-button:not(.md-button--primary) {
-  border: 1px solid rgba(255,255,255,0.5);
+.llm-journey .llm-section__title {
   color: white;
 }
 
-/* Token Visual - Inline */
-.tx-hero__visual {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+.llm-journey .llm-section__subtitle {
+  color: var(--text-secondary);
 }
 
-.tx-token {
-  background: rgba(255,255,255,0.15);
-  border: 1px solid rgba(255,255,255,0.3);
-  padding: 0.5rem 0.75rem;
-  border-radius: 6px;
-  font-family: var(--md-code-font-family);
-  font-size: 0.75rem;
-}
-
-.tx-token--output {
-  background: white;
-  color: #4f46e5;
-  font-weight: 700;
-  font-size: 0.85rem;
-  border: none;
-}
-
-.tx-arrow { font-size: 1rem; opacity: 0.8; }
-
-/* ===== Main Grid ===== */
-.tx-main {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 1rem;
+.llm-journey__grid {
   display: grid;
-  grid-template-columns: 1.5fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1rem;
 }
 
-@media (max-width: 800px) {
-  .tx-main { grid-template-columns: 1fr; }
-  .tx-hero { flex-direction: column; text-align: center; }
-  .tx-hero__visual { justify-content: center; }
+.llm-journey__step {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.3s ease;
 }
 
-/* Features */
-.tx-features__title {
-  font-size: 1rem;
-  font-weight: 700;
-  margin: 0 0 0.6rem;
-  color: var(--md-typeset-color);
+.llm-journey__step:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
 }
 
-.tx-features__grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.5rem;
-}
-
-.tx-feature {
-  display: flex;
+.llm-journey__step-number {
+  display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem;
-  background: var(--md-code-bg-color);
-  border-radius: 6px;
-  border: 1px solid var(--md-typeset-table-color);
-}
-
-.tx-feature__icon { font-size: 1.2rem; }
-
-.tx-feature__text h3 {
-  font-size: 0.75rem;
-  font-weight: 600;
-  margin: 0;
-  color: var(--md-typeset-color);
-}
-
-.tx-feature__text p {
-  font-size: 0.65rem;
-  margin: 0;
-  opacity: 0.75;
-}
-
-/* Audience */
-.tx-sidebar__title {
-  font-size: 1rem;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: var(--accent-gradient);
+  border-radius: 50%;
   font-weight: 700;
-  margin: 0 0 0.5rem;
-  color: var(--md-typeset-color);
-}
-
-.tx-audience__list {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.4rem;
-}
-
-@media (max-width: 500px) {
-  .tx-audience__list { grid-template-columns: 1fr; }
-}
-
-.tx-audience__item {
-  padding: 0.4rem 0.6rem;
-  background: var(--md-code-bg-color);
-  border-radius: 5px;
-  border: 1px solid var(--md-typeset-table-color);
-}
-
-.tx-audience__item strong {
-  color: var(--md-primary-fg-color);
-  font-size: 0.7rem;
-}
-
-.tx-audience__item span {
-  display: block;
-  font-size: 0.6rem;
-  opacity: 0.75;
-}
-
-/* CTA */
-.tx-cta {
-  grid-column: 1 / -1;
-  background: linear-gradient(90deg, var(--md-primary-fg-color), #7c3aed);
-  border-radius: 6px;
-  padding: 0.75rem 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
+  font-size: 0.9rem;
   color: white;
-  flex-wrap: wrap;
+  margin-bottom: 1rem;
 }
 
-[data-md-color-scheme="slate"] .tx-cta {
-  background: linear-gradient(90deg, #312e81, #4c1d95);
-}
-
-.tx-cta__text h2 {
-  font-size: 0.95rem;
+.llm-journey__step-title {
+  font-size: 1rem;
   font-weight: 600;
+  color: white;
+  margin: 0 0 0.5rem;
+}
+
+.llm-journey__step-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
   margin: 0;
 }
 
-.tx-cta__text p {
-  font-size: 0.75rem;
-  margin: 0;
-  opacity: 0.85;
+/* ===== Audience Section ===== */
+.llm-audience {
+  background: var(--section-bg);
+  padding: 6rem 2rem;
 }
 
-.tx-cta .md-button {
-  background: white;
-  color: #4f46e5;
-  padding: 0.5rem 1rem;
-  font-size: 0.8rem;
-  border: none;
-  border-radius: 5px;
+.llm-audience__container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.llm-audience__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+@media (max-width: 600px) {
+  .llm-audience__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.llm-audience__card {
+  background: var(--card-bg-light);
+  border: 1px solid var(--card-border-light);
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  transition: all 0.3s ease;
+}
+
+.llm-audience__card:hover {
+  border-color: #818cf8;
+  transform: translateX(4px);
+}
+
+.llm-audience__card-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.llm-audience__card-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 0 0 0.25rem;
+}
+
+.llm-audience__card-desc {
+  font-size: 0.9rem;
+  color: var(--text-dark-secondary);
+  margin: 0;
+}
+
+/* ===== Stats Section ===== */
+.llm-stats {
+  background: #0f172a;
+  padding: 4rem 2rem;
+}
+
+.llm-stats__container {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .llm-stats__container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.llm-stat__value {
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.5rem;
+}
+
+.llm-stat__label {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ===== CTA Section ===== */
+.llm-cta {
+  background: var(--section-bg);
+  padding: 6rem 2rem;
+}
+
+.llm-cta__container {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.llm-cta__title {
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 0 0 1rem;
+}
+
+.llm-cta__subtitle {
+  font-size: 1.1rem;
+  color: var(--text-dark-secondary);
+  margin: 0 0 2rem;
+}
+
+.llm-cta .llm-btn--primary {
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  color: white;
+  padding: 1.25rem 3rem;
+  font-size: 1.1rem;
+}
+
+.llm-cta .llm-btn--primary:hover {
+  box-shadow: 0 20px 40px rgba(79, 70, 229, 0.4);
+}
+
+/* ===== Footer ===== */
+.llm-footer {
+  background: #0f172a;
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.llm-footer__text {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.llm-footer__link {
+  color: #818cf8;
+  text-decoration: none;
+}
+
+.llm-footer__link:hover {
+  text-decoration: underline;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .llm-header {
+    padding: 1rem;
+  }
+  
+  .llm-header__nav {
+    display: none;
+  }
+  
+  .llm-hero {
+    padding: 4rem 1.5rem 5rem;
+  }
+  
+  .llm-hero__demo {
+    padding: 1.5rem;
+  }
+  
+  .llm-demo__flow {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+  
+  .llm-demo__arrow {
+    transform: rotate(90deg);
+  }
 }
 </style>
 
-<!-- Header -->
-<header class="tx-header">
-  <div class="tx-header__search">
-    <input type="text" placeholder="Search..." onclick="document.querySelector('.md-search__input')?.focus()">
-  </div>
-  <button class="tx-header__toggle" onclick="toggleTheme()" title="Toggle dark mode">🌓</button>
 <script>
 function toggleTheme() {
   const body = document.body;
@@ -277,77 +644,257 @@ function toggleTheme() {
   body.setAttribute('data-md-color-scheme', next);
   localStorage.setItem('data-md-color-scheme', next);
 }
-// Load saved theme
+
 document.addEventListener('DOMContentLoaded', function() {
   const saved = localStorage.getItem('data-md-color-scheme');
   if (saved) document.body.setAttribute('data-md-color-scheme', saved);
 });
 </script>
-  <a href="https://github.com/rrbanda/prepi" class="tx-header__github">
-    <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+
+<!-- Header -->
+<header class="llm-header">
+  <a href="." class="llm-header__brand">
+    <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+    LLM Handbook
   </a>
+  
+  <nav class="llm-header__nav">
+    <a href="chapters/00-prologue/" class="llm-header__link">Start Reading</a>
+    <a href="chapters/14-vocabulary/" class="llm-header__link">Vocabulary</a>
+    <a href="chapters/16-appendix/" class="llm-header__link">Resources</a>
+  </nav>
+  
+  <div class="llm-header__actions">
+    <input type="text" class="llm-header__search" placeholder="Search..." onclick="document.querySelector('.md-search__input')?.focus()">
+    <button class="llm-header__icon-btn" onclick="toggleTheme()" title="Toggle theme">🌓</button>
+    <a href="https://github.com/rrbanda/prepi" class="llm-header__icon-btn" title="GitHub">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+    </a>
+  </div>
 </header>
 
-<!-- Hero -->
-<section class="tx-container">
-  <div class="tx-hero">
-    <div>
-      <h1>The LLM Handbook</h1>
-      <p class="tx-hero__tagline">A Complete Guide to Understanding Large Language Models</p>
-      <p class="tx-hero__description">From Concepts to Production. No ML knowledge required.</p>
-      <a href="chapters/00-prologue/" class="md-button md-button--primary">Start Reading</a>
-      <a href="chapters/14-vocabulary/" class="md-button">Vocabulary</a>
+<!-- Hero Section -->
+<section class="llm-hero">
+  <div class="llm-hero__container">
+    <div class="llm-hero__badge">
+      <span class="llm-hero__badge-dot"></span>
+      Free & Open Source
     </div>
-    <div class="tx-hero__visual">
-      <span class="tx-token">"Eiffel Tower is in"</span>
-      <span class="tx-arrow">→</span>
-      <span class="tx-token tx-token--output">"Paris"</span>
+    
+    <h1 class="llm-hero__title">
+      Master <span>Large Language Models</span><br>
+      From First Principles
+    </h1>
+    
+    <p class="llm-hero__subtitle">
+      The complete technical guide to understanding how LLMs work — from tokenization to production deployment. No ML background required.
+    </p>
+    
+    <div class="llm-hero__cta">
+      <a href="chapters/00-prologue/" class="llm-btn llm-btn--primary">
+        Start Reading
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="chapters/14-vocabulary/" class="llm-btn llm-btn--secondary">
+        Browse Vocabulary
+      </a>
+    </div>
+    
+    <div class="llm-hero__demo">
+      <div class="llm-demo__label">See How LLMs Think</div>
+      <div class="llm-demo__flow">
+        <div class="llm-demo__input">"The Eiffel Tower is located in"</div>
+        <div class="llm-demo__arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          <span>predicts</span>
+        </div>
+        <div class="llm-demo__output">"Paris"</div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- Main -->
-<section class="tx-main">
-  <div class="tx-features">
-    <h2 class="tx-features__title">What You'll Learn</h2>
-    <div class="tx-features__grid">
-      <div class="tx-feature">
-        <div class="tx-feature__icon">🧩</div>
-        <div class="tx-feature__text"><h3>Tokenization</h3><p>Text → Numbers</p></div>
+<!-- Features Section -->
+<section class="llm-features">
+  <div class="llm-features__container">
+    <div class="llm-section__header">
+      <h2 class="llm-section__title">What You'll Learn</h2>
+      <p class="llm-section__subtitle">A complete journey from basic concepts to production systems</p>
+    </div>
+    
+    <div class="llm-features__grid">
+      <div class="llm-feature-card">
+        <div class="llm-feature-card__icon">🔤</div>
+        <h3 class="llm-feature-card__title">Tokenization</h3>
+        <p class="llm-feature-card__description">How text becomes numbers. Understand BPE, vocabulary, and why "ChatGPT" is three tokens.</p>
       </div>
-      <div class="tx-feature">
-        <div class="tx-feature__icon">🧠</div>
-        <div class="tx-feature__text"><h3>Transformers</h3><p>The architecture</p></div>
+      
+      <div class="llm-feature-card">
+        <div class="llm-feature-card__icon">🧠</div>
+        <h3 class="llm-feature-card__title">Transformers</h3>
+        <p class="llm-feature-card__description">The architecture behind GPT, Claude, and LLaMA. Self-attention explained simply.</p>
       </div>
-      <div class="tx-feature">
-        <div class="tx-feature__icon">⚡</div>
-        <div class="tx-feature__text"><h3>Inference</h3><p>How it generates</p></div>
+      
+      <div class="llm-feature-card">
+        <div class="llm-feature-card__icon">⚡</div>
+        <h3 class="llm-feature-card__title">Inference</h3>
+        <p class="llm-feature-card__description">Follow a token's journey from input to output. Understand sampling, temperature, and generation.</p>
       </div>
-      <div class="tx-feature">
-        <div class="tx-feature__icon">🚀</div>
-        <div class="tx-feature__text"><h3>Deployment</h3><p>vLLM & KServe</p></div>
+      
+      <div class="llm-feature-card">
+        <div class="llm-feature-card__icon">🚀</div>
+        <h3 class="llm-feature-card__title">Production Serving</h3>
+        <p class="llm-feature-card__description">vLLM, PagedAttention, KV cache, continuous batching. Deploy LLMs at scale.</p>
+      </div>
+      
+      <div class="llm-feature-card">
+        <div class="llm-feature-card__icon">🎯</div>
+        <h3 class="llm-feature-card__title">Attention Mechanism</h3>
+        <p class="llm-feature-card__description">The "secret sauce" of transformers. Q, K, V explained with intuitive examples.</p>
+      </div>
+      
+      <div class="llm-feature-card">
+        <div class="llm-feature-card__icon">📊</div>
+        <h3 class="llm-feature-card__title">Training & Fine-tuning</h3>
+        <p class="llm-feature-card__description">How models learn patterns. Backpropagation, loss functions, and RLHF demystified.</p>
       </div>
     </div>
-  </div>
-
-  <div class="tx-sidebar">
-    <h2 class="tx-sidebar__title">Who This Is For</h2>
-    <div class="tx-audience__list">
-      <div class="tx-audience__item"><strong>Engineers</strong><span>LLM understanding</span></div>
-      <div class="tx-audience__item"><strong>MLOps</strong><span>Deployment</span></div>
-      <div class="tx-audience__item"><strong>PMs</strong><span>AI capabilities</span></div>
-      <div class="tx-audience__item"><strong>Leaders</strong><span>AI decisions</span></div>
-    </div>
-  </div>
-
-  <div class="tx-cta">
-    <div class="tx-cta__text">
-      <h2>Ready to understand LLMs?</h2>
-      <p>17 chapters • 4-6 hours</p>
-    </div>
-    <a href="chapters/00-prologue/" class="md-button">Begin Prologue →</a>
   </div>
 </section>
+
+<!-- Journey Section -->
+<section class="llm-journey">
+  <div class="llm-journey__container">
+    <div class="llm-section__header">
+      <h2 class="llm-section__title">Your Learning Journey</h2>
+      <p class="llm-section__subtitle">17 chapters taking you from beginner to expert</p>
+    </div>
+    
+    <div class="llm-journey__grid">
+      <div class="llm-journey__step">
+        <div class="llm-journey__step-number">I</div>
+        <h3 class="llm-journey__step-title">The Magic Trick</h3>
+        <p class="llm-journey__step-desc">What LLMs actually do</p>
+      </div>
+      
+      <div class="llm-journey__step">
+        <div class="llm-journey__step-number">II</div>
+        <h3 class="llm-journey__step-title">Translation</h3>
+        <p class="llm-journey__step-desc">Tokens & embeddings</p>
+      </div>
+      
+      <div class="llm-journey__step">
+        <div class="llm-journey__step-number">III</div>
+        <h3 class="llm-journey__step-title">Architecture</h3>
+        <p class="llm-journey__step-desc">Neural nets & transformers</p>
+      </div>
+      
+      <div class="llm-journey__step">
+        <div class="llm-journey__step-number">IV</div>
+        <h3 class="llm-journey__step-title">Secret Sauce</h3>
+        <p class="llm-journey__step-desc">Attention & context</p>
+      </div>
+      
+      <div class="llm-journey__step">
+        <div class="llm-journey__step-number">V</div>
+        <h3 class="llm-journey__step-title">In Action</h3>
+        <p class="llm-journey__step-desc">Inference & training</p>
+      </div>
+      
+      <div class="llm-journey__step">
+        <div class="llm-journey__step-number">VI</div>
+        <h3 class="llm-journey__step-title">Under the Hood</h3>
+        <p class="llm-journey__step-desc">KV cache & serving</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Audience Section -->
+<section class="llm-audience">
+  <div class="llm-audience__container">
+    <div class="llm-section__header">
+      <h2 class="llm-section__title">Who This Is For</h2>
+      <p class="llm-section__subtitle">Whether you're building, deploying, or deciding</p>
+    </div>
+    
+    <div class="llm-audience__grid">
+      <div class="llm-audience__card">
+        <div class="llm-audience__card-icon">👨‍💻</div>
+        <div>
+          <h3 class="llm-audience__card-title">Software Engineers</h3>
+          <p class="llm-audience__card-desc">Understand LLMs deeply to build better AI-powered applications</p>
+        </div>
+      </div>
+      
+      <div class="llm-audience__card">
+        <div class="llm-audience__card-icon">🔧</div>
+        <div>
+          <h3 class="llm-audience__card-title">MLOps Engineers</h3>
+          <p class="llm-audience__card-desc">Deploy and scale LLMs with vLLM, KServe, and OpenShift AI</p>
+        </div>
+      </div>
+      
+      <div class="llm-audience__card">
+        <div class="llm-audience__card-icon">📋</div>
+        <div>
+          <h3 class="llm-audience__card-title">Product Managers</h3>
+          <p class="llm-audience__card-desc">Make informed decisions about AI capabilities and limitations</p>
+        </div>
+      </div>
+      
+      <div class="llm-audience__card">
+        <div class="llm-audience__card-icon">🎯</div>
+        <div>
+          <h3 class="llm-audience__card-title">Tech Leaders</h3>
+          <p class="llm-audience__card-desc">Guide AI strategy with real technical understanding</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats Section -->
+<section class="llm-stats">
+  <div class="llm-stats__container">
+    <div class="llm-stat">
+      <div class="llm-stat__value">17</div>
+      <div class="llm-stat__label">Chapters</div>
+    </div>
+    <div class="llm-stat">
+      <div class="llm-stat__value">4-6</div>
+      <div class="llm-stat__label">Hours to Read</div>
+    </div>
+    <div class="llm-stat">
+      <div class="llm-stat__value">100+</div>
+      <div class="llm-stat__label">Concepts Explained</div>
+    </div>
+    <div class="llm-stat">
+      <div class="llm-stat__value">Free</div>
+      <div class="llm-stat__label">Forever</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="llm-cta">
+  <div class="llm-cta__container">
+    <h2 class="llm-cta__title">Ready to truly understand LLMs?</h2>
+    <p class="llm-cta__subtitle">Start from Chapter 0 and build your understanding from first principles.</p>
+    <a href="chapters/00-prologue/" class="llm-btn llm-btn--primary">
+      Begin Your Journey
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="llm-footer">
+  <p class="llm-footer__text">
+    Open source on <a href="https://github.com/rrbanda/prepi" class="llm-footer__link">GitHub</a> · 
+    Built with ❤️ for the AI community
+  </p>
+</footer>
 
 {% endblock %}
 
