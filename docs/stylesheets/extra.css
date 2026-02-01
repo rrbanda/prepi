@@ -1,27 +1,352 @@
 /*
  * The LLM Handbook - Custom Styles
- * Extends Material for MkDocs theme
+ * Beautiful hero landing page + content enhancements
  */
 
 /* ========================================
-   Root Variables - Brand Colors
+   Root Variables
    ======================================== */
 :root {
-  /* Adjust primary palette */
   --md-primary-fg-color: #4f46e5;
   --md-primary-fg-color--light: #818cf8;
   --md-primary-fg-color--dark: #3730a3;
-  
-  /* Accent color */
   --md-accent-fg-color: #8b5cf6;
-  
-  /* Typography enhancements */
-  --md-text-font: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
-  --md-code-font: "JetBrains Mono", "SF Mono", Consolas, monospace;
+}
+
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: #818cf8;
+  --md-primary-fg-color--light: #a5b4fc;
+  --md-primary-fg-color--dark: #6366f1;
 }
 
 /* ========================================
-   Typography Enhancements
+   Hero Section
+   ======================================== */
+.mdx-container {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #6366f1 100%);
+  padding: 4rem 0;
+  margin-top: -1rem;
+}
+
+[data-md-color-scheme="slate"] .mdx-container {
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #3730a3 100%);
+}
+
+.mdx-hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  padding: 2rem 0;
+}
+
+@media screen and (max-width: 76.25em) {
+  .mdx-hero {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 2rem;
+  }
+}
+
+.mdx-hero__content {
+  color: white;
+}
+
+.mdx-hero__title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  line-height: 1.1;
+  margin: 0 0 1rem;
+  color: white;
+  letter-spacing: -0.03em;
+}
+
+@media screen and (max-width: 60em) {
+  .mdx-hero__title {
+    font-size: 2.5rem;
+  }
+}
+
+.mdx-hero__tagline {
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin: 0 0 0.75rem;
+  opacity: 0.95;
+  line-height: 1.5;
+}
+
+.mdx-hero__description {
+  font-size: 1.1rem;
+  opacity: 0.85;
+  margin: 0 0 2rem;
+  line-height: 1.6;
+}
+
+.mdx-hero__actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+@media screen and (max-width: 76.25em) {
+  .mdx-hero__actions {
+    justify-content: center;
+  }
+}
+
+.mdx-hero__actions .md-button {
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+}
+
+.mdx-hero__actions .md-button--primary {
+  background: white;
+  color: #4f46e5;
+  border-color: white;
+}
+
+.mdx-hero__actions .md-button--primary:hover {
+  background: #f0f0f0;
+  color: #3730a3;
+}
+
+.mdx-hero__actions .md-button:not(.md-button--primary) {
+  color: white;
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.mdx-hero__actions .md-button:not(.md-button--primary):hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: white;
+}
+
+/* Hero Visual - Token Animation */
+.mdx-hero__image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mdx-hero__visual {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.mdx-hero__token {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 1rem 1.5rem;
+  border-radius: 0.75rem;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 1rem;
+  color: white;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.mdx-hero__token--output {
+  background: rgba(255, 255, 255, 0.95);
+  color: #4f46e5;
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.mdx-hero__arrow {
+  font-size: 2rem;
+  color: white;
+  opacity: 0.8;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; transform: translateX(0); }
+  50% { opacity: 1; transform: translateX(5px); }
+}
+
+/* ========================================
+   Features Section
+   ======================================== */
+.mdx-features {
+  padding: 4rem 0;
+  background: var(--md-default-bg-color);
+}
+
+.mdx-features__title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 3rem;
+  color: var(--md-typeset-color);
+}
+
+.mdx-features__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+}
+
+@media screen and (max-width: 76.25em) {
+  .mdx-features__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 45em) {
+  .mdx-features__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mdx-features__item {
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  background: var(--md-code-bg-color);
+  border: 1px solid var(--md-typeset-table-color);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.mdx-features__item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
+.mdx-features__icon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  background: linear-gradient(135deg, #4f46e5 0%, #8b5cf6 100%);
+}
+
+.mdx-features__icon svg {
+  width: 100%;
+  height: 100%;
+  fill: white;
+}
+
+.mdx-features__item h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+  color: var(--md-typeset-color);
+}
+
+.mdx-features__item p {
+  font-size: 0.9rem;
+  margin: 0;
+  color: var(--md-typeset-color);
+  opacity: 0.8;
+  line-height: 1.6;
+}
+
+/* ========================================
+   Audience Section
+   ======================================== */
+.mdx-audience {
+  padding: 4rem 0;
+  background: var(--md-code-bg-color);
+}
+
+.mdx-audience__title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 3rem;
+  color: var(--md-typeset-color);
+}
+
+.mdx-audience__grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.5rem;
+}
+
+@media screen and (max-width: 76.25em) {
+  .mdx-audience__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media screen and (max-width: 45em) {
+  .mdx-audience__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mdx-audience__item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.25rem;
+  background: var(--md-default-bg-color);
+  border-radius: 0.5rem;
+  border: 1px solid var(--md-typeset-table-color);
+}
+
+.mdx-audience__item strong {
+  color: var(--md-primary-fg-color);
+  font-size: 0.95rem;
+}
+
+.mdx-audience__item span {
+  font-size: 0.85rem;
+  color: var(--md-typeset-color);
+  opacity: 0.8;
+  line-height: 1.5;
+}
+
+/* ========================================
+   CTA Section
+   ======================================== */
+.mdx-cta {
+  padding: 4rem 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+[data-md-color-scheme="slate"] .mdx-cta {
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+}
+
+.mdx-cta__content {
+  text-align: center;
+  color: white;
+}
+
+.mdx-cta__content h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 0.75rem;
+  color: white;
+}
+
+.mdx-cta__content p {
+  font-size: 1.1rem;
+  opacity: 0.85;
+  margin: 0 0 2rem;
+}
+
+.mdx-cta .md-button--primary {
+  background: white;
+  color: #4f46e5;
+  border-color: white;
+  font-weight: 600;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  border-radius: 0.5rem;
+}
+
+.mdx-cta .md-button--primary:hover {
+  background: #f0f0f0;
+  color: #3730a3;
+}
+
+/* ========================================
+   Content Enhancements
    ======================================== */
 
 /* Better line height for readability */
@@ -50,10 +375,7 @@
   color: var(--md-primary-fg-color);
 }
 
-/* ========================================
-   Blockquotes - The Revelation Sections
-   ======================================== */
-
+/* Blockquotes - The Revelation Sections */
 .md-typeset blockquote {
   border-left: 4px solid var(--md-primary-fg-color);
   background: linear-gradient(135deg, rgba(79, 70, 229, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
@@ -66,10 +388,7 @@
   font-style: italic;
 }
 
-/* ========================================
-   Code Blocks
-   ======================================== */
-
+/* Code blocks */
 .md-typeset code {
   font-size: 0.85em;
   padding: 0.1em 0.4em;
@@ -85,10 +404,7 @@
   line-height: 1.6;
 }
 
-/* ========================================
-   Tables - Enhanced styling
-   ======================================== */
-
+/* Tables */
 .md-typeset table:not([class]) {
   font-size: 0.8rem;
   border-radius: 0.5rem;
@@ -101,7 +417,7 @@
   text-transform: uppercase;
   font-size: 0.7rem;
   letter-spacing: 0.05em;
-  background-color: var(--md-primary-fg-color--light);
+  background-color: var(--md-primary-fg-color);
   color: white;
 }
 
@@ -109,10 +425,7 @@
   background-color: rgba(79, 70, 229, 0.04);
 }
 
-/* ========================================
-   Admonitions - Custom styling
-   ======================================== */
-
+/* Admonitions */
 .md-typeset .admonition {
   border-radius: 0.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
@@ -122,79 +435,19 @@
   font-weight: 600;
 }
 
-/* Custom admonition for "The Revelation" */
-.md-typeset .admonition.quote,
-.md-typeset details.quote {
-  border-color: var(--md-primary-fg-color);
-}
-
-.md-typeset .quote > .admonition-title,
-.md-typeset .quote > summary {
-  background-color: rgba(79, 70, 229, 0.1);
-}
-
-.md-typeset .quote > .admonition-title::before,
-.md-typeset .quote > summary::before {
-  background-color: var(--md-primary-fg-color);
-  -webkit-mask-image: var(--md-admonition-icon--quote);
-  mask-image: var(--md-admonition-icon--quote);
-}
-
-/* ========================================
-   Navigation Enhancements
-   ======================================== */
-
-/* Active nav item */
+/* Navigation active item */
 .md-nav__link--active {
   font-weight: 600;
-}
-
-/* Nav sections (Parts) */
-.md-nav__item--nested > .md-nav__link {
-  font-weight: 600;
-  color: var(--md-primary-fg-color);
-}
-
-/* ========================================
-   Content Width
-   ======================================== */
-
-.md-content {
-  max-width: 52rem;
-}
-
-/* ========================================
-   Hero/Home Page Styling
-   ======================================== */
-
-.md-typeset .hero-title {
-  font-size: 2.5rem;
-  font-weight: 800;
-  background: linear-gradient(135deg, #4f46e5 0%, #8b5cf6 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: 1rem;
-}
-
-.md-typeset .hero-subtitle {
-  font-size: 1.25rem;
-  color: var(--md-typeset-color);
-  opacity: 0.8;
-  margin-bottom: 2rem;
 }
 
 /* ========================================
    Print Styles
    ======================================== */
-
 @media print {
-  .md-typeset h1 {
-    font-size: 24pt;
-  }
-  
-  .md-typeset h2 {
-    font-size: 18pt;
-    border-bottom: 1px solid #ccc;
+  .mdx-container,
+  .mdx-features,
+  .mdx-audience,
+  .mdx-cta {
+    display: none;
   }
 }

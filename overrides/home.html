@@ -1,0 +1,138 @@
+{% extends "main.html" %}
+
+{% block tabs %}
+  {{ super() }}
+
+  <!-- Hero Section -->
+  <section class="mdx-container">
+    <div class="md-grid md-typeset">
+      <div class="mdx-hero">
+        
+        <!-- Hero Content -->
+        <div class="mdx-hero__content">
+          <h1 class="mdx-hero__title">The LLM Handbook</h1>
+          <p class="mdx-hero__tagline">
+            A Complete Guide to Understanding Large Language Models — From Concepts to Production
+          </p>
+          <p class="mdx-hero__description">
+            Demystify how ChatGPT and other LLMs actually work. No prior ML knowledge required.
+          </p>
+          <div class="mdx-hero__actions">
+            <a href="chapters/00-prologue/" class="md-button md-button--primary">
+              <span class="twemoji">{% include ".icons/material/book-open-page-variant.svg" %}</span>
+              Start Reading
+            </a>
+            <a href="#what-youll-learn" class="md-button">
+              Learn More
+            </a>
+          </div>
+        </div>
+
+        <!-- Hero Image/Visual -->
+        <div class="mdx-hero__image">
+          <div class="mdx-hero__visual">
+            <div class="mdx-hero__token">"The Eiffel Tower is located in"</div>
+            <div class="mdx-hero__arrow">→</div>
+            <div class="mdx-hero__token mdx-hero__token--output">"Paris"</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="mdx-features" id="what-youll-learn">
+    <div class="md-grid md-typeset">
+      <h2 class="mdx-features__title">What You'll Learn</h2>
+      
+      <div class="mdx-features__grid">
+        
+        <div class="mdx-features__item">
+          <div class="mdx-features__icon">
+            {% include ".icons/material/puzzle.svg" %}
+          </div>
+          <h3>Tokenization & Embeddings</h3>
+          <p>How text becomes numbers that preserve meaning. Understand BPE, token IDs, and vector representations.</p>
+        </div>
+
+        <div class="mdx-features__item">
+          <div class="mdx-features__icon">
+            {% include ".icons/material/brain.svg" %}
+          </div>
+          <h3>Neural Networks & Transformers</h3>
+          <p>The architecture that revolutionized AI. Learn how attention mechanisms enable understanding.</p>
+        </div>
+
+        <div class="mdx-features__item">
+          <div class="mdx-features__icon">
+            {% include ".icons/material/lightning-bolt.svg" %}
+          </div>
+          <h3>Inference & Training</h3>
+          <p>Step-by-step walkthrough of how models generate text and how intelligence emerges from data.</p>
+        </div>
+
+        <div class="mdx-features__item">
+          <div class="mdx-features__icon">
+            {% include ".icons/material/server.svg" %}
+          </div>
+          <h3>Production Deployment</h3>
+          <p>Deploy LLMs with vLLM, KServe, and OpenShift AI. Real-world performance optimization.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Audience Section -->
+  <section class="mdx-audience">
+    <div class="md-grid md-typeset">
+      <h2 class="mdx-audience__title">Who This Book Is For</h2>
+      
+      <div class="mdx-audience__grid">
+        
+        <div class="mdx-audience__item">
+          <strong>Software Engineers</strong>
+          <span>Deep understanding of LLMs to use them more effectively</span>
+        </div>
+
+        <div class="mdx-audience__item">
+          <strong>MLOps Practitioners</strong>
+          <span>Production deployment knowledge with vLLM, KServe, OpenShift AI</span>
+        </div>
+
+        <div class="mdx-audience__item">
+          <strong>Product Managers</strong>
+          <span>Mental models to evaluate AI capabilities and limitations</span>
+        </div>
+
+        <div class="mdx-audience__item">
+          <strong>Technical Leaders</strong>
+          <span>Framework for making informed AI investment decisions</span>
+        </div>
+
+        <div class="mdx-audience__item">
+          <strong>Curious Minds</strong>
+          <span>Clear, demystified explanations of how the magic works</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="mdx-cta">
+    <div class="md-grid md-typeset">
+      <div class="mdx-cta__content">
+        <h2>Ready to understand how LLMs really work?</h2>
+        <p>Estimated reading time: 4-6 hours for the complete book.</p>
+        <a href="chapters/00-prologue/" class="md-button md-button--primary md-button--lg">
+          Begin with the Prologue
+        </a>
+      </div>
+    </div>
+  </section>
+
+{% endblock %}
+
+{% block content %}{% endblock %}
