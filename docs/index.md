@@ -4,4 +4,5 @@ title: The LLM Handbook
 hide:
   - navigation
   - toc
+  - tabs
 ---
