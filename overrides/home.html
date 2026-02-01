@@ -1,12 +1,72 @@
 {% extends "main.html" %}
 
+<!-- Hide the default header -->
+{% block header %}{% endblock %}
+
 {% block tabs %}
 
 <style>
+/* ===== Hero Header Bar ===== */
+.tx-header {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #6366f1 100%);
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+[data-md-color-scheme="slate"] .tx-header {
+  background: linear-gradient(135deg, #312e81 0%, #4c1d95 50%, #3730a3 100%);
+}
+
+.tx-header__search {
+  flex: 1;
+  max-width: 300px;
+}
+
+.tx-header__search input {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 20px;
+  background: rgba(255,255,255,0.15);
+  color: white;
+  font-size: 0.85rem;
+}
+
+.tx-header__search input::placeholder {
+  color: rgba(255,255,255,0.7);
+}
+
+.tx-header__toggle {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white;
+  font-size: 1.1rem;
+}
+
+.tx-header__github {
+  color: white;
+  font-size: 1.3rem;
+  opacity: 0.9;
+}
+
+.tx-header__github:hover {
+  opacity: 1;
+}
+
 /* ===== Compact Hero ===== */
 .tx-container {
   background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #6366f1 100%);
-  padding: 2rem 1rem;
+  padding: 1.5rem 1rem 2rem;
 }
 
 [data-md-color-scheme="slate"] .tx-container {
@@ -67,7 +127,7 @@
   color: white;
 }
 
-/* Token Visual - Horizontal */
+/* Token Visual */
 .tx-hero__visual {
   display: flex;
   align-items: center;
@@ -114,7 +174,7 @@
   }
 }
 
-/* Features - Compact Grid */
+/* Features */
 .tx-features__title {
   font-size: 1.3rem;
   font-weight: 700;
@@ -163,7 +223,7 @@
   line-height: 1.4;
 }
 
-/* Audience - Compact Sidebar */
+/* Audience Sidebar */
 .tx-sidebar__title {
   font-size: 1.1rem;
   font-weight: 700;
@@ -196,7 +256,7 @@
   opacity: 0.8;
 }
 
-/* CTA - Compact */
+/* CTA */
 .tx-cta {
   grid-column: 1 / -1;
   background: linear-gradient(90deg, var(--md-primary-fg-color), #7c3aed);
@@ -237,7 +297,20 @@
 }
 </style>
 
-<!-- Compact Hero -->
+<!-- Custom Header with Search & Theme -->
+<header class="tx-header">
+  <div class="tx-header__search">
+    <input type="text" placeholder="Search..." onclick="document.querySelector('.md-search__input').focus(); document.querySelector('.md-search__input').click();">
+  </div>
+  <label class="tx-header__toggle" for="__palette" title="Toggle dark mode">
+    🌓
+  </label>
+  <a href="https://github.com/rrbanda/prepi" class="tx-header__github" title="GitHub">
+    <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+  </a>
+</header>
+
+<!-- Hero Section -->
 <section class="tx-container">
   <div class="tx-hero">
     <div class="tx-hero__content">
@@ -255,9 +328,8 @@
   </div>
 </section>
 
-<!-- Compact Main Content -->
+<!-- Main Content -->
 <section class="tx-main">
-  <!-- Features -->
   <div class="tx-features">
     <h2 class="tx-features__title">What You'll Learn</h2>
     <div class="tx-features__grid">
@@ -292,7 +364,6 @@
     </div>
   </div>
 
-  <!-- Audience Sidebar -->
   <div class="tx-sidebar">
     <h2 class="tx-sidebar__title">Who This Book Is For</h2>
     <div class="tx-audience__list">
@@ -319,7 +390,6 @@
     </div>
   </div>
 
-  <!-- CTA Bar -->
   <div class="tx-cta">
     <div class="tx-cta__text">
       <h2>Ready to understand how LLMs really work?</h2>
