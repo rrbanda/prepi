@@ -1,63 +1,248 @@
 /*
- * The LLM Handbook - Custom Styles
- * Clean, readable typography for book-style documentation
+ * The LLM Handbook - Rich Modern UI
+ * Glassmorphism, gradients, and smooth animations
  */
 
 /* ========================================
-   CSS Variables - Easy to customize
+   Google Fonts - Inter for modern look
+   ======================================== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* ========================================
+   CSS Variables - Rich color palette
    ======================================== */
 
 :root {
   /* Typography */
-  --font-family-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --font-family-heading: var(--font-family-body);
-  --font-family-code: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  --font-family-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-family-heading: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-family-code: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
   
-  /* Colors - Professional blue theme */
-  --color-brand-primary: #2563eb;
-  --color-brand-secondary: #1d4ed8;
-  --color-text-primary: #1f2937;
-  --color-text-secondary: #4b5563;
-  --color-text-muted: #6b7280;
-  --color-background: #ffffff;
-  --color-background-alt: #f9fafb;
-  --color-border: #e5e7eb;
-  --color-code-background: #f3f4f6;
+  /* Primary gradient - Deep purple to blue */
+  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  --gradient-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  --gradient-dark: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+  --gradient-subtle: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+  
+  /* Brand colors */
+  --color-brand-primary: #6366f1;
+  --color-brand-secondary: #8b5cf6;
+  --color-brand-accent: #06b6d4;
+  --color-brand-glow: rgba(99, 102, 241, 0.4);
+  
+  /* Text colors */
+  --color-text-primary: #1e293b;
+  --color-text-secondary: #475569;
+  --color-text-muted: #94a3b8;
+  --color-text-inverse: #ffffff;
+  
+  /* Background colors */
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #f8fafc;
+  --color-bg-tertiary: #f1f5f9;
+  --color-bg-dark: #0f172a;
+  --color-bg-darker: #020617;
+  
+  /* Glass effect */
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.3);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  
+  /* Borders */
+  --color-border: #e2e8f0;
+  --color-border-light: #f1f5f9;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-glow: 0 0 40px rgba(99, 102, 241, 0.15);
+  
+  /* Animation */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
   
   /* Spacing */
   --content-max-width: 52rem;
   --line-height: 1.75;
+  --border-radius: 0.75rem;
+  --border-radius-lg: 1rem;
 }
 
 /* ========================================
-   Base Typography
+   Base Styles & Background
    ======================================== */
+
+html {
+  scroll-behavior: smooth;
+}
 
 body {
   font-family: var(--font-family-body);
   font-size: 1rem;
   line-height: var(--line-height);
   color: var(--color-text-primary);
+  background: var(--gradient-subtle);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Subtle animated background pattern */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 40% 60%, rgba(6, 182, 212, 0.02) 0%, transparent 40%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Text selection */
+::selection {
+  background: var(--color-brand-primary);
+  color: var(--color-text-inverse);
+}
+
 /* ========================================
-   Document Content Area
+   Navigation Header - Glassmorphism
+   ======================================== */
+
+.navbar {
+  background: var(--gradient-dark);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar .navbar-brand {
+  color: var(--color-text-inverse);
+  font-weight: 700;
+  font-size: 1.25rem;
+  letter-spacing: -0.025em;
+  background: linear-gradient(135deg, #fff 0%, #e0e7ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.navbar .navbar-item,
+.navbar .navbar-link {
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 500;
+  transition: all var(--transition-fast);
+}
+
+.navbar .navbar-item:hover,
+.navbar .navbar-link:hover {
+  color: var(--color-text-inverse);
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+}
+
+/* ========================================
+   Sidebar Navigation - Glass Card
+   ======================================== */
+
+.nav-panel-menu {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-right: 1px solid var(--glass-border);
+  padding: 1rem 0;
+}
+
+.nav-panel-menu .nav-list {
+  font-size: 0.9rem;
+  padding: 0 0.5rem;
+}
+
+.nav-panel-menu .nav-item {
+  margin: 0.125rem 0;
+}
+
+.nav-panel-menu .nav-link {
+  color: var(--color-text-secondary);
+  padding: 0.5rem 0.875rem;
+  border-radius: var(--border-radius);
+  display: block;
+  font-weight: 450;
+  transition: all var(--transition-fast);
+  border: 1px solid transparent;
+}
+
+.nav-panel-menu .nav-link:hover {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(139, 92, 246, 0.08) 100%);
+  color: var(--color-brand-primary);
+  text-decoration: none;
+  border-color: rgba(99, 102, 241, 0.1);
+  transform: translateX(4px);
+}
+
+.nav-panel-menu .nav-item.is-current-page > .nav-link {
+  background: var(--gradient-primary);
+  color: var(--color-text-inverse);
+  font-weight: 600;
+  box-shadow: var(--shadow-md), 0 0 20px var(--color-brand-glow);
+  border-color: transparent;
+}
+
+/* Navigation section titles (Parts) */
+.nav-panel-menu .nav-title {
+  font-weight: 700;
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-text-muted);
+  padding: 1.25rem 0.875rem 0.5rem;
+  margin-top: 0.5rem;
+  border-top: 1px solid var(--color-border-light);
+}
+
+.nav-panel-menu .nav-title:first-child {
+  border-top: none;
+  margin-top: 0;
+}
+
+/* ========================================
+   Main Content Area
    ======================================== */
 
 .doc {
   font-size: 1.0625rem;
-  line-height: 1.8;
+  line-height: 1.85;
   max-width: var(--content-max-width);
+  padding: 2.5rem 3rem;
+  background: var(--color-bg-primary);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-lg);
+  margin: 1.5rem;
 }
 
 .doc p {
   margin-bottom: 1.5rem;
+  color: var(--color-text-secondary);
+}
+
+.doc p:first-of-type {
+  font-size: 1.125rem;
+  color: var(--color-text-primary);
+  font-weight: 450;
 }
 
 /* ========================================
-   Headings - Clear hierarchy
+   Headings - Gradient accents
    ======================================== */
 
 .doc h1,
@@ -67,51 +252,100 @@ body {
 .doc h5,
 .doc h6 {
   font-family: var(--font-family-heading);
-  font-weight: 600;
+  font-weight: 700;
   color: var(--color-text-primary);
   line-height: 1.3;
-  margin-top: 2.5rem;
+  margin-top: 3rem;
   margin-bottom: 1rem;
+  letter-spacing: -0.025em;
 }
 
 .doc h1 {
-  font-size: 2.25rem;
-  font-weight: 700;
+  font-size: 2.5rem;
+  font-weight: 800;
   margin-top: 0;
-  padding-bottom: 0.75rem;
-  border-bottom: 3px solid var(--color-brand-primary);
+  padding-bottom: 1rem;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  border-bottom: 3px solid;
+  border-image: var(--gradient-primary) 1;
+  position: relative;
+}
+
+.doc h1::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--gradient-primary);
+  opacity: 0.3;
+  filter: blur(8px);
 }
 
 .doc h2 {
-  font-size: 1.625rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--color-border);
+  font-size: 1.75rem;
+  padding-bottom: 0.625rem;
+  border-bottom: 2px solid var(--color-border);
+  position: relative;
+}
+
+.doc h2::before {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 60px;
+  height: 2px;
+  background: var(--gradient-primary);
 }
 
 .doc h3 {
   font-size: 1.375rem;
+  color: var(--color-brand-primary);
 }
 
 .doc h4 {
   font-size: 1.125rem;
+  font-weight: 600;
 }
 
 /* ========================================
-   Links
+   Links - Animated underline
    ======================================== */
 
 .doc a {
   color: var(--color-brand-primary);
   text-decoration: none;
+  font-weight: 500;
+  position: relative;
+  transition: color var(--transition-fast);
+}
+
+.doc a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--gradient-primary);
+  transition: width var(--transition-base);
 }
 
 .doc a:hover {
   color: var(--color-brand-secondary);
-  text-decoration: underline;
+}
+
+.doc a:hover::after {
+  width: 100%;
 }
 
 /* ========================================
-   Code - Inline and Blocks
+   Code - Dark theme with glow
    ======================================== */
 
 .doc code,
@@ -119,20 +353,37 @@ body {
   font-family: var(--font-family-code);
 }
 
-.doc code:not(.hljs) {
-  background-color: var(--color-code-background);
-  border-radius: 0.25rem;
-  padding: 0.15rem 0.4rem;
+.doc code:not(.hljs):not([data-lang]) {
+  background: linear-gradient(135deg, #fef3f2 0%, #fce7f3 100%);
+  border: 1px solid rgba(236, 72, 153, 0.2);
+  border-radius: 0.375rem;
+  padding: 0.2rem 0.5rem;
   font-size: 0.875em;
   color: #be185d;
+  font-weight: 500;
 }
 
 .doc pre {
-  background-color: #1e293b;
-  border-radius: 0.5rem;
-  padding: 1.25rem;
+  background: var(--gradient-dark);
+  border-radius: var(--border-radius-lg);
+  padding: 1.5rem;
   overflow-x: auto;
-  margin: 1.5rem 0;
+  margin: 2rem 0;
+  box-shadow: var(--shadow-xl), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+}
+
+.doc pre::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
 }
 
 .doc pre code {
@@ -140,114 +391,177 @@ body {
   color: #e2e8f0;
   padding: 0;
   font-size: 0.875rem;
-  line-height: 1.6;
+  line-height: 1.7;
+  border: none;
+}
+
+/* Code block line numbers appearance */
+.doc .listingblock .content {
+  position: relative;
 }
 
 /* ========================================
-   Blockquotes - For "The Revelation" sections
+   Blockquotes - The Revelation sections
    ======================================== */
 
 .doc blockquote {
-  border-left: 4px solid var(--color-brand-primary);
-  background-color: #eff6ff;
-  margin: 1.5rem 0;
-  padding: 1rem 1.5rem;
-  border-radius: 0 0.5rem 0.5rem 0;
+  position: relative;
+  margin: 2rem 0;
+  padding: 1.5rem 2rem;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(139, 92, 246, 0.08) 100%);
+  border-left: 4px solid;
+  border-image: var(--gradient-primary) 1;
+  border-radius: 0 var(--border-radius-lg) var(--border-radius-lg) 0;
+  backdrop-filter: blur(4px);
+  box-shadow: var(--shadow-md);
+}
+
+.doc blockquote::before {
+  content: '"';
+  position: absolute;
+  top: -10px;
+  left: 15px;
+  font-size: 4rem;
+  font-family: Georgia, serif;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  opacity: 0.3;
+  line-height: 1;
 }
 
 .doc blockquote p {
   margin: 0;
   font-style: italic;
+  font-size: 1.0625rem;
   color: var(--color-text-primary);
+  font-weight: 450;
 }
 
 /* ========================================
-   Tables - Clean and readable
+   Tables - Modern card style
    ======================================== */
 
 .doc table {
   width: 100%;
-  border-collapse: collapse;
-  margin: 1.5rem 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 2rem 0;
   font-size: 0.9375rem;
+  background: var(--color-bg-primary);
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--color-border);
 }
 
 .doc table th {
-  background-color: var(--color-background-alt);
+  background: linear-gradient(135deg, var(--color-bg-secondary) 0%, var(--color-bg-tertiary) 100%);
   font-weight: 600;
   text-align: left;
-  padding: 0.75rem 1rem;
+  padding: 1rem 1.25rem;
+  color: var(--color-text-primary);
   border-bottom: 2px solid var(--color-brand-primary);
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .doc table td {
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid var(--color-border);
+  padding: 0.875rem 1.25rem;
+  border-bottom: 1px solid var(--color-border-light);
   vertical-align: top;
+  transition: background var(--transition-fast);
+}
+
+.doc table tr:last-child td {
+  border-bottom: none;
 }
 
 .doc table tr:hover td {
-  background-color: var(--color-background-alt);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.04) 0%, rgba(139, 92, 246, 0.04) 100%);
 }
 
 /* ========================================
-   Admonitions (Note, Tip, Warning, etc.)
+   Admonitions - Glassmorphism cards
    ======================================== */
 
 .doc .admonitionblock {
-  margin: 1.5rem 0;
-  border-radius: 0.5rem;
+  margin: 2rem 0;
+  border-radius: var(--border-radius-lg);
   overflow: hidden;
+  backdrop-filter: blur(4px);
+  box-shadow: var(--shadow-md);
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.doc .admonitionblock:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.doc .admonitionblock table {
+  margin: 0;
+  box-shadow: none;
+  border: none;
 }
 
 .doc .admonitionblock td.icon {
-  padding: 1rem;
+  padding: 1.25rem;
   width: auto;
   vertical-align: middle;
+  font-size: 1.25rem;
 }
 
 .doc .admonitionblock td.content {
-  padding: 1rem;
+  padding: 1.25rem 1.5rem 1.25rem 0;
   border-left: none;
 }
 
 .doc .admonitionblock.note {
-  background-color: #eff6ff;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(99, 102, 241, 0.1) 100%);
   border-left: 4px solid #3b82f6;
 }
 
 .doc .admonitionblock.tip {
-  background-color: #ecfdf5;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%);
   border-left: 4px solid #10b981;
 }
 
 .doc .admonitionblock.warning {
-  background-color: #fffbeb;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(251, 146, 60, 0.1) 100%);
   border-left: 4px solid #f59e0b;
 }
 
 .doc .admonitionblock.caution {
-  background-color: #fef2f2;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(244, 63, 94, 0.1) 100%);
   border-left: 4px solid #ef4444;
 }
 
 .doc .admonitionblock.important {
-  background-color: #faf5ff;
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
   border-left: 4px solid #a855f7;
 }
 
 /* ========================================
-   Lists - Better spacing
+   Lists - Better visual hierarchy
    ======================================== */
 
 .doc ul,
 .doc ol {
-  margin: 1rem 0 1.5rem;
-  padding-left: 1.5rem;
+  margin: 1.25rem 0 1.75rem;
+  padding-left: 1.75rem;
 }
 
 .doc li {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.625rem;
+  color: var(--color-text-secondary);
+}
+
+.doc li::marker {
+  color: var(--color-brand-primary);
+  font-weight: 600;
 }
 
 .doc li p {
@@ -255,139 +569,176 @@ body {
 }
 
 /* ========================================
-   Navigation - Sidebar
+   TOC (Right sidebar)
    ======================================== */
 
-.nav-panel-menu .nav-list {
-  font-size: 0.9375rem;
+.toc {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-left: 1px solid var(--glass-border);
+  padding: 1.5rem;
 }
 
-.nav-panel-menu .nav-item {
-  margin: 0.25rem 0;
-}
-
-.nav-panel-menu .nav-link {
-  color: var(--color-text-secondary);
-  padding: 0.375rem 0.75rem;
-  border-radius: 0.375rem;
-  display: block;
-}
-
-.nav-panel-menu .nav-link:hover {
-  background-color: var(--color-background-alt);
-  color: var(--color-brand-primary);
-  text-decoration: none;
-}
-
-.nav-panel-menu .nav-item.is-current-page > .nav-link {
-  background-color: var(--color-brand-primary);
-  color: white;
-  font-weight: 500;
-}
-
-/* Navigation section titles (Parts) */
-.nav-panel-menu .nav-title {
-  font-weight: 600;
+.toc .toc-title {
+  font-weight: 700;
   font-size: 0.75rem;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.1em;
   color: var(--color-text-muted);
-  padding: 1rem 0.75rem 0.5rem;
-  margin-top: 0.5rem;
+  margin-bottom: 1rem;
 }
-
-/* ========================================
-   Header / Navbar
-   ======================================== */
-
-.navbar {
-  background-color: #1e293b;
-}
-
-.navbar .navbar-brand {
-  color: white;
-  font-weight: 600;
-}
-
-.navbar .navbar-item,
-.navbar .navbar-link {
-  color: rgba(255, 255, 255, 0.9);
-}
-
-.navbar .navbar-item:hover,
-.navbar .navbar-link:hover {
-  color: white;
-}
-
-/* ========================================
-   Footer
-   ======================================== */
-
-.footer {
-  background-color: #1e293b;
-  color: rgba(255, 255, 255, 0.8);
-  padding: 2rem;
-  text-align: center;
-  font-size: 0.875rem;
-}
-
-.footer a {
-  color: #93c5fd;
-}
-
-.footer a:hover {
-  color: white;
-}
-
-/* ========================================
-   Page Table of Contents (Right sidebar)
-   ======================================== */
 
 .toc .toc-menu {
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
 }
 
 .toc .toc-link {
-  color: var(--color-text-secondary);
-  padding: 0.25rem 0;
+  color: var(--color-text-muted);
+  padding: 0.375rem 0;
+  display: block;
+  transition: all var(--transition-fast);
+  border-left: 2px solid transparent;
+  padding-left: 0.75rem;
+  margin-left: -0.75rem;
 }
 
 .toc .toc-link:hover {
   color: var(--color-brand-primary);
+  text-decoration: none;
 }
 
 .toc .toc-link.is-active {
   color: var(--color-brand-primary);
-  font-weight: 500;
+  font-weight: 600;
+  border-left-color: var(--color-brand-primary);
+  background: linear-gradient(90deg, rgba(99, 102, 241, 0.1) 0%, transparent 100%);
 }
 
 /* ========================================
-   Responsive adjustments
+   Footer - Dark gradient
    ======================================== */
+
+.footer {
+  background: var(--gradient-dark);
+  color: rgba(255, 255, 255, 0.7);
+  padding: 2.5rem 2rem;
+  text-align: center;
+  font-size: 0.875rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer a {
+  color: #a5b4fc;
+  font-weight: 500;
+  transition: color var(--transition-fast);
+}
+
+.footer a:hover {
+  color: var(--color-text-inverse);
+}
+
+/* ========================================
+   Scrollbar - Custom styled
+   ======================================== */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-tertiary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--color-brand-primary) 0%, var(--color-brand-secondary) 100%);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-brand-secondary);
+}
+
+/* ========================================
+   Responsive Design
+   ======================================== */
+
+@media screen and (max-width: 1024px) {
+  .doc {
+    margin: 1rem;
+    padding: 2rem;
+  }
+}
 
 @media screen and (max-width: 768px) {
   .doc {
     font-size: 1rem;
-    padding: 1rem;
+    padding: 1.5rem;
+    margin: 0.5rem;
+    border-radius: var(--border-radius);
   }
   
   .doc h1 {
-    font-size: 1.75rem;
+    font-size: 1.875rem;
   }
   
   .doc h2 {
-    font-size: 1.375rem;
+    font-size: 1.5rem;
+  }
+  
+  .doc pre {
+    padding: 1rem;
+    margin: 1.5rem -1rem;
+    border-radius: 0;
+  }
+  
+  .nav-panel-menu {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
   }
 }
 
 /* ========================================
-   Print styles
+   Animations
+   ======================================== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.doc {
+  animation: fadeIn 0.4s ease-out;
+}
+
+/* Smooth hover transitions for all interactive elements */
+a, button, .nav-link, .toc-link {
+  transition: all var(--transition-fast);
+}
+
+/* ========================================
+   Print Styles
    ======================================== */
 
 @media print {
+  body::before {
+    display: none;
+  }
+  
   .doc {
     font-size: 11pt;
     line-height: 1.5;
+    box-shadow: none;
+    margin: 0;
+    padding: 0;
+    animation: none;
   }
   
   .nav-panel-menu,
@@ -395,5 +746,22 @@ body {
   .navbar,
   .footer {
     display: none;
+  }
+  
+  .doc h1 {
+    background: none;
+    -webkit-text-fill-color: initial;
+    color: var(--color-text-primary);
+  }
+  
+  .doc pre {
+    background: #f3f4f6;
+    color: #1f2937;
+    box-shadow: none;
+    border: 1px solid #e5e7eb;
+  }
+  
+  .doc pre code {
+    color: #1f2937;
   }
 }
