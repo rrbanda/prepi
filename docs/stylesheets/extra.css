@@ -1,0 +1,200 @@
+/*
+ * The LLM Handbook - Custom Styles
+ * Extends Material for MkDocs theme
+ */
+
+/* ========================================
+   Root Variables - Brand Colors
+   ======================================== */
+:root {
+  /* Adjust primary palette */
+  --md-primary-fg-color: #4f46e5;
+  --md-primary-fg-color--light: #818cf8;
+  --md-primary-fg-color--dark: #3730a3;
+  
+  /* Accent color */
+  --md-accent-fg-color: #8b5cf6;
+  
+  /* Typography enhancements */
+  --md-text-font: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  --md-code-font: "JetBrains Mono", "SF Mono", Consolas, monospace;
+}
+
+/* ========================================
+   Typography Enhancements
+   ======================================== */
+
+/* Better line height for readability */
+.md-typeset {
+  font-size: 0.85rem;
+  line-height: 1.8;
+}
+
+/* Chapter titles */
+.md-typeset h1 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.5rem;
+}
+
+/* Section headings */
+.md-typeset h2 {
+  font-weight: 600;
+  margin-top: 2.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--md-primary-fg-color--light);
+}
+
+.md-typeset h3 {
+  font-weight: 600;
+  color: var(--md-primary-fg-color);
+}
+
+/* ========================================
+   Blockquotes - The Revelation Sections
+   ======================================== */
+
+.md-typeset blockquote {
+  border-left: 4px solid var(--md-primary-fg-color);
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+  padding: 1rem 1.5rem;
+  border-radius: 0 0.5rem 0.5rem 0;
+  margin: 1.5rem 0;
+}
+
+.md-typeset blockquote p {
+  font-style: italic;
+}
+
+/* ========================================
+   Code Blocks
+   ======================================== */
+
+.md-typeset code {
+  font-size: 0.85em;
+  padding: 0.1em 0.4em;
+  border-radius: 0.25rem;
+}
+
+.md-typeset pre {
+  border-radius: 0.5rem;
+}
+
+.md-typeset pre > code {
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+/* ========================================
+   Tables - Enhanced styling
+   ======================================== */
+
+.md-typeset table:not([class]) {
+  font-size: 0.8rem;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.md-typeset table:not([class]) th {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  background-color: var(--md-primary-fg-color--light);
+  color: white;
+}
+
+.md-typeset table:not([class]) tr:hover td {
+  background-color: rgba(79, 70, 229, 0.04);
+}
+
+/* ========================================
+   Admonitions - Custom styling
+   ======================================== */
+
+.md-typeset .admonition {
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.md-typeset .admonition-title {
+  font-weight: 600;
+}
+
+/* Custom admonition for "The Revelation" */
+.md-typeset .admonition.quote,
+.md-typeset details.quote {
+  border-color: var(--md-primary-fg-color);
+}
+
+.md-typeset .quote > .admonition-title,
+.md-typeset .quote > summary {
+  background-color: rgba(79, 70, 229, 0.1);
+}
+
+.md-typeset .quote > .admonition-title::before,
+.md-typeset .quote > summary::before {
+  background-color: var(--md-primary-fg-color);
+  -webkit-mask-image: var(--md-admonition-icon--quote);
+  mask-image: var(--md-admonition-icon--quote);
+}
+
+/* ========================================
+   Navigation Enhancements
+   ======================================== */
+
+/* Active nav item */
+.md-nav__link--active {
+  font-weight: 600;
+}
+
+/* Nav sections (Parts) */
+.md-nav__item--nested > .md-nav__link {
+  font-weight: 600;
+  color: var(--md-primary-fg-color);
+}
+
+/* ========================================
+   Content Width
+   ======================================== */
+
+.md-content {
+  max-width: 52rem;
+}
+
+/* ========================================
+   Hero/Home Page Styling
+   ======================================== */
+
+.md-typeset .hero-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #4f46e5 0%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 1rem;
+}
+
+.md-typeset .hero-subtitle {
+  font-size: 1.25rem;
+  color: var(--md-typeset-color);
+  opacity: 0.8;
+  margin-bottom: 2rem;
+}
+
+/* ========================================
+   Print Styles
+   ======================================== */
+
+@media print {
+  .md-typeset h1 {
+    font-size: 24pt;
+  }
+  
+  .md-typeset h2 {
+    font-size: 18pt;
+    border-bottom: 1px solid #ccc;
+  }
+}

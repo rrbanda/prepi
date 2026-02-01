@@ -1,7 +1,14 @@
 # Build output
 build/
+site/
 
-# Node modules
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Node modules (legacy)
 node_modules/
 
 # OS files
