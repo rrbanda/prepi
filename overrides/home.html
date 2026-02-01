@@ -1,137 +1,370 @@
 {% extends "main.html" %}
 
 {% block tabs %}
-  {{ super() }}
+{{ super() }}
 
-  <!-- Hero Section -->
-  <section class="mdx-container">
-    <div class="md-grid md-typeset">
-      <div class="mdx-hero">
-        
-        <!-- Hero Content -->
-        <div class="mdx-hero__content">
-          <h1 class="mdx-hero__title">The LLM Handbook</h1>
-          <p class="mdx-hero__tagline">
-            A Complete Guide to Understanding Large Language Models — From Concepts to Production
-          </p>
-          <p class="mdx-hero__description">
-            Demystify how ChatGPT and other LLMs actually work. No prior ML knowledge required.
-          </p>
-          <div class="mdx-hero__actions">
-            <a href="chapters/00-prologue/" class="md-button md-button--primary">
-              <span class="twemoji">{% include ".icons/material/book-open-page-variant.svg" %}</span>
-              Start Reading
-            </a>
-            <a href="#what-youll-learn" class="md-button">
-              Learn More
-            </a>
-          </div>
-        </div>
+<style>
+/* Hero Section */
+.tx-hero {
+  margin: 0;
+  padding: 4rem 1rem;
+  background: linear-gradient(to bottom right, #4f46e5, #7c3aed, #6366f1);
+  color: white;
+}
 
-        <!-- Hero Image/Visual -->
-        <div class="mdx-hero__image">
-          <div class="mdx-hero__visual">
-            <div class="mdx-hero__token">"The Eiffel Tower is located in"</div>
-            <div class="mdx-hero__arrow">→</div>
-            <div class="mdx-hero__token mdx-hero__token--output">"Paris"</div>
-          </div>
-        </div>
+[data-md-color-scheme="slate"] .tx-hero {
+  background: linear-gradient(to bottom right, #312e81, #4c1d95, #3730a3);
+}
 
-      </div>
-    </div>
-  </section>
+.tx-hero__inner {
+  max-width: 61rem;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 3rem;
+}
 
-  <!-- Features Section -->
-  <section class="mdx-features" id="what-youll-learn">
-    <div class="md-grid md-typeset">
-      <h2 class="mdx-features__title">What You'll Learn</h2>
-      
-      <div class="mdx-features__grid">
-        
-        <div class="mdx-features__item">
-          <div class="mdx-features__icon">
-            {% include ".icons/material/puzzle.svg" %}
-          </div>
-          <h3>Tokenization & Embeddings</h3>
-          <p>How text becomes numbers that preserve meaning. Understand BPE, token IDs, and vector representations.</p>
-        </div>
+.tx-hero__content {
+  flex: 1;
+  min-width: 300px;
+}
 
-        <div class="mdx-features__item">
-          <div class="mdx-features__icon">
-            {% include ".icons/material/brain.svg" %}
-          </div>
-          <h3>Neural Networks & Transformers</h3>
-          <p>The architecture that revolutionized AI. Learn how attention mechanisms enable understanding.</p>
-        </div>
+.tx-hero__title {
+  font-size: 3rem;
+  font-weight: 800;
+  margin: 0 0 1rem;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
 
-        <div class="mdx-features__item">
-          <div class="mdx-features__icon">
-            {% include ".icons/material/lightning-bolt.svg" %}
-          </div>
-          <h3>Inference & Training</h3>
-          <p>Step-by-step walkthrough of how models generate text and how intelligence emerges from data.</p>
-        </div>
+.tx-hero__subtitle {
+  font-size: 1.25rem;
+  opacity: 0.9;
+  margin: 0 0 0.5rem;
+  font-weight: 500;
+}
 
-        <div class="mdx-features__item">
-          <div class="mdx-features__icon">
-            {% include ".icons/material/server.svg" %}
-          </div>
-          <h3>Production Deployment</h3>
-          <p>Deploy LLMs with vLLM, KServe, and OpenShift AI. Real-world performance optimization.</p>
-        </div>
+.tx-hero__description {
+  font-size: 1.1rem;
+  opacity: 0.8;
+  margin: 0 0 2rem;
+}
 
-      </div>
-    </div>
-  </section>
+.tx-hero__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
 
-  <!-- Audience Section -->
-  <section class="mdx-audience">
-    <div class="md-grid md-typeset">
-      <h2 class="mdx-audience__title">Who This Book Is For</h2>
-      
-      <div class="mdx-audience__grid">
-        
-        <div class="mdx-audience__item">
-          <strong>Software Engineers</strong>
-          <span>Deep understanding of LLMs to use them more effectively</span>
-        </div>
+.tx-hero__buttons .md-button {
+  padding: 0.8rem 1.5rem;
+  font-weight: 600;
+  border-radius: 8px;
+}
 
-        <div class="mdx-audience__item">
-          <strong>MLOps Practitioners</strong>
-          <span>Production deployment knowledge with vLLM, KServe, OpenShift AI</span>
-        </div>
+.tx-hero__buttons .md-button--primary {
+  background: white;
+  color: #4f46e5;
+  border: none;
+}
 
-        <div class="mdx-audience__item">
-          <strong>Product Managers</strong>
-          <span>Mental models to evaluate AI capabilities and limitations</span>
-        </div>
+.tx-hero__buttons .md-button--primary:hover {
+  background: #f1f5f9;
+}
 
-        <div class="mdx-audience__item">
-          <strong>Technical Leaders</strong>
-          <span>Framework for making informed AI investment decisions</span>
-        </div>
+.tx-hero__buttons .md-button:not(.md-button--primary) {
+  border: 2px solid rgba(255,255,255,0.5);
+  color: white;
+}
 
-        <div class="mdx-audience__item">
-          <strong>Curious Minds</strong>
-          <span>Clear, demystified explanations of how the magic works</span>
-        </div>
+.tx-hero__buttons .md-button:not(.md-button--primary):hover {
+  border-color: white;
+  background: rgba(255,255,255,0.1);
+}
 
-      </div>
-    </div>
-  </section>
+/* Token Visual */
+.tx-hero__visual {
+  flex: 1;
+  min-width: 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
 
-  <!-- CTA Section -->
-  <section class="mdx-cta">
-    <div class="md-grid md-typeset">
-      <div class="mdx-cta__content">
-        <h2>Ready to understand how LLMs really work?</h2>
-        <p>Estimated reading time: 4-6 hours for the complete book.</p>
-        <a href="chapters/00-prologue/" class="md-button md-button--primary md-button--lg">
-          Begin with the Prologue
+.tx-token {
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.3);
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1rem;
+  text-align: center;
+  max-width: 100%;
+}
+
+.tx-token--output {
+  background: white;
+  color: #4f46e5;
+  font-weight: 700;
+  font-size: 1.5rem;
+  border: none;
+}
+
+.tx-arrow {
+  font-size: 1.5rem;
+  opacity: 0.7;
+}
+
+/* Features Grid */
+.tx-features {
+  padding: 4rem 1rem;
+  background: var(--md-default-bg-color);
+}
+
+.tx-features__inner {
+  max-width: 61rem;
+  margin: 0 auto;
+}
+
+.tx-features__title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 3rem;
+  color: var(--md-typeset-color);
+}
+
+.tx-features__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.tx-feature {
+  background: var(--md-code-bg-color);
+  border: 1px solid var(--md-typeset-table-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.tx-feature:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+}
+
+.tx-feature__icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.tx-feature h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+  color: var(--md-typeset-color);
+}
+
+.tx-feature p {
+  font-size: 0.9rem;
+  margin: 0;
+  opacity: 0.8;
+  line-height: 1.6;
+}
+
+/* Audience Section */
+.tx-audience {
+  padding: 4rem 1rem;
+  background: var(--md-code-bg-color);
+}
+
+.tx-audience__inner {
+  max-width: 61rem;
+  margin: 0 auto;
+}
+
+.tx-audience__title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 2rem;
+  color: var(--md-typeset-color);
+}
+
+.tx-audience__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.tx-audience__item {
+  background: var(--md-default-bg-color);
+  border: 1px solid var(--md-typeset-table-color);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+}
+
+.tx-audience__item strong {
+  display: block;
+  color: #4f46e5;
+  font-size: 0.95rem;
+  margin-bottom: 0.25rem;
+}
+
+[data-md-color-scheme="slate"] .tx-audience__item strong {
+  color: #818cf8;
+}
+
+.tx-audience__item span {
+  font-size: 0.85rem;
+  opacity: 0.8;
+  line-height: 1.5;
+}
+
+/* CTA Section */
+.tx-cta {
+  padding: 4rem 1rem;
+  background: linear-gradient(to right, #4f46e5, #7c3aed);
+  text-align: center;
+  color: white;
+}
+
+[data-md-color-scheme="slate"] .tx-cta {
+  background: linear-gradient(to right, #312e81, #4c1d95);
+}
+
+.tx-cta h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+}
+
+.tx-cta p {
+  font-size: 1.1rem;
+  opacity: 0.8;
+  margin: 0 0 1.5rem;
+}
+
+.tx-cta .md-button {
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  background: white;
+  color: #4f46e5;
+}
+
+.tx-cta .md-button:hover {
+  background: #f1f5f9;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .tx-hero__title {
+    font-size: 2rem;
+  }
+  .tx-hero__inner {
+    text-align: center;
+  }
+  .tx-hero__buttons {
+    justify-content: center;
+  }
+}
+</style>
+
+<!-- Hero Section -->
+<section class="tx-hero">
+  <div class="tx-hero__inner">
+    <div class="tx-hero__content">
+      <h1 class="tx-hero__title">The LLM Handbook</h1>
+      <p class="tx-hero__subtitle">A Complete Guide to Understanding Large Language Models</p>
+      <p class="tx-hero__description">From Concepts to Production. No prior ML knowledge required.</p>
+      <div class="tx-hero__buttons">
+        <a href="chapters/00-prologue/" class="md-button md-button--primary">
+          Start Reading
+        </a>
+        <a href="#features" class="md-button">
+          Learn More
         </a>
       </div>
     </div>
-  </section>
+    <div class="tx-hero__visual">
+      <div class="tx-token">"The Eiffel Tower is located in"</div>
+      <div class="tx-arrow">↓</div>
+      <div class="tx-token tx-token--output">"Paris"</div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="tx-features" id="features">
+  <div class="tx-features__inner">
+    <h2 class="tx-features__title">What You'll Learn</h2>
+    <div class="tx-features__grid">
+      <div class="tx-feature">
+        <div class="tx-feature__icon">🧩</div>
+        <h3>Tokenization & Embeddings</h3>
+        <p>How text becomes numbers that preserve meaning. Understand BPE, token IDs, and vector representations.</p>
+      </div>
+      <div class="tx-feature">
+        <div class="tx-feature__icon">🧠</div>
+        <h3>Neural Networks & Transformers</h3>
+        <p>The architecture that revolutionized AI. Learn how attention mechanisms enable understanding.</p>
+      </div>
+      <div class="tx-feature">
+        <div class="tx-feature__icon">⚡</div>
+        <h3>Inference & Training</h3>
+        <p>Step-by-step walkthrough of how models generate text and how intelligence emerges from data.</p>
+      </div>
+      <div class="tx-feature">
+        <div class="tx-feature__icon">🚀</div>
+        <h3>Production Deployment</h3>
+        <p>Deploy LLMs with vLLM, KServe, and OpenShift AI. Real-world performance optimization.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Audience Section -->
+<section class="tx-audience">
+  <div class="tx-audience__inner">
+    <h2 class="tx-audience__title">Who This Book Is For</h2>
+    <div class="tx-audience__grid">
+      <div class="tx-audience__item">
+        <strong>Software Engineers</strong>
+        <span>Deep understanding of LLMs to use them more effectively</span>
+      </div>
+      <div class="tx-audience__item">
+        <strong>MLOps Practitioners</strong>
+        <span>Production deployment with vLLM, KServe, OpenShift AI</span>
+      </div>
+      <div class="tx-audience__item">
+        <strong>Product Managers</strong>
+        <span>Mental models to evaluate AI capabilities</span>
+      </div>
+      <div class="tx-audience__item">
+        <strong>Technical Leaders</strong>
+        <span>Framework for AI investment decisions</span>
+      </div>
+      <div class="tx-audience__item">
+        <strong>Curious Minds</strong>
+        <span>Clear explanations of how the magic works</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="tx-cta">
+  <h2>Ready to understand how LLMs really work?</h2>
+  <p>Estimated reading time: 4-6 hours for the complete book.</p>
+  <a href="chapters/00-prologue/" class="md-button">
+    Begin with the Prologue →
+  </a>
+</section>
 
 {% endblock %}
 
