@@ -19,6 +19,7 @@ copyright: Copyright &copy; 2025 The LLM Handbook
 # Theme Configuration
 theme:
   name: material
+  custom_dir: overrides
   
   # Color palette with light/dark toggle
   palette:

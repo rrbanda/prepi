@@ -1,0 +1,305 @@
+{% extends "main.html" %}
+
+{% block tabs %}
+{{ super() }}
+
+<style>
+/* ===== Hero Section ===== */
+.tx-container {
+  padding-top: 1rem;
+  background: linear-gradient(to bottom, var(--md-primary-fg-color), #7c3aed);
+}
+
+[data-md-color-scheme="slate"] .tx-container {
+  background: linear-gradient(to bottom, #312e81, #4c1d95);
+}
+
+.tx-hero {
+  display: block;
+  color: var(--md-primary-bg-color);
+  justify-content: center;
+  margin: 0 0.8rem;
+  padding: 2.5rem 0;
+}
+
+.tx-hero h1 {
+  margin-bottom: 1rem;
+  color: currentcolor;
+  font-weight: 700;
+  font-size: 2.4rem;
+}
+
+@media screen and (max-width: 70em) {
+  .tx-hero h1 {
+    font-size: 1.8rem;
+  }
+}
+
+.tx-hero__content {
+  padding-bottom: 1rem;
+}
+
+.tx-hero__tagline {
+  font-size: 1.2rem;
+  opacity: 0.9;
+  margin-bottom: 0.5rem;
+}
+
+.tx-hero__description {
+  font-size: 1rem;
+  opacity: 0.8;
+  margin-bottom: 1.5rem;
+}
+
+.tx-hero .md-button {
+  margin-top: 0.5rem;
+  margin-right: 0.5rem;
+  color: var(--md-primary-bg-color);
+  border-color: var(--md-primary-bg-color);
+}
+
+.tx-hero .md-button--primary {
+  background-color: var(--md-primary-bg-color);
+  color: var(--md-primary-fg-color);
+  border-color: var(--md-primary-bg-color);
+}
+
+.tx-hero .md-button:focus,
+.tx-hero .md-button:hover {
+  background-color: var(--md-primary-bg-color);
+  color: var(--md-primary-fg-color);
+  border-color: var(--md-primary-bg-color);
+}
+
+/* Token visualization */
+.tx-hero__visual {
+  margin-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.tx-token {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 0.8rem 1.2rem;
+  border-radius: 8px;
+  font-family: var(--md-code-font-family);
+  font-size: 0.9rem;
+}
+
+.tx-token--output {
+  background: var(--md-primary-bg-color);
+  color: var(--md-primary-fg-color);
+  font-weight: 700;
+  font-size: 1.1rem;
+  border: none;
+}
+
+.tx-arrow {
+  font-size: 1.5rem;
+  opacity: 0.8;
+}
+
+/* ===== Features Section ===== */
+.tx-features {
+  padding: 3rem 0.8rem;
+  background: var(--md-default-bg-color);
+}
+
+.tx-features__title {
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+}
+
+.tx-features__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.tx-feature {
+  padding: 1.5rem;
+  background: var(--md-code-bg-color);
+  border-radius: 8px;
+  border: 1px solid var(--md-typeset-table-color);
+}
+
+.tx-feature__icon {
+  font-size: 2rem;
+  margin-bottom: 0.8rem;
+}
+
+.tx-feature h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+}
+
+.tx-feature p {
+  font-size: 0.85rem;
+  margin: 0;
+  opacity: 0.85;
+  line-height: 1.5;
+}
+
+/* ===== Audience Section ===== */
+.tx-audience {
+  padding: 3rem 0.8rem;
+  background: var(--md-code-bg-color);
+}
+
+.tx-audience__title {
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+}
+
+.tx-audience__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.tx-audience__item {
+  padding: 1rem;
+  background: var(--md-default-bg-color);
+  border-radius: 6px;
+  border: 1px solid var(--md-typeset-table-color);
+}
+
+.tx-audience__item strong {
+  display: block;
+  color: var(--md-primary-fg-color);
+  margin-bottom: 0.25rem;
+  font-size: 0.9rem;
+}
+
+.tx-audience__item span {
+  font-size: 0.8rem;
+  opacity: 0.85;
+}
+
+/* ===== CTA Section ===== */
+.tx-cta {
+  padding: 3rem 0.8rem;
+  background: linear-gradient(to right, var(--md-primary-fg-color), #7c3aed);
+  text-align: center;
+  color: var(--md-primary-bg-color);
+}
+
+[data-md-color-scheme="slate"] .tx-cta {
+  background: linear-gradient(to right, #312e81, #4c1d95);
+}
+
+.tx-cta h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+}
+
+.tx-cta p {
+  font-size: 1rem;
+  opacity: 0.85;
+  margin: 0 0 1.5rem;
+}
+
+.tx-cta .md-button {
+  background: var(--md-primary-bg-color);
+  color: var(--md-primary-fg-color);
+  border: none;
+  padding: 0.8rem 1.5rem;
+}
+</style>
+
+<!-- Hero -->
+<section class="tx-container">
+  <div class="tx-hero">
+    <div class="tx-hero__content">
+      <h1>The LLM Handbook</h1>
+      <p class="tx-hero__tagline">A Complete Guide to Understanding Large Language Models</p>
+      <p class="tx-hero__description">From Concepts to Production. No prior ML knowledge required.</p>
+      <a href="chapters/00-prologue/" class="md-button md-button--primary">Start Reading</a>
+      <a href="#features" class="md-button">Learn More</a>
+    </div>
+    <div class="tx-hero__visual">
+      <span class="tx-token">"The Eiffel Tower is located in"</span>
+      <span class="tx-arrow">→</span>
+      <span class="tx-token tx-token--output">"Paris"</span>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="tx-features" id="features">
+  <h2 class="tx-features__title">What You'll Learn</h2>
+  <div class="tx-features__grid">
+    <div class="tx-feature">
+      <div class="tx-feature__icon">🧩</div>
+      <h3>Tokenization & Embeddings</h3>
+      <p>How text becomes numbers that preserve meaning.</p>
+    </div>
+    <div class="tx-feature">
+      <div class="tx-feature__icon">🧠</div>
+      <h3>Neural Networks & Transformers</h3>
+      <p>The architecture that revolutionized AI.</p>
+    </div>
+    <div class="tx-feature">
+      <div class="tx-feature__icon">⚡</div>
+      <h3>Inference & Training</h3>
+      <p>How models generate text and learn from data.</p>
+    </div>
+    <div class="tx-feature">
+      <div class="tx-feature__icon">🚀</div>
+      <h3>Production Deployment</h3>
+      <p>Deploy with vLLM, KServe, and OpenShift AI.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Audience -->
+<section class="tx-audience">
+  <h2 class="tx-audience__title">Who This Book Is For</h2>
+  <div class="tx-audience__grid">
+    <div class="tx-audience__item">
+      <strong>Software Engineers</strong>
+      <span>Deep understanding of LLMs</span>
+    </div>
+    <div class="tx-audience__item">
+      <strong>MLOps Practitioners</strong>
+      <span>Production deployment skills</span>
+    </div>
+    <div class="tx-audience__item">
+      <strong>Product Managers</strong>
+      <span>AI capabilities & limits</span>
+    </div>
+    <div class="tx-audience__item">
+      <strong>Technical Leaders</strong>
+      <span>AI investment decisions</span>
+    </div>
+    <div class="tx-audience__item">
+      <strong>Curious Minds</strong>
+      <span>How the magic works</span>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="tx-cta">
+  <h2>Ready to understand how LLMs really work?</h2>
+  <p>Estimated reading time: 4-6 hours</p>
+  <a href="chapters/00-prologue/" class="md-button">Begin with the Prologue →</a>
+</section>
+
+{% endblock %}
+
+{% block content %}{% endblock %}
