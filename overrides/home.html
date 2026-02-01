@@ -1,119 +1,98 @@
 {% extends "main.html" %}
 
-<!-- Hide the default header -->
 {% block header %}{% endblock %}
 
 {% block tabs %}
 
 <style>
-/* ===== Hero Header Bar ===== */
+/* ===== Header Bar ===== */
 .tx-header {
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #6366f1 100%);
-  padding: 0.75rem 1rem;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  padding: 0.5rem 1rem;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 [data-md-color-scheme="slate"] .tx-header {
-  background: linear-gradient(135deg, #312e81 0%, #4c1d95 50%, #3730a3 100%);
-}
-
-.tx-header__search {
-  flex: 1;
-  max-width: 300px;
+  background: linear-gradient(135deg, #312e81, #4c1d95);
 }
 
 .tx-header__search input {
-  width: 100%;
-  padding: 0.5rem 1rem;
+  padding: 0.4rem 0.8rem;
   border: 1px solid rgba(255,255,255,0.3);
-  border-radius: 20px;
+  border-radius: 16px;
   background: rgba(255,255,255,0.15);
   color: white;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
+  width: 180px;
 }
 
-.tx-header__search input::placeholder {
-  color: rgba(255,255,255,0.7);
-}
+.tx-header__search input::placeholder { color: rgba(255,255,255,0.7); }
 
 .tx-header__toggle {
   background: rgba(255,255,255,0.15);
   border: 1px solid rgba(255,255,255,0.3);
   border-radius: 50%;
-  width: 36px;
-  height: 36px;
+  width: 30px;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   color: white;
-  font-size: 1.1rem;
+  font-size: 0.9rem;
 }
 
-.tx-header__github {
-  color: white;
-  font-size: 1.3rem;
-  opacity: 0.9;
-}
+.tx-header__github { color: white; opacity: 0.9; }
+.tx-header__github:hover { opacity: 1; }
 
-.tx-header__github:hover {
-  opacity: 1;
-}
-
-/* ===== Compact Hero ===== */
+/* ===== COMPACT Hero ===== */
 .tx-container {
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #6366f1 100%);
-  padding: 1.5rem 1rem 2rem;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  padding: 1rem 1rem 1.25rem;
 }
 
 [data-md-color-scheme="slate"] .tx-container {
-  background: linear-gradient(135deg, #312e81 0%, #4c1d95 50%, #3730a3 100%);
+  background: linear-gradient(135deg, #312e81, #4c1d95);
 }
 
 .tx-hero {
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
+  display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
   color: white;
-}
-
-@media (max-width: 900px) {
-  .tx-hero {
-    grid-template-columns: 1fr;
-    text-align: center;
-  }
+  flex-wrap: wrap;
 }
 
 .tx-hero h1 {
-  font-size: 2.5rem;
+  font-size: 1.8rem;
   font-weight: 800;
-  margin: 0 0 0.5rem;
+  margin: 0;
   line-height: 1.1;
 }
 
 .tx-hero__tagline {
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   opacity: 0.9;
-  margin: 0 0 0.25rem;
+  margin: 0.25rem 0 0;
 }
 
 .tx-hero__description {
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   opacity: 0.8;
-  margin: 0 0 1rem;
+  margin: 0.25rem 0 0.75rem;
 }
 
 .tx-hero .md-button {
-  margin-right: 0.5rem;
-  padding: 0.5rem 1rem;
-  font-size: 0.85rem;
-  border-radius: 6px;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+  border-radius: 5px;
+  margin-right: 0.4rem;
 }
 
 .tx-hero .md-button--primary {
@@ -127,147 +106,135 @@
   color: white;
 }
 
-/* Token Visual */
+/* Token Visual - Inline */
 .tx-hero__visual {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 .tx-token {
   background: rgba(255,255,255,0.15);
   border: 1px solid rgba(255,255,255,0.3);
-  padding: 0.75rem 1rem;
-  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
   font-family: var(--md-code-font-family);
-  font-size: 0.85rem;
+  font-size: 0.75rem;
 }
 
 .tx-token--output {
   background: white;
   color: #4f46e5;
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 0.85rem;
   border: none;
 }
 
-.tx-arrow {
-  font-size: 1.2rem;
-  opacity: 0.8;
-}
+.tx-arrow { font-size: 1rem; opacity: 0.8; }
 
-/* ===== Compact Main Content ===== */
+/* ===== Main Grid ===== */
 .tx-main {
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 1.5rem 1rem;
+  padding: 1rem;
   display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 2rem;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 1rem;
 }
 
-@media (max-width: 900px) {
-  .tx-main {
-    grid-template-columns: 1fr;
-  }
+@media (max-width: 800px) {
+  .tx-main { grid-template-columns: 1fr; }
+  .tx-hero { flex-direction: column; text-align: center; }
+  .tx-hero__visual { justify-content: center; }
 }
 
 /* Features */
 .tx-features__title {
-  font-size: 1.3rem;
+  font-size: 1rem;
   font-weight: 700;
-  margin: 0 0 1rem;
+  margin: 0 0 0.6rem;
   color: var(--md-typeset-color);
 }
 
 .tx-features__grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.75rem;
-}
-
-@media (max-width: 600px) {
-  .tx-features__grid {
-    grid-template-columns: 1fr;
-  }
+  gap: 0.5rem;
 }
 
 .tx-feature {
   display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-  padding: 0.75rem;
-  background: var(--md-code-bg-color);
-  border-radius: 8px;
-  border: 1px solid var(--md-typeset-table-color);
-}
-
-.tx-feature__icon {
-  font-size: 1.5rem;
-  flex-shrink: 0;
-}
-
-.tx-feature__text h3 {
-  font-size: 0.9rem;
-  font-weight: 600;
-  margin: 0 0 0.2rem;
-  color: var(--md-typeset-color);
-}
-
-.tx-feature__text p {
-  font-size: 0.75rem;
-  margin: 0;
-  opacity: 0.8;
-  line-height: 1.4;
-}
-
-/* Audience Sidebar */
-.tx-sidebar__title {
-  font-size: 1.1rem;
-  font-weight: 700;
-  margin: 0 0 0.75rem;
-  color: var(--md-typeset-color);
-}
-
-.tx-audience__list {
-  display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: 0.5rem;
-}
-
-.tx-audience__item {
-  padding: 0.6rem 0.75rem;
+  padding: 0.5rem;
   background: var(--md-code-bg-color);
   border-radius: 6px;
   border: 1px solid var(--md-typeset-table-color);
 }
 
+.tx-feature__icon { font-size: 1.2rem; }
+
+.tx-feature__text h3 {
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--md-typeset-color);
+}
+
+.tx-feature__text p {
+  font-size: 0.65rem;
+  margin: 0;
+  opacity: 0.75;
+}
+
+/* Audience */
+.tx-sidebar__title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+  color: var(--md-typeset-color);
+}
+
+.tx-audience__list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+}
+
+@media (max-width: 500px) {
+  .tx-audience__list { grid-template-columns: 1fr; }
+}
+
+.tx-audience__item {
+  padding: 0.4rem 0.6rem;
+  background: var(--md-code-bg-color);
+  border-radius: 5px;
+  border: 1px solid var(--md-typeset-table-color);
+}
+
 .tx-audience__item strong {
-  display: block;
   color: var(--md-primary-fg-color);
-  font-size: 0.8rem;
-  margin-bottom: 0.1rem;
+  font-size: 0.7rem;
 }
 
 .tx-audience__item span {
-  font-size: 0.7rem;
-  opacity: 0.8;
+  display: block;
+  font-size: 0.6rem;
+  opacity: 0.75;
 }
 
 /* CTA */
 .tx-cta {
   grid-column: 1 / -1;
   background: linear-gradient(90deg, var(--md-primary-fg-color), #7c3aed);
-  border-radius: 8px;
-  padding: 1rem 1.5rem;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 1rem;
+  gap: 0.75rem;
   color: white;
+  flex-wrap: wrap;
 }
 
 [data-md-color-scheme="slate"] .tx-cta {
@@ -275,130 +242,114 @@
 }
 
 .tx-cta__text h2 {
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   font-weight: 600;
   margin: 0;
 }
 
 .tx-cta__text p {
-  font-size: 0.85rem;
-  margin: 0.25rem 0 0;
+  font-size: 0.75rem;
+  margin: 0;
   opacity: 0.85;
 }
 
 .tx-cta .md-button {
   background: white;
   color: #4f46e5;
-  padding: 0.6rem 1.2rem;
-  font-size: 0.85rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem;
   border: none;
-  border-radius: 6px;
-  white-space: nowrap;
+  border-radius: 5px;
 }
 </style>
 
-<!-- Custom Header with Search & Theme -->
+<!-- Header -->
 <header class="tx-header">
   <div class="tx-header__search">
-    <input type="text" placeholder="Search..." onclick="document.querySelector('.md-search__input').focus(); document.querySelector('.md-search__input').click();">
+    <input type="text" placeholder="Search..." onclick="document.querySelector('.md-search__input')?.focus()">
   </div>
-  <label class="tx-header__toggle" for="__palette" title="Toggle dark mode">
-    🌓
-  </label>
-  <a href="https://github.com/rrbanda/prepi" class="tx-header__github" title="GitHub">
-    <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+  <button class="tx-header__toggle" onclick="toggleTheme()" title="Toggle dark mode">🌓</button>
+<script>
+function toggleTheme() {
+  const body = document.body;
+  const current = body.getAttribute('data-md-color-scheme');
+  const next = current === 'slate' ? 'default' : 'slate';
+  body.setAttribute('data-md-color-scheme', next);
+  localStorage.setItem('data-md-color-scheme', next);
+}
+// Load saved theme
+document.addEventListener('DOMContentLoaded', function() {
+  const saved = localStorage.getItem('data-md-color-scheme');
+  if (saved) document.body.setAttribute('data-md-color-scheme', saved);
+});
+</script>
+  <a href="https://github.com/rrbanda/prepi" class="tx-header__github">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
   </a>
 </header>
 
-<!-- Hero Section -->
+<!-- Hero -->
 <section class="tx-container">
   <div class="tx-hero">
-    <div class="tx-hero__content">
+    <div>
       <h1>The LLM Handbook</h1>
       <p class="tx-hero__tagline">A Complete Guide to Understanding Large Language Models</p>
-      <p class="tx-hero__description">From Concepts to Production. No prior ML knowledge required.</p>
+      <p class="tx-hero__description">From Concepts to Production. No ML knowledge required.</p>
       <a href="chapters/00-prologue/" class="md-button md-button--primary">Start Reading</a>
       <a href="chapters/14-vocabulary/" class="md-button">Vocabulary</a>
     </div>
     <div class="tx-hero__visual">
-      <span class="tx-token">"The Eiffel Tower is located in"</span>
+      <span class="tx-token">"Eiffel Tower is in"</span>
       <span class="tx-arrow">→</span>
       <span class="tx-token tx-token--output">"Paris"</span>
     </div>
   </div>
 </section>
 
-<!-- Main Content -->
+<!-- Main -->
 <section class="tx-main">
   <div class="tx-features">
     <h2 class="tx-features__title">What You'll Learn</h2>
     <div class="tx-features__grid">
       <div class="tx-feature">
         <div class="tx-feature__icon">🧩</div>
-        <div class="tx-feature__text">
-          <h3>Tokenization & Embeddings</h3>
-          <p>How text becomes numbers that preserve meaning</p>
-        </div>
+        <div class="tx-feature__text"><h3>Tokenization</h3><p>Text → Numbers</p></div>
       </div>
       <div class="tx-feature">
         <div class="tx-feature__icon">🧠</div>
-        <div class="tx-feature__text">
-          <h3>Neural Networks & Transformers</h3>
-          <p>The architecture that revolutionized AI</p>
-        </div>
+        <div class="tx-feature__text"><h3>Transformers</h3><p>The architecture</p></div>
       </div>
       <div class="tx-feature">
         <div class="tx-feature__icon">⚡</div>
-        <div class="tx-feature__text">
-          <h3>Inference & Training</h3>
-          <p>How models generate and learn from data</p>
-        </div>
+        <div class="tx-feature__text"><h3>Inference</h3><p>How it generates</p></div>
       </div>
       <div class="tx-feature">
         <div class="tx-feature__icon">🚀</div>
-        <div class="tx-feature__text">
-          <h3>Production Deployment</h3>
-          <p>vLLM, KServe, and OpenShift AI</p>
-        </div>
+        <div class="tx-feature__text"><h3>Deployment</h3><p>vLLM & KServe</p></div>
       </div>
     </div>
   </div>
 
   <div class="tx-sidebar">
-    <h2 class="tx-sidebar__title">Who This Book Is For</h2>
+    <h2 class="tx-sidebar__title">Who This Is For</h2>
     <div class="tx-audience__list">
-      <div class="tx-audience__item">
-        <strong>Software Engineers</strong>
-        <span>Deep understanding of LLMs</span>
-      </div>
-      <div class="tx-audience__item">
-        <strong>MLOps Practitioners</strong>
-        <span>Production deployment skills</span>
-      </div>
-      <div class="tx-audience__item">
-        <strong>Product Managers</strong>
-        <span>AI capabilities & limitations</span>
-      </div>
-      <div class="tx-audience__item">
-        <strong>Technical Leaders</strong>
-        <span>AI investment decisions</span>
-      </div>
-      <div class="tx-audience__item">
-        <strong>Curious Minds</strong>
-        <span>How the magic works</span>
-      </div>
+      <div class="tx-audience__item"><strong>Engineers</strong><span>LLM understanding</span></div>
+      <div class="tx-audience__item"><strong>MLOps</strong><span>Deployment</span></div>
+      <div class="tx-audience__item"><strong>PMs</strong><span>AI capabilities</span></div>
+      <div class="tx-audience__item"><strong>Leaders</strong><span>AI decisions</span></div>
     </div>
   </div>
 
   <div class="tx-cta">
     <div class="tx-cta__text">
-      <h2>Ready to understand how LLMs really work?</h2>
-      <p>17 chapters • 4-6 hours reading time</p>
+      <h2>Ready to understand LLMs?</h2>
+      <p>17 chapters • 4-6 hours</p>
     </div>
-    <a href="chapters/00-prologue/" class="md-button">Begin with the Prologue →</a>
+    <a href="chapters/00-prologue/" class="md-button">Begin Prologue →</a>
   </div>
 </section>
 
 {% endblock %}
 
 {% block content %}{% endblock %}
+{% block footer %}{% endblock %}
