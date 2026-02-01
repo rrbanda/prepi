@@ -4,175 +4,183 @@
 {{ super() }}
 
 <style>
-/* ===== Hero Section ===== */
+/* ===== Compact Hero ===== */
 .tx-container {
-  padding-top: 1rem;
-  background: linear-gradient(to bottom, var(--md-primary-fg-color), #7c3aed);
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #6366f1 100%);
+  padding: 2rem 1rem;
 }
 
 [data-md-color-scheme="slate"] .tx-container {
-  background: linear-gradient(to bottom, #312e81, #4c1d95);
+  background: linear-gradient(135deg, #312e81 0%, #4c1d95 50%, #3730a3 100%);
 }
 
 .tx-hero {
-  display: block;
-  color: var(--md-primary-bg-color);
-  justify-content: center;
-  margin: 0 0.8rem;
-  padding: 2.5rem 0;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: center;
+  color: white;
 }
 
-.tx-hero h1 {
-  margin-bottom: 1rem;
-  color: currentcolor;
-  font-weight: 700;
-  font-size: 2.4rem;
-}
-
-@media screen and (max-width: 70em) {
-  .tx-hero h1 {
-    font-size: 1.8rem;
+@media (max-width: 900px) {
+  .tx-hero {
+    grid-template-columns: 1fr;
+    text-align: center;
   }
 }
 
-.tx-hero__content {
-  padding-bottom: 1rem;
+.tx-hero h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin: 0 0 0.5rem;
+  line-height: 1.1;
 }
 
 .tx-hero__tagline {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   opacity: 0.9;
-  margin-bottom: 0.5rem;
+  margin: 0 0 0.25rem;
 }
 
 .tx-hero__description {
-  font-size: 1rem;
+  font-size: 0.95rem;
   opacity: 0.8;
-  margin-bottom: 1.5rem;
+  margin: 0 0 1rem;
 }
 
 .tx-hero .md-button {
-  margin-top: 0.5rem;
   margin-right: 0.5rem;
-  color: var(--md-primary-bg-color);
-  border-color: var(--md-primary-bg-color);
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  border-radius: 6px;
 }
 
 .tx-hero .md-button--primary {
-  background-color: var(--md-primary-bg-color);
-  color: var(--md-primary-fg-color);
-  border-color: var(--md-primary-bg-color);
+  background: white;
+  color: #4f46e5;
+  border: none;
 }
 
-.tx-hero .md-button:focus,
-.tx-hero .md-button:hover {
-  background-color: var(--md-primary-bg-color);
-  color: var(--md-primary-fg-color);
-  border-color: var(--md-primary-bg-color);
+.tx-hero .md-button:not(.md-button--primary) {
+  border: 1px solid rgba(255,255,255,0.5);
+  color: white;
 }
 
-/* Token visualization */
+/* Token Visual - Horizontal */
 .tx-hero__visual {
-  margin-top: 2rem;
   display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
   align-items: center;
   justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .tx-token {
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 0.8rem 1.2rem;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  padding: 0.75rem 1rem;
   border-radius: 8px;
   font-family: var(--md-code-font-family);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 
 .tx-token--output {
-  background: var(--md-primary-bg-color);
-  color: var(--md-primary-fg-color);
+  background: white;
+  color: #4f46e5;
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 1rem;
   border: none;
 }
 
 .tx-arrow {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   opacity: 0.8;
 }
 
-/* ===== Features Section ===== */
-.tx-features {
-  padding: 3rem 0.8rem;
-  background: var(--md-default-bg-color);
+/* ===== Compact Main Content ===== */
+.tx-main {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
 }
 
+@media (max-width: 900px) {
+  .tx-main {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Features - Compact Grid */
 .tx-features__title {
-  text-align: center;
-  font-size: 1.8rem;
-  font-weight: 600;
-  margin-bottom: 2rem;
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 0 0 1rem;
+  color: var(--md-typeset-color);
 }
 
 .tx-features__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1.5rem;
-  max-width: 1200px;
-  margin: 0 auto;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+@media (max-width: 600px) {
+  .tx-features__grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .tx-feature {
-  padding: 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem;
   background: var(--md-code-bg-color);
   border-radius: 8px;
   border: 1px solid var(--md-typeset-table-color);
 }
 
 .tx-feature__icon {
-  font-size: 2rem;
-  margin-bottom: 0.8rem;
+  font-size: 1.5rem;
+  flex-shrink: 0;
 }
 
-.tx-feature h3 {
-  font-size: 1rem;
+.tx-feature__text h3 {
+  font-size: 0.9rem;
   font-weight: 600;
-  margin: 0 0 0.5rem;
+  margin: 0 0 0.2rem;
+  color: var(--md-typeset-color);
 }
 
-.tx-feature p {
-  font-size: 0.85rem;
+.tx-feature__text p {
+  font-size: 0.75rem;
   margin: 0;
-  opacity: 0.85;
-  line-height: 1.5;
+  opacity: 0.8;
+  line-height: 1.4;
 }
 
-/* ===== Audience Section ===== */
-.tx-audience {
-  padding: 3rem 0.8rem;
-  background: var(--md-code-bg-color);
+/* Audience - Compact Sidebar */
+.tx-sidebar__title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0 0 0.75rem;
+  color: var(--md-typeset-color);
 }
 
-.tx-audience__title {
-  text-align: center;
-  font-size: 1.8rem;
-  font-weight: 600;
-  margin-bottom: 2rem;
-}
-
-.tx-audience__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 1rem;
-  max-width: 1000px;
-  margin: 0 auto;
+.tx-audience__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .tx-audience__item {
-  padding: 1rem;
-  background: var(--md-default-bg-color);
+  padding: 0.6rem 0.75rem;
+  background: var(--md-code-bg-color);
   border-radius: 6px;
   border: 1px solid var(--md-typeset-table-color);
 }
@@ -180,48 +188,57 @@
 .tx-audience__item strong {
   display: block;
   color: var(--md-primary-fg-color);
-  margin-bottom: 0.25rem;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
+  margin-bottom: 0.1rem;
 }
 
 .tx-audience__item span {
-  font-size: 0.8rem;
-  opacity: 0.85;
+  font-size: 0.7rem;
+  opacity: 0.8;
 }
 
-/* ===== CTA Section ===== */
+/* CTA - Compact */
 .tx-cta {
-  padding: 3rem 0.8rem;
-  background: linear-gradient(to right, var(--md-primary-fg-color), #7c3aed);
-  text-align: center;
-  color: var(--md-primary-bg-color);
+  grid-column: 1 / -1;
+  background: linear-gradient(90deg, var(--md-primary-fg-color), #7c3aed);
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  color: white;
 }
 
 [data-md-color-scheme="slate"] .tx-cta {
-  background: linear-gradient(to right, #312e81, #4c1d95);
+  background: linear-gradient(90deg, #312e81, #4c1d95);
 }
 
-.tx-cta h2 {
-  font-size: 1.5rem;
+.tx-cta__text h2 {
+  font-size: 1.1rem;
   font-weight: 600;
-  margin: 0 0 0.5rem;
+  margin: 0;
 }
 
-.tx-cta p {
-  font-size: 1rem;
+.tx-cta__text p {
+  font-size: 0.85rem;
+  margin: 0.25rem 0 0;
   opacity: 0.85;
-  margin: 0 0 1.5rem;
 }
 
 .tx-cta .md-button {
-  background: var(--md-primary-bg-color);
-  color: var(--md-primary-fg-color);
+  background: white;
+  color: #4f46e5;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.85rem;
   border: none;
-  padding: 0.8rem 1.5rem;
+  border-radius: 6px;
+  white-space: nowrap;
 }
 </style>
 
-<!-- Hero -->
+<!-- Compact Hero -->
 <section class="tx-container">
   <div class="tx-hero">
     <div class="tx-hero__content">
@@ -229,7 +246,7 @@
       <p class="tx-hero__tagline">A Complete Guide to Understanding Large Language Models</p>
       <p class="tx-hero__description">From Concepts to Production. No prior ML knowledge required.</p>
       <a href="chapters/00-prologue/" class="md-button md-button--primary">Start Reading</a>
-      <a href="#features" class="md-button">Learn More</a>
+      <a href="chapters/14-vocabulary/" class="md-button">Vocabulary</a>
     </div>
     <div class="tx-hero__visual">
       <span class="tx-token">"The Eiffel Tower is located in"</span>
@@ -239,65 +256,78 @@
   </div>
 </section>
 
-<!-- Features -->
-<section class="tx-features" id="features">
-  <h2 class="tx-features__title">What You'll Learn</h2>
-  <div class="tx-features__grid">
-    <div class="tx-feature">
-      <div class="tx-feature__icon">🧩</div>
-      <h3>Tokenization & Embeddings</h3>
-      <p>How text becomes numbers that preserve meaning.</p>
-    </div>
-    <div class="tx-feature">
-      <div class="tx-feature__icon">🧠</div>
-      <h3>Neural Networks & Transformers</h3>
-      <p>The architecture that revolutionized AI.</p>
-    </div>
-    <div class="tx-feature">
-      <div class="tx-feature__icon">⚡</div>
-      <h3>Inference & Training</h3>
-      <p>How models generate text and learn from data.</p>
-    </div>
-    <div class="tx-feature">
-      <div class="tx-feature__icon">🚀</div>
-      <h3>Production Deployment</h3>
-      <p>Deploy with vLLM, KServe, and OpenShift AI.</p>
-    </div>
-  </div>
-</section>
-
-<!-- Audience -->
-<section class="tx-audience">
-  <h2 class="tx-audience__title">Who This Book Is For</h2>
-  <div class="tx-audience__grid">
-    <div class="tx-audience__item">
-      <strong>Software Engineers</strong>
-      <span>Deep understanding of LLMs</span>
-    </div>
-    <div class="tx-audience__item">
-      <strong>MLOps Practitioners</strong>
-      <span>Production deployment skills</span>
-    </div>
-    <div class="tx-audience__item">
-      <strong>Product Managers</strong>
-      <span>AI capabilities & limits</span>
-    </div>
-    <div class="tx-audience__item">
-      <strong>Technical Leaders</strong>
-      <span>AI investment decisions</span>
-    </div>
-    <div class="tx-audience__item">
-      <strong>Curious Minds</strong>
-      <span>How the magic works</span>
+<!-- Compact Main Content -->
+<section class="tx-main">
+  <!-- Features -->
+  <div class="tx-features">
+    <h2 class="tx-features__title">What You'll Learn</h2>
+    <div class="tx-features__grid">
+      <div class="tx-feature">
+        <div class="tx-feature__icon">🧩</div>
+        <div class="tx-feature__text">
+          <h3>Tokenization & Embeddings</h3>
+          <p>How text becomes numbers that preserve meaning</p>
+        </div>
+      </div>
+      <div class="tx-feature">
+        <div class="tx-feature__icon">🧠</div>
+        <div class="tx-feature__text">
+          <h3>Neural Networks & Transformers</h3>
+          <p>The architecture that revolutionized AI</p>
+        </div>
+      </div>
+      <div class="tx-feature">
+        <div class="tx-feature__icon">⚡</div>
+        <div class="tx-feature__text">
+          <h3>Inference & Training</h3>
+          <p>How models generate and learn from data</p>
+        </div>
+      </div>
+      <div class="tx-feature">
+        <div class="tx-feature__icon">🚀</div>
+        <div class="tx-feature__text">
+          <h3>Production Deployment</h3>
+          <p>vLLM, KServe, and OpenShift AI</p>
+        </div>
+      </div>
     </div>
   </div>
-</section>
 
-<!-- CTA -->
-<section class="tx-cta">
-  <h2>Ready to understand how LLMs really work?</h2>
-  <p>Estimated reading time: 4-6 hours</p>
-  <a href="chapters/00-prologue/" class="md-button">Begin with the Prologue →</a>
+  <!-- Audience Sidebar -->
+  <div class="tx-sidebar">
+    <h2 class="tx-sidebar__title">Who This Book Is For</h2>
+    <div class="tx-audience__list">
+      <div class="tx-audience__item">
+        <strong>Software Engineers</strong>
+        <span>Deep understanding of LLMs</span>
+      </div>
+      <div class="tx-audience__item">
+        <strong>MLOps Practitioners</strong>
+        <span>Production deployment skills</span>
+      </div>
+      <div class="tx-audience__item">
+        <strong>Product Managers</strong>
+        <span>AI capabilities & limitations</span>
+      </div>
+      <div class="tx-audience__item">
+        <strong>Technical Leaders</strong>
+        <span>AI investment decisions</span>
+      </div>
+      <div class="tx-audience__item">
+        <strong>Curious Minds</strong>
+        <span>How the magic works</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA Bar -->
+  <div class="tx-cta">
+    <div class="tx-cta__text">
+      <h2>Ready to understand how LLMs really work?</h2>
+      <p>17 chapters • 4-6 hours reading time</p>
+    </div>
+    <a href="chapters/00-prologue/" class="md-button">Begin with the Prologue →</a>
+  </div>
 </section>
 
 {% endblock %}
